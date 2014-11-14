@@ -13,7 +13,6 @@ public class StarlingParticle extends Particle2D
     override public function init():void
     {
         super.init();
-
         color = Color.WHITE;
     }
 
@@ -21,10 +20,19 @@ public class StarlingParticle extends Particle2D
     {
         image.x = x;
         image.y = y;
-        image.rotation = rotation;
         image.scaleX = image.scaleY = scale;
-        image.alpha = alpha;
-        image.color = color;
+        if (image.rotation != rotation)
+        {
+            image.rotation = rotation;
+        }
+        if (image.alpha != alpha)
+        {
+            image.alpha = alpha;
+        }
+        if (image.color != color)
+        {
+            image.color = color;
+        }
     }
 }
 }
