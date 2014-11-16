@@ -1,4 +1,4 @@
-package idv.cjcat.stardustextended.twoD.display.bitmapParticle
+package idv.cjcat.stardustextended.twoD.display
 {
 import flash.display.BitmapData;
 import flash.geom.Point;

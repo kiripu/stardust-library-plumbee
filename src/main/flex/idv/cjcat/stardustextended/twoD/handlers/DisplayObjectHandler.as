@@ -26,7 +26,10 @@ public class DisplayObjectHandler extends ParticleHandler {
     /**
      * The blend mode for drawing.
      */
-    public var blendMode:String;
+    private var _blendMode:String;
+
+    private var p2D:Particle2D;
+    private var displayObj:DisplayObject;
 
     public function DisplayObjectHandler(container:DisplayObjectContainer = null, blendMode:String = "normal", addChildMode:int = 0) {
         this.container = container;
@@ -34,9 +37,6 @@ public class DisplayObjectHandler extends ParticleHandler {
         this.blendMode = blendMode;
         forceParentChange = false;
     }
-
-    private var p2D:Particle2D;
-    private var displayObj:DisplayObject;
 
     override public function particleAdded(particle:Particle):void {
         displayObj = DisplayObject(particle.target);
@@ -76,7 +76,13 @@ public class DisplayObjectHandler extends ParticleHandler {
         displayObj.alpha = p2D.alpha;
     }
 
+    public function set blendMode(val : String) : void {
+        _blendMode = val;
+    }
 
+    public function get blendMode() : String {
+        return _blendMode;
+    }
     //XML
     //------------------------------------------------------------------------------------------------
 
@@ -89,7 +95,7 @@ public class DisplayObjectHandler extends ParticleHandler {
 
         xml.@addChildMode = addChildMode;
         xml.@forceParentChange = forceParentChange;
-        xml.@blendMode = blendMode;
+        xml.@blendMode = _blendMode;
 
         return xml;
     }

@@ -3,16 +3,16 @@ package idv.cjcat.stardustextended.twoD.actions {
 import idv.cjcat.stardustextended.common.emitters.Emitter;
 import idv.cjcat.stardustextended.common.particles.Particle;
 import idv.cjcat.stardustextended.common.xml.XMLBuilder;
-import idv.cjcat.stardustextended.twoD.display.bitmapParticle.IBitmapParticle;
+import idv.cjcat.stardustextended.twoD.handlers.DisplayObjectSpriteSheetHandler;
 
 public class AnimateSpriteSheet extends Action2D{
 
     override public function update(emitter:Emitter, particle:Particle, timeDelta:Number, currentTime:Number):void {
-        const target : IBitmapParticle = particle.target as IBitmapParticle;
-        if (target)
+        if (particle.dictionary != null && particle.dictionary[DisplayObjectSpriteSheetHandler.CURRENT_FRAME] != null)
         {
-            target.stepSpriteSheet( timeDelta );
+            particle.dictionary[DisplayObjectSpriteSheetHandler.CURRENT_FRAME]++;
         }
+
     }
 
     //XML
