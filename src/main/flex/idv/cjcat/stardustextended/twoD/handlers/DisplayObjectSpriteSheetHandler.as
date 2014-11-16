@@ -46,7 +46,7 @@ public class DisplayObjectSpriteSheetHandler extends DisplayObjectHandler implem
     }
 
     override public function readParticle(particle:Particle):void {
-        if (isSpriteSheet)
+        if (_isSpriteSheet)
         {
             var currFrame : uint = particle.dictionary[CURRENT_FRAME];
             const nextFrame : uint = (currFrame + _time) % _totalFrames;
@@ -68,7 +68,7 @@ public class DisplayObjectSpriteSheetHandler extends DisplayObjectHandler implem
         const bmp : Bitmap = Bitmap(_pool.get());
         particle.target = bmp;
 
-        if (isSpriteSheet)
+        if (_isSpriteSheet)
         {
             makeSpriteSheetCache();
             var currFrame:uint = 0;
@@ -131,6 +131,7 @@ public class DisplayObjectSpriteSheetHandler extends DisplayObjectHandler implem
 
     public function set spriteSheetAnimationSpeed(spriteSheetAnimationSpeed:uint):void {
         _spriteSheetAnimationSpeed = spriteSheetAnimationSpeed;
+        makeSpriteSheetCache();
     }
 
     public function get spriteSheetAnimationSpeed():uint {
