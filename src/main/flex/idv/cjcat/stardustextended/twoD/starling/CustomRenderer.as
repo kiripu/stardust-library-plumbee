@@ -38,7 +38,7 @@ public class CustomRenderer extends DisplayObject
     private static var sCosLUT:Vector.<Number> = new Vector.<Number>(0x800, true);
     private static var sSinLUT:Vector.<Number> = new Vector.<Number>(0x800, true);
 
-    private var mTinted : Boolean;
+    private var mTinted : Boolean = true;
     private var mTexture : Texture;
     private var mSmoothing : String;
     private var mPremultipliedAlpha:Boolean = false;
@@ -120,9 +120,9 @@ public class CustomRenderer extends DisplayObject
         // update vertex data
         var vertexID:int = 0;
 
-        var red:int;
-        var green:int;
-        var blue:int;
+        var red:Number = 1;
+        var green:Number = 1;
+        var blue:Number = 1;
         var particleAlpha:Number;
 
         var rotation:Number;
@@ -151,9 +151,11 @@ public class CustomRenderer extends DisplayObject
             particle = mParticles[i] as Particle2D;
 
             // TODO: this decreases performance by a LOT
-          /*  red = ( particle.color >> 16 ) & 0xFF;
+            /*
+            red = ( particle.color >> 16 ) & 0xFF;
             green = ( particle.color >> 8 ) & 0xFF;
-            blue = particle.color & 0xFF;*/
+            blue = particle.color & 0xFF;
+            */
 
             particleAlpha = particle.alpha;
 
@@ -177,13 +179,13 @@ public class CustomRenderer extends DisplayObject
                 sinY = sin * yOffset;
 
                 position = vertexID << 3; // * 8
-                rawData[position] = x - cosX + sinY;
+                rawData[position] = x - cosX + sinY;  // 0-2: position
                 rawData[++position] = y - sinX - cosY;
-                rawData[++position] = red;
+                rawData[++position] = red;// 2-5: Color [0-1]
                 rawData[++position] = green;
                 rawData[++position] = blue;
                 rawData[++position] = particleAlpha;
-                rawData[++position] = textureX;
+                rawData[++position] = textureX; // 6,7: Texture coords [?-1]
                 rawData[++position] = textureY;
 
                 rawData[++position] = x + cosX + sinY;
@@ -405,17 +407,16 @@ public class CustomRenderer extends DisplayObject
         support.raiseDrawCount();
 
         var context:Context3D = Starling.context;
-
-        var sRenderAlpha:Vector.<Number> = new <Number>[1.0, 1.0, 1.0, 1.0];
-        sRenderAlpha[0] = sRenderAlpha[1] = sRenderAlpha[2] = mPremultipliedAlpha ? alpha : 1.0;
-        sRenderAlpha[3] = alpha;
-
         if (context == null)
         {
             throw new MissingContextError();
         }
 
         context.setBlendFactors(mBlendFuncSource, mBlendFuncDestination);
+
+        var sRenderAlpha:Vector.<Number> = new <Number>[1.0, 1.0, 1.0, 1.0];
+        sRenderAlpha[0] = sRenderAlpha[1] = sRenderAlpha[2] = mPremultipliedAlpha ? alpha : 1.0;
+        sRenderAlpha[3] = alpha;
 
         MatrixUtil.convertTo3D(support.mvpMatrix, sRenderMatrix);
 
@@ -425,8 +426,8 @@ public class CustomRenderer extends DisplayObject
         context.setTextureAt(0, mTexture.base);
 
         sVertexBuffers[sVertexBufferIdx].uploadFromVector(mVertexData.rawData, 0, Math.min(sBufferSize * 4, mVertexData.rawData.length / 8));
-
         context.setVertexBufferAt(0, sVertexBuffers[sVertexBufferIdx], VertexData.POSITION_OFFSET, Context3DVertexBufferFormat.FLOAT_2);
+
         if (mTinted)
         {
             context.setVertexBufferAt(1, sVertexBuffers[sVertexBufferIdx], VertexData.COLOR_OFFSET, Context3DVertexBufferFormat.FLOAT_4);
