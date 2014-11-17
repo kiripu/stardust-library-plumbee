@@ -28,7 +28,7 @@ import starling.utils.VertexData;
 public class CustomRenderer extends DisplayObject
 {
     /**
-     * The maximum number of particles possible. Can be over 16000, but for performance reasons its maximized at 10000
+     * The maximum number of particles possible. Can be over 16000, but for performance reasons its maximized at a lower value
      */
     public static const MAX_CAPACITY:int = 10000;
 
@@ -42,8 +42,8 @@ public class CustomRenderer extends DisplayObject
     private var mTexture : Texture;
     private var mSmoothing : String;
     private var mPremultipliedAlpha:Boolean = false;
-    private var mBlendFuncSource:String = Context3DBlendFactor.ONE; // source blend factor
-    private var mBlendFuncDestination:String = Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA;
+    private const mBlendFuncSource:String = Context3DBlendFactor.SOURCE_ALPHA; // source blend factor, was ONE
+    private const mBlendFuncDestination:String = Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA;
 
     private var mBatched : Boolean;
 
@@ -82,12 +82,12 @@ public class CustomRenderer extends DisplayObject
         if (bufferSize > MAX_CAPACITY)
         {
             bufferSize = MAX_CAPACITY;
-            trace("Warning: bufferSize exceeds the limit and is set to it's maximum value (16383)");
+            trace("Warning: bufferSize exceeds the limit and is set to it's maximum value");
         }
         else if (bufferSize <= 0)
         {
             bufferSize = MAX_CAPACITY;
-            trace("Warning: bufferSize can't be lower than 1 and is set to it's maximum value (16383)");
+            trace("Warning: bufferSize can't be lower than 1 and is set to it's maximum value");
         }
         sBufferSize = bufferSize;
         sNumberOfVertexBuffers = numberOfBuffers;
@@ -152,9 +152,9 @@ public class CustomRenderer extends DisplayObject
 
             // TODO: this decreases performance by a LOT
             /*
-            red = ( particle.color >> 16 ) & 0xFF;
-            green = ( particle.color >> 8 ) & 0xFF;
-            blue = particle.color & 0xFF;
+            red = ( particle.color >> 16 ) & 0xFF / 255;
+            green = ( particle.color >> 8 ) & 0xFF / 255;
+            blue = particle.color & 0xFF / 255;
             */
 
             particleAlpha = particle.alpha;
@@ -168,6 +168,8 @@ public class CustomRenderer extends DisplayObject
             var textureX : Number = 0;
             var textureY : Number = 0;
 
+            position = vertexID << 3; // * 8
+
             if (rotation)
             {
                 angle = (rotation * 325.94932345220164765467394738691) & 2047;
@@ -178,7 +180,6 @@ public class CustomRenderer extends DisplayObject
                 sinX = sin * xOffset;
                 sinY = sin * yOffset;
 
-                position = vertexID << 3; // * 8
                 rawData[position] = x - cosX + sinY;  // 0-2: position
                 rawData[++position] = y - sinX - cosY;
                 rawData[++position] = red;// 2-5: Color [0-1]
@@ -218,7 +219,6 @@ public class CustomRenderer extends DisplayObject
             }
             else
             {
-                position = vertexID << 3; // * 8
                 rawData[position] = x - xOffset;
                 rawData[++position] = y - yOffset;
                 rawData[++position] = red;
@@ -296,7 +296,7 @@ public class CustomRenderer extends DisplayObject
         }
 
         var zeroBytes:ByteArray = new ByteArray();
-        zeroBytes.length = numParticles * 16 * VertexData.ELEMENTS_PER_VERTEX; // numParticle * verticesPerParticle * bytesPerVertex * ELEMENTS_PER_VERTEX
+        zeroBytes.length = numParticles * 16 * VertexData.ELEMENTS_PER_VERTEX;
         for (i = 0; i < sNumberOfVertexBuffers; ++i)
         {
             sVertexBuffers[i].uploadFromByteArray(zeroBytes, 0, 0, numParticles * 4);
