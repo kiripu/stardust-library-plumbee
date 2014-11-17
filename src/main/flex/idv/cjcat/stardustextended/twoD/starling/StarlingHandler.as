@@ -1,10 +1,13 @@
 package idv.cjcat.stardustextended.twoD.starling {
 
 import flash.display.BitmapData;
+import flash.geom.Matrix;
+import flash.geom.Rectangle;
 
 import idv.cjcat.stardustextended.common.emitters.Emitter;
 import idv.cjcat.stardustextended.common.handlers.ParticleHandler;
 import idv.cjcat.stardustextended.common.particles.Particle;
+import idv.cjcat.stardustextended.twoD.handlers.DisplayObjectSpriteSheetHandler;
 import idv.cjcat.stardustextended.twoD.handlers.ISpriteSheetHandler;
 import idv.cjcat.stardustextended.twoD.particles.Particle2D;
 
@@ -12,6 +15,7 @@ import starling.display.DisplayObjectContainer;
 import starling.display.Image;
 
 import starling.display.QuadBatch;
+import starling.textures.SubTexture;
 import starling.textures.Texture;
 import starling.textures.TextureSmoothing;
 
@@ -22,6 +26,12 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
     private var _batch:QuadBatch;
     private var _smoothing : String;
     private var image:Image;
+    private var _spriteSheetSliceWidth : uint;
+    private var _spriteSheetSliceHeight : uint;
+    private var _isSpriteSheet : Boolean;
+    private var _spriteSheetAnimationSpeed : uint;
+    private var _spriteSheetStartAtRandomFrame : Boolean;
+    private var _totalFrames : uint;
 
     private static const DEGREES_TO_RADIANS : Number = Math.PI / 180;
 
@@ -54,12 +64,45 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
             {
                 image.color = particle.color;
             }
+
+            if (_isSpriteSheet)
+            {
+                var currFrame : uint = particle.dictionary[DisplayObjectSpriteSheetHandler.CURRENT_FRAME];
+                const nextFrame : uint = (currFrame + time) % _totalFrames;
+                const nextImageIndex : uint = uint(nextFrame / _spriteSheetAnimationSpeed);
+                const currImageIndex : uint = uint(currFrame / _spriteSheetAnimationSpeed);
+                if ( nextImageIndex != currImageIndex )
+                {
+                    var normalizedWidth:Number = 1 / _totalFrames;
+                    //image.readjustSize();
+                   /* image.setTexCoordsTo(0, nextFrame * normalizedWidth, 0);
+                    image.setTexCoordsTo(1, (nextFrame + 1) * normalizedWidth, 0);
+                    image.setTexCoordsTo(2, nextFrame * normalizedWidth, 1);
+                    image.setTexCoordsTo(3, (nextFrame + 1) * normalizedWidth, 1);
+                    image.set
+                    var rec : Rectangle = new Rectangle(_spriteSheetSliceWidth * nextFrame, 0, 30, 30);
+                    image.texture = new SubTexture( Texture.fromBitmapData(_bitmapData), new Rectangle(0,0,_bitmapData.width,_bitmapData.height), true, rec);
+
+                    //image.transformationMatrix.scale(_totalFrames / image.width, 1)
+                    */
+                }
+                particle.dictionary[DisplayObjectSpriteSheetHandler.CURRENT_FRAME] = nextFrame;
+            }
             _batch.addQuad(image, 1, image.texture, _smoothing, null, _blendMode);
         }
     }
 
     override public function particleAdded(particle:Particle):void {
         particle.color = 0xFFFFFF;
+        if (_isSpriteSheet)
+        {
+            var currFrame:uint = 0;
+            if (_spriteSheetStartAtRandomFrame)
+            {
+                currFrame = Math.random() * _totalFrames;
+            }
+            particle.dictionary[DisplayObjectSpriteSheetHandler.CURRENT_FRAME] = currFrame;
+        }
     }
 
     public function set bitmapData(bitmapData:BitmapData):void {
@@ -73,33 +116,43 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
         return _bitmapData;
     }
 
-    // Todo
     public function set spriteSheetSliceWidth(value:uint):void {
+        _spriteSheetSliceWidth = value;
+        calculateSpriteSheetProperties();
     }
 
-    public function get spriteSheetSliceWidth():uint {
-        return 0;
+    public function get spriteSheetSliceWidth() : uint {
+        return _spriteSheetSliceWidth;
     }
 
     public function set spriteSheetSliceHeight(value:uint):void {
+        _spriteSheetSliceHeight = value;
+        calculateSpriteSheetProperties();
     }
 
-    public function get spriteSheetSliceHeight():uint {
-        return 0;
+    public function get spriteSheetSliceHeight() : uint {
+        return _spriteSheetSliceHeight;
     }
 
     public function set spriteSheetAnimationSpeed(spriteSheetAnimationSpeed:uint):void {
+        _spriteSheetAnimationSpeed = spriteSheetAnimationSpeed;
+        calculateSpriteSheetProperties();
     }
 
     public function get spriteSheetAnimationSpeed():uint {
-        return 0;
+        return _spriteSheetAnimationSpeed;
     }
 
     public function set spriteSheetStartAtRandomFrame(spriteSheetStartAtRandomFrame:Boolean):void {
+        _spriteSheetStartAtRandomFrame = spriteSheetStartAtRandomFrame;
     }
 
     public function get spriteSheetStartAtRandomFrame():Boolean {
-        return false;
+        return _spriteSheetStartAtRandomFrame;
+    }
+
+    public function get isSpriteSheet():Boolean {
+        return _isSpriteSheet;
     }
 
     public function get smoothing():Boolean {
@@ -108,15 +161,11 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
 
     public function set smoothing(value:Boolean):void {
         if (value == true) {
-            _smoothing = TextureSmoothing.TRILINEAR
+            _smoothing = TextureSmoothing.BILINEAR;
         }
         else {
             _smoothing = TextureSmoothing.NONE;
         }
-    }
-
-    public function get isSpriteSheet():Boolean {
-        return false;
     }
 
     public function set blendMode(blendMode:String):void {
@@ -125,6 +174,19 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
 
     public function get blendMode():String {
         return _blendMode;
+    }
+
+    private function calculateSpriteSheetProperties() :void
+    {
+        if (_bitmapData == null || _spriteSheetSliceWidth == 0 || _spriteSheetSliceHeight == 0)
+        {
+            return;
+        }
+        _isSpriteSheet = _bitmapData.width > _spriteSheetSliceWidth || _bitmapData.height > _spriteSheetSliceHeight;
+        if (_isSpriteSheet)
+        {
+            _totalFrames = _spriteSheetAnimationSpeed * (_bitmapData.width / _spriteSheetSliceWidth  + _bitmapData.height / _spriteSheetSliceHeight);
+        }
     }
 
     //////////////////////////////////////////////////////// XML
