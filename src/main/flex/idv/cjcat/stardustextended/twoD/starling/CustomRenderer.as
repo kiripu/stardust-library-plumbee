@@ -1,12 +1,19 @@
 package idv.cjcat.stardustextended.twoD.starling {
 
 import flash.display3D.Context3D;
+import flash.display3D.Context3DBlendFactor;
 import flash.display3D.Context3DProgramType;
-import flash.display3D.Context3DTextureFormat;
 import flash.display3D.Context3DVertexBufferFormat;
-import flash.display3D.Program3D;
-import flash.geom.Rectangle;
-import flash.utils.Dictionary;
+import flash.display3D.IndexBuffer3D;
+import flash.display3D.VertexBuffer3D;
+import flash.events.Event;
+import flash.geom.Matrix3D;
+import flash.system.ApplicationDomain;
+import flash.utils.ByteArray;
+
+import idv.cjcat.stardustextended.common.particles.Particle;
+
+import idv.cjcat.stardustextended.twoD.particles.Particle2D;
 
 import starling.core.RenderSupport;
 import starling.core.Starling;
@@ -15,41 +22,113 @@ import starling.display.DisplayObject;
 import starling.errors.MissingContextError;
 import starling.filters.FragmentFilter;
 import starling.textures.Texture;
-import starling.textures.TextureSmoothing;
 import starling.utils.MatrixUtil;
 import starling.utils.VertexData;
 
 public class CustomRenderer extends DisplayObject
 {
+    /**
+     * The maximum number of particles possible. Can be over 16000, but for performance reasons its maximized at 10000
+     */
+    public static const MAX_CAPACITY:int = 10000;
+
     private var mVertexData:VertexData;
+    private var mFilter:FragmentFilter;
 
     private static var sCosLUT:Vector.<Number> = new Vector.<Number>(0x800, true);
     private static var sSinLUT:Vector.<Number> = new Vector.<Number>(0x800, true);
 
-    private static function initLUTs():void
+    private var mTinted : Boolean;
+    private var mTexture : Texture;
+    private var mSmoothing : String;
+    private var mPremultipliedAlpha:Boolean = false;
+    private var mBlendFuncSource:String = Context3DBlendFactor.ONE; // source blend factor
+    private var mBlendFuncDestination:String = Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA;
+
+    private var mBatched : Boolean;
+
+    private static var sBufferSize:uint = 0;
+    private static var sIndexBuffer:IndexBuffer3D;
+    private static var sVertexBuffers:Vector.<VertexBuffer3D>;
+    private static var sVertexBufferIdx:int = -1;
+    private static var sNumberOfVertexBuffers:int;
+    private static var sIndices:Vector.<uint>;
+    private static var sRenderMatrix:Matrix3D = new Matrix3D;
+    private static var sLUTsCreated:Boolean = false;
+    private static var sInstances:Vector.<CustomRenderer> = new <CustomRenderer>[];
+    private static const DEGREES_TO_RADIANS : Number = Math.PI / 180;
+
+    public var mNumParticles:int = 0;
+
+    public function CustomRenderer()
     {
-        for (var i:int = 0; i < 0x800; ++i)
+        sInstances.push(this);
+
+        if (!sVertexBuffers || !sVertexBuffers[0])
         {
-            sCosLUT[i & 0x7FF] = Math.cos(i * 0.00306796157577128245943617517898); // 0.003067 = 2PI/2048
-            sSinLUT[i & 0x7FF] = Math.sin(i * 0.00306796157577128245943617517898);
+            init();
         }
+
+        mVertexData = new VertexData(MAX_CAPACITY * 4);
+        Starling.current.context.enableErrorChecking = true;
     }
 
-    public function advanceTime(passedTime:Number):void
+    public static function init(bufferSize:uint = 0, numberOfBuffers:uint = 1):void
     {
+        if (!bufferSize && sBufferSize)
+        {
+            bufferSize = sBufferSize;
+        }
+        if (bufferSize > MAX_CAPACITY)
+        {
+            bufferSize = MAX_CAPACITY;
+            trace("Warning: bufferSize exceeds the limit and is set to it's maximum value (16383)");
+        }
+        else if (bufferSize <= 0)
+        {
+            bufferSize = MAX_CAPACITY;
+            trace("Warning: bufferSize can't be lower than 1 and is set to it's maximum value (16383)");
+        }
+        sBufferSize = bufferSize;
+        sNumberOfVertexBuffers = numberOfBuffers;
+        createBuffers(sBufferSize, numberOfBuffers);
+
+        if (!sLUTsCreated)
+        {
+            for (var i:int = 0; i < 0x800; ++i)
+            {
+                sCosLUT[i & 0x7FF] = Math.cos(i * 0.00306796157577128245943617517898); // 0.003067 = 2PI/2048
+                sSinLUT[i & 0x7FF] = Math.sin(i * 0.00306796157577128245943617517898);
+            }
+            sLUTsCreated = true
+        }
+        // handle a lost device context
+        Starling.current.stage3D.addEventListener(flash.events.Event.CONTEXT3D_CREATE, onContextCreated, false, 0, true);
+    }
+
+    private static function onContextCreated(event:flash.events.Event):void
+    {
+        createBuffers(sBufferSize, sNumberOfVertexBuffers);
+    }
+
+    public function advanceTime(mParticles : Vector.<Particle>, texture : Texture):void
+    {
+        mTexture = texture;
+        mNumParticles = mParticles.length;
+        var particle:Particle2D;
+
         // update vertex data
         var vertexID:int = 0;
 
-        var red:Number;
-        var green:Number;
-        var blue:Number;
+        var red:int;
+        var green:int;
+        var blue:int;
         var particleAlpha:Number;
 
         var rotation:Number;
         var x:Number, y:Number;
         var xOffset:Number, yOffset:Number;
-        var rawData:Vector.<Number> = mVertexData.rawData;
-        var frameDimensions:Frame;
+        const rawData:Vector.<Number> = mVertexData.rawData;
 
         var angle:uint;
         var cos:Number;
@@ -60,24 +139,32 @@ public class CustomRenderer extends DisplayObject
         var sinY:Number;
         var position:uint;
 
+        var textureWidth : uint = 1;
+        var textureHeight : uint = 1;
+
+        var textureHalfWidth : uint = mTexture.width / 2;
+        var textureHalfHeight : uint = mTexture.height / 2;
+
         for (var i:int = 0; i < mNumParticles; ++i)
         {
             vertexID = i << 2;
-            particle = mParticles[i];
-            frameDimensions = mFrameLUT[particle.frameIdx];
+            particle = mParticles[i] as Particle2D;
 
-            red = particle.colorRed;
-            green = particle.colorGreen;
-            blue = particle.colorBlue;
+            // TODO: this decreases performance by a LOT
+          /*  red = ( particle.color >> 16 ) & 0xFF;
+            green = ( particle.color >> 8 ) & 0xFF;
+            blue = particle.color & 0xFF;*/
 
-            particleAlpha = particle.colorAlpha * particle.fadeInFactor * particle.fadeOutFactor * mSystemAlpha;
+            particleAlpha = particle.alpha;
 
-            rotation = particle.rotation;
+            rotation = particle.rotation * DEGREES_TO_RADIANS;
             x = particle.x;
             y = particle.y;
 
-            xOffset = frameDimensions.particleHalfWidth * particle.scale * particle.spawnFactor;
-            yOffset = frameDimensions.particleHalfHeight * particle.scale * particle.spawnFactor;
+            xOffset = textureHalfWidth * particle.scale; //frameDimensions.particleHalfWidth;
+            yOffset = textureHalfHeight * particle.scale; //frameDimensions.particleHalfHeight;
+            var textureX : Number = 0;
+            var textureY : Number = 0;
 
             if (rotation)
             {
@@ -96,8 +183,8 @@ public class CustomRenderer extends DisplayObject
                 rawData[++position] = green;
                 rawData[++position] = blue;
                 rawData[++position] = particleAlpha;
-                rawData[++position] = frameDimensions.textureX;
-                rawData[++position] = frameDimensions.textureY;
+                rawData[++position] = textureX;
+                rawData[++position] = textureY;
 
                 rawData[++position] = x + cosX + sinY;
                 rawData[++position] = y + sinX - cosY;
@@ -105,8 +192,8 @@ public class CustomRenderer extends DisplayObject
                 rawData[++position] = green;
                 rawData[++position] = blue;
                 rawData[++position] = particleAlpha;
-                rawData[++position] = frameDimensions.textureWidth;
-                rawData[++position] = frameDimensions.textureY;
+                rawData[++position] = textureWidth;
+                rawData[++position] = textureY;
 
                 rawData[++position] = x - cosX - sinY;
                 rawData[++position] = y - sinX + cosY;
@@ -114,8 +201,8 @@ public class CustomRenderer extends DisplayObject
                 rawData[++position] = green;
                 rawData[++position] = blue;
                 rawData[++position] = particleAlpha;
-                rawData[++position] = frameDimensions.textureX;
-                rawData[++position] = frameDimensions.textureHeight;
+                rawData[++position] = textureX;
+                rawData[++position] = textureHeight;
 
                 rawData[++position] = x + cosX - sinY;
                 rawData[++position] = y + sinX + cosY;
@@ -123,8 +210,8 @@ public class CustomRenderer extends DisplayObject
                 rawData[++position] = green;
                 rawData[++position] = blue;
                 rawData[++position] = particleAlpha;
-                rawData[++position] = frameDimensions.textureWidth;
-                rawData[++position] = frameDimensions.textureHeight;
+                rawData[++position] = textureWidth;
+                rawData[++position] = textureHeight;
 
             }
             else
@@ -136,8 +223,8 @@ public class CustomRenderer extends DisplayObject
                 rawData[++position] = green;
                 rawData[++position] = blue;
                 rawData[++position] = particleAlpha;
-                rawData[++position] = frameDimensions.textureX;
-                rawData[++position] = frameDimensions.textureY;
+                rawData[++position] = textureX;
+                rawData[++position] = textureY;
 
                 rawData[++position] = x + xOffset;
                 rawData[++position] = y - yOffset;
@@ -145,8 +232,8 @@ public class CustomRenderer extends DisplayObject
                 rawData[++position] = green;
                 rawData[++position] = blue;
                 rawData[++position] = particleAlpha;
-                rawData[++position] = frameDimensions.textureWidth;
-                rawData[++position] = frameDimensions.textureY;
+                rawData[++position] = textureWidth;
+                rawData[++position] = textureY;
 
                 rawData[++position] = x - xOffset;
                 rawData[++position] = y + yOffset;
@@ -154,8 +241,8 @@ public class CustomRenderer extends DisplayObject
                 rawData[++position] = green;
                 rawData[++position] = blue;
                 rawData[++position] = particleAlpha;
-                rawData[++position] = frameDimensions.textureX;
-                rawData[++position] = frameDimensions.textureHeight;
+                rawData[++position] = textureX;
+                rawData[++position] = textureHeight;
 
                 rawData[++position] = x + xOffset;
                 rawData[++position] = y + yOffset;
@@ -163,95 +250,77 @@ public class CustomRenderer extends DisplayObject
                 rawData[++position] = green;
                 rawData[++position] = blue;
                 rawData[++position] = particleAlpha;
-                rawData[++position] = frameDimensions.textureWidth;
-                rawData[++position] = frameDimensions.textureHeight;
+                rawData[++position] = textureWidth;
+                rawData[++position] = textureHeight;
             }
         }
     }
 
-    private static var sProgramNameCache:Dictionary = new Dictionary();
-
-    private function getProgram(tinted:Boolean):Program3D
+    private static function createBuffers(numParticles:uint, sNumberOfVertexBuffers : int):void
     {
-        var target:Starling = Starling.current;
-        var programName:String;
-
-        if (mTexture)
-            programName = getImageProgramName(mTinted, mTexture.mipMapping, mTexture.repeat, mTexture.format, mSmoothing);
-
-        var program:Program3D = target.getProgram(programName);
-
-        if (!program)
+        if (sVertexBuffers)
         {
-            // this is the input data we'll pass to the shaders:
-            //
-            // va0 -> position
-            // va1 -> color
-            // va2 -> texCoords
-            // vc0 -> alpha
-            // vc1 -> mvpMatrix
-            // fs0 -> texture
-            var vertexShader:String;
-            var fragmentShader:String;
-
-            if (!mTexture) // Quad-Shaders
+            for (var i:int = 0; i < sVertexBuffers.length; ++i)
             {
-                vertexShader = "m44 op, va0, vc1 \n" + // 4x4 matrix transform to output clipspace
-                        "mul v0, va1, vc0 \n"; // multiply alpha (vc0) with color (va1)
-
-                fragmentShader = "mov oc, v0       \n"; // output color
+                sVertexBuffers[i].dispose();
             }
-            else // Image-Shaders
-            {
-                vertexShader = tinted ? "m44 op, va0, vc1 \n" + // 4x4 matrix transform to output clipspace
-                        "mul v0, va1, vc0 \n" + // multiply alpha (vc0) with color (va1)
-                        "mov v1, va2      \n" // pass texture coordinates to fragment program
-                        : "m44 op, va0, vc1 \n" + // 4x4 matrix transform to output clipspace
-                        "mov v1, va2      \n"; // pass texture coordinates to fragment program
-
-                fragmentShader = tinted ? "tex ft1,  v1, fs0 <???> \n" + // sample texture 0
-                        "mul  oc, ft1,  v0       \n" // multiply color with texel color
-                        : "tex  oc,  v1, fs0 <???> \n"; // sample texture 0
-
-                fragmentShader = fragmentShader.replace("<???>", RenderSupport.getTextureLookupFlags(mTexture.format, mTexture.mipMapping, mTexture.repeat, smoothing));
-            }
-            program = target.registerProgramFromSource(programName, vertexShader, fragmentShader);
         }
-        return program;
-    }
 
-    private static function getImageProgramName(tinted:Boolean, mipMap:Boolean = true, repeat:Boolean = false, format:String = "bgra", smoothing:String = "bilinear"):String
-    {
-        var bitField:uint = 0;
-
-        if (tinted)
-            bitField |= 1;
-        if (mipMap)
-            bitField |= 1 << 1;
-        if (repeat)
-            bitField |= 1 << 2;
-
-        if (smoothing == TextureSmoothing.NONE)
-            bitField |= 1 << 3;
-        else if (smoothing == TextureSmoothing.TRILINEAR)
-            bitField |= 1 << 4;
-
-        if (format == Context3DTextureFormat.COMPRESSED)
-            bitField |= 1 << 5;
-        else if (format == "compressedAlpha")
-            bitField |= 1 << 6;
-
-        var name:String = sProgramNameCache[bitField];
-
-        if (name == null)
+        if (sIndexBuffer)
         {
-            name = "QB_i." + bitField.toString(16);
-            sProgramNameCache[bitField] = name;
+            sIndexBuffer.dispose();
         }
-        return name;
-    }
 
-    ///////////////////////////////// QUAD BATCH EXCERPT END /////////////////////////////////
+        var context:Context3D = Starling.context;
+        if (context == null) throw new MissingContextError();
+        if (context.driverInfo == "Disposed") return;
+
+        sVertexBuffers = new Vector.<VertexBuffer3D>();
+        sVertexBufferIdx = -1;
+        if (ApplicationDomain.currentDomain.hasDefinition("flash.display3D.Context3DBufferUsage"))
+        {
+            for (i = 0; i < sNumberOfVertexBuffers; ++i)
+            {
+                // Context3DBufferUsage.DYNAMIC_DRAW; hardcoded for backward compatibility
+                sVertexBuffers[i] = context.createVertexBuffer.call(context, numParticles * 4, VertexData.ELEMENTS_PER_VERTEX, "dynamicDraw");
+            }
+        }
+        else
+        {
+            for (i = 0; i < sNumberOfVertexBuffers; ++i)
+            {
+                sVertexBuffers[i] = context.createVertexBuffer(numParticles * 4, VertexData.ELEMENTS_PER_VERTEX);
+            }
+        }
+
+        var zeroBytes:ByteArray = new ByteArray();
+        zeroBytes.length = numParticles * 16 * VertexData.ELEMENTS_PER_VERTEX; // numParticle * verticesPerParticle * bytesPerVertex * ELEMENTS_PER_VERTEX
+        for (i = 0; i < sNumberOfVertexBuffers; ++i)
+        {
+            sVertexBuffers[i].uploadFromByteArray(zeroBytes, 0, 0, numParticles * 4);
+        }
+        zeroBytes.length = 0;
+
+        if (!sIndices)
+        {
+            sIndices = new Vector.<uint>();
+            var numVertices:int = 0;
+            var indexPosition:int = -1;
+            for (i = 0; i < MAX_CAPACITY; ++i)
+            {
+                sIndices[++indexPosition] = numVertices;
+                sIndices[++indexPosition] = numVertices + 1;
+                sIndices[++indexPosition] = numVertices + 2;
+
+                sIndices[++indexPosition] = numVertices + 1;
+                sIndices[++indexPosition] = numVertices + 3;
+                sIndices[++indexPosition] = numVertices + 2;
+                numVertices += 4;
+            }
+        }
+        sIndexBuffer = context.createIndexBuffer(numParticles * 6);
+        sIndexBuffer.uploadFromVector(sIndices, 0, numParticles * 6);
+    }
 
     ///////////////////////////////// QUAD BATCH MODIFICATIONS /////////////////////////////////
 
@@ -279,85 +348,55 @@ public class CustomRenderer extends DisplayObject
             return true;
     }
 
-    private static var sHelperRect:Rectangle = new Rectangle();
-
     public override function render(support:RenderSupport, parentAlpha:Number):void
     {
-        mNumBatchedParticles = 0;
-        getBounds(stage, batchBounds);
-
-        if (mNumParticles)
+        if (mNumParticles > 0 && !mBatched)
         {
-            if (mBatching)
-            {
-                if (!mBatched)
-                {
-                    var first:int = parent.getChildIndex(this);
-                    var last:int = first;
-                    var numChildren:int = parent.numChildren;
-
-                    while (++last < numChildren)
-                    {
-                        var next:DisplayObject = parent.getChildAt(last);
-                        if (next is FFParticleSystem)
-                        {
-                            var nextps:FFParticleSystem = FFParticleSystem(next);
-
-                            if (nextps.mParticles && !nextps.isStateChange(mTinted, alpha, mTexture,
-                                mPremultipliedAlpha, mSmoothing, blendMode, mBlendFuncSource, mBlendFuncDestination, mFilter))
-                            {
-
-                                var newcapacity:int = numParticles + mNumBatchedParticles + nextps.numParticles;
-                                if (newcapacity > sBufferSize)
-                                    break;
-
-                                mVertexData.rawData.fixed = false;
-                                nextps.mVertexData.copyTo(this.mVertexData, (numParticles + mNumBatchedParticles) * 4,
-                                                          0, nextps.numParticles * 4);
-                                mVertexData.rawData.fixed = true;
-                                mNumBatchedParticles += nextps.numParticles;
-
-                                nextps.mBatched = true;
-
-                                //disable filter of batched system temporarily
-                                nextps.filter = null;
-
-                                nextps.getBounds(stage, sHelperRect);
-                                if (batchBounds.intersects(sHelperRect))
-                                    batchBounds = batchBounds.union(sHelperRect);
-                            }
-                            else
-                            {
-                                break;
-                            }
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-                    renderCustom(support, alpha * parentAlpha, support.blendMode);
-                }
-            }
-            else
-            {
-                renderCustom(support, alpha * parentAlpha, support.blendMode);
-            }
+            var mNumBatchedParticles : int = batchNeighbours();
+            renderCustom(support, mNumBatchedParticles, alpha * parentAlpha, support.blendMode);
         }
         //reset filter
         super.filter = mFilter;
         mBatched = false;
     }
 
-    /** @private */
-    private var batchBounds:Rectangle = new Rectangle();
+    private function batchNeighbours() : int
+    {
+        var mNumBatchedParticles : int = 0;
+        var last:int = parent.getChildIndex(this);
 
-    private function renderCustom(support:RenderSupport, parentAlpha:Number = 1.0, blendMode:String = null):void
+        while (++last < parent.numChildren)
+        {
+            var nextps:CustomRenderer = parent.getChildAt(last) as CustomRenderer;
+            if (nextps != null && nextps.mNumParticles > 0 &&
+                !nextps.isStateChange(mTinted, alpha, mTexture, mPremultipliedAlpha, mSmoothing, blendMode, mBlendFuncSource, mBlendFuncDestination, mFilter))
+            {
+                if (mNumParticles + mNumBatchedParticles + nextps.mNumParticles > sBufferSize)
+                {
+                    break;
+                }
+                mVertexData.rawData.fixed = false;
+                nextps.mVertexData.copyTo(mVertexData, (mNumParticles + mNumBatchedParticles) * 4, 0, nextps.mNumParticles * 4);
+                mVertexData.rawData.fixed = true;
+                mNumBatchedParticles += nextps.mNumParticles;
+
+                nextps.mBatched = true;
+
+                //disable filter of batched system temporarily
+                nextps.filter = null;
+            }
+        }
+        return mNumBatchedParticles
+    }
+
+    private function renderCustom(support:RenderSupport, mNumBatchedParticles : int, parentAlpha:Number = 1.0, blendMode:String = null):void
     {
         sVertexBufferIdx = ++sVertexBufferIdx % sNumberOfVertexBuffers;
 
         if (mNumParticles == 0 || !sVertexBuffers)
+        {
             return;
+        }
 
         // always call this method when you write custom rendering code!
         // it causes all previously batched quads/images to render.
@@ -365,23 +404,22 @@ public class CustomRenderer extends DisplayObject
 
         support.raiseDrawCount();
 
-        //alpha *= this.alpha;
-
-        var program:String = getImageProgramName(mTinted, mTexture.mipMapping, mTexture.repeat, mTexture.format, mSmoothing);
-
         var context:Context3D = Starling.context;
 
+        var sRenderAlpha:Vector.<Number> = new <Number>[1.0, 1.0, 1.0, 1.0];
         sRenderAlpha[0] = sRenderAlpha[1] = sRenderAlpha[2] = mPremultipliedAlpha ? alpha : 1.0;
         sRenderAlpha[3] = alpha;
 
         if (context == null)
+        {
             throw new MissingContextError();
+        }
 
         context.setBlendFactors(mBlendFuncSource, mBlendFuncDestination);
 
         MatrixUtil.convertTo3D(support.mvpMatrix, sRenderMatrix);
 
-        context.setProgram(getProgram(mTinted));
+        context.setProgram(ParticleProgram.getProgram(mTexture != null, mTinted, mTexture.mipMapping, mTexture.repeat, mTexture.format));
         context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 0, sRenderAlpha, 1);
         context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 1, sRenderMatrix, true);
         context.setTextureAt(0, mTexture.base);
@@ -389,16 +427,13 @@ public class CustomRenderer extends DisplayObject
         sVertexBuffers[sVertexBufferIdx].uploadFromVector(mVertexData.rawData, 0, Math.min(sBufferSize * 4, mVertexData.rawData.length / 8));
 
         context.setVertexBufferAt(0, sVertexBuffers[sVertexBufferIdx], VertexData.POSITION_OFFSET, Context3DVertexBufferFormat.FLOAT_2);
-        if (mTinted) {
+        if (mTinted)
+        {
             context.setVertexBufferAt(1, sVertexBuffers[sVertexBufferIdx], VertexData.COLOR_OFFSET, Context3DVertexBufferFormat.FLOAT_4);
         }
         context.setVertexBufferAt(2, sVertexBuffers[sVertexBufferIdx], VertexData.TEXCOORD_OFFSET, Context3DVertexBufferFormat.FLOAT_2);
 
-        if (batchBounds)
-            support.pushClipRect(batchBounds);
         context.drawTriangles(sIndexBuffer, 0, (Math.min(sBufferSize, mNumParticles + mNumBatchedParticles)) * 2);
-        if (batchBounds)
-            support.popClipRect();
 
         context.setVertexBufferAt(2, null);
         context.setVertexBufferAt(1, null);

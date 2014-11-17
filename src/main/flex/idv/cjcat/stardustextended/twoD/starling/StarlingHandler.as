@@ -33,19 +33,30 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
     private var _spriteSheetStartAtRandomFrame : Boolean;
     private var _totalFrames : uint;
 
+    private var renderer : CustomRenderer;
     private static const DEGREES_TO_RADIANS : Number = Math.PI / 180;
 
     public function set container(container:DisplayObjectContainer) : void {
-        if (_batch == null) {
+
+        /*if (_batch == null) {
             _batch = new QuadBatch();
         }
         if (_batch.parent) {
             _batch.parent.removeChild(_batch);
         }
-        container.addChild(_batch);
+        container.addChild(_batch);*/
+
+        if (renderer == null)
+        {
+            renderer = new CustomRenderer();
+        }
+        container.addChild(renderer);
     }
 
     override public function stepEnd(emitter:Emitter, particles:Vector.<Particle>, time:Number):void {
+        renderer.advanceTime(particles, image.texture);
+        return;
+        /*
         _batch.reset();
         for (var i:int = 0; i < particles.length; i++) {
             var particle : Particle2D = Particle2D(particles[i]);
@@ -73,23 +84,12 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
                 const currImageIndex : uint = uint(currFrame / _spriteSheetAnimationSpeed);
                 if ( nextImageIndex != currImageIndex )
                 {
-                    var normalizedWidth:Number = 1 / _totalFrames;
-                    //image.readjustSize();
-                   /* image.setTexCoordsTo(0, nextFrame * normalizedWidth, 0);
-                    image.setTexCoordsTo(1, (nextFrame + 1) * normalizedWidth, 0);
-                    image.setTexCoordsTo(2, nextFrame * normalizedWidth, 1);
-                    image.setTexCoordsTo(3, (nextFrame + 1) * normalizedWidth, 1);
-                    image.set
-                    var rec : Rectangle = new Rectangle(_spriteSheetSliceWidth * nextFrame, 0, 30, 30);
-                    image.texture = new SubTexture( Texture.fromBitmapData(_bitmapData), new Rectangle(0,0,_bitmapData.width,_bitmapData.height), true, rec);
 
-                    //image.transformationMatrix.scale(_totalFrames / image.width, 1)
-                    */
                 }
                 particle.dictionary[DisplayObjectSpriteSheetHandler.CURRENT_FRAME] = nextFrame;
             }
             _batch.addQuad(image, 1, image.texture, _smoothing, null, _blendMode);
-        }
+        }*/
     }
 
     override public function particleAdded(particle:Particle):void {

@@ -19,6 +19,9 @@ import flash.geom.Rectangle;
 import flash.system.ApplicationDomain;
 import flash.utils.ByteArray;
 import flash.utils.Dictionary;
+
+import idv.cjcat.stardustextended.common.particles.Particle;
+
 import starling.animation.IAnimatable;
 import starling.animation.Juggler;
 import starling.core.RenderSupport;
@@ -33,37 +36,6 @@ import starling.textures.TextureSmoothing;
 import starling.utils.MatrixUtil;
 import starling.utils.VertexData;
 
-/**
- * <p>The FFParticleSystem is an extension for the <a target="_top" href="http://starling-framework.org">Starling Framework</a>.
- * It's basically an optimized version of the original ParticleSystem combined with Starling's QuadBatch class.
- *
- * <p>In addition it comes with a few new features:
- * <ul>
- *   <li>particle pooling</li>
- *   <li>multi buffering</li>
- *   <li>batching (of particle systems)</li>
- *   <li>animated Texture loops</li>
- *   <li>random start frame</li>
- *   <li>ATF support</li>
- *   <li>filter support</li>
- *   <li>optional custom sorting, code and variables</li>
- *   <li>calculating exact bounds (optional)</li>
- *   <li>spawnTime</li>
- *   <li>fadeInTime</li>
- *   <li>fadeOutTime</li>
- *   <li>emit angle aligned particle rotation</li>
- * </ul>
- * </p>
- *
- * <p>This extension has been kindly sponsored by the fabulous <a target="_top" href="http://colinnorthway.com/">Colin Northway</a>. :)</p>
- *
- * <a target="_top" href="http://www.flintfabrik.de/blog/">Live Demo</a>
- *
- * @author Michael Trenkler
- * @see http://flintfabrik.de
- * @see #FFParticleSystem()
- * @see #init() FFParticleSystem.init()
- */
 public class FFParticleSystem extends DisplayObject implements IAnimatable
 {
     public static const EMITTER_TYPE_GRAVITY:int = 0;
@@ -1204,84 +1176,7 @@ public class FFParticleSystem extends DisplayObject implements IAnimatable
         const DEG2RAD:Number = 1 / 180 * Math.PI;
 
         mTextureAnimation = Boolean(systemOptions.isAnimated);
-        mAnimationLoops = int(systemOptions.loops);
-        mFirstFrame = int(systemOptions.firstFrame);
-        mLastFrame = int(systemOptions.lastFrame);
-        mRandomStartFrames = Boolean(systemOptions.randomStartFrames);
-        mTinted = Boolean(systemOptions.tinted);
-        mSpawnTime = Number(systemOptions.spawnTime);
-        mFadeInTime = Number(systemOptions.fadeInTime);
-        mFadeOutTime = Number(systemOptions.fadeOutTime);
-        mEmitterType = int(systemOptions.emitterType);
-        mMaxNumParticles = int(systemOptions.maxParticles);
-        emitter.x = mEmitterX = Number(systemOptions.sourceX);
-        emitter.y = mEmitterY = Number(systemOptions.sourceY);
-        mEmitterXVariance = Number(systemOptions.sourceVarianceX);
-        mEmitterYVariance = Number(systemOptions.sourceVarianceY);
-        mLifespan = Number(systemOptions.lifespan);
-        lifespanVariance = Number(systemOptions.lifespanVariance);
-        mEmitAngle = Number(systemOptions.angle) * DEG2RAD;
-        mEmitAngleVariance = Number(systemOptions.angleVariance) * DEG2RAD;
-        mStartSize = Number(systemOptions.startParticleSize);
-        mStartSizeVariance = Number(systemOptions.startParticleSizeVariance);
-        mEndSize = Number(systemOptions.finishParticleSize);
-        mEndSizeVariance = Number(systemOptions.finishParticleSizeVariance);
-        mStartRotation = Number(systemOptions.rotationStart) * DEG2RAD;
-        mStartRotationVariance = Number(systemOptions.rotationStartVariance) * DEG2RAD;
-        mEndRotation = Number(systemOptions.rotationEnd) * DEG2RAD;
-        mEndRotationVariance = Number(systemOptions.rotationEndVariance) * DEG2RAD;
-        mEmissionTimePredefined = Number(systemOptions.duration);
-        mEmissionTimePredefined = mEmissionTimePredefined < 0 ? Number.MAX_VALUE : mEmissionTimePredefined;
-
-        mGravityX = Number(systemOptions.gravityX);
-        mGravityY = Number(systemOptions.gravityY);
-        mSpeed = Number(systemOptions.speed);
-        mSpeedVariance = Number(systemOptions.speedVariance);
-        mRadialAcceleration = Number(systemOptions.radialAcceleration);
-        mRadialAccelerationVariance = Number(systemOptions.radialAccelerationVariance);
-        mTangentialAcceleration = Number(systemOptions.tangentialAcceleration);
-        mTangentialAccelerationVariance = Number(systemOptions.tangentialAccelerationVariance);
-
-        mMaxRadius = Number(systemOptions.maxRadius);
-        mMaxRadiusVariance = Number(systemOptions.maxRadiusVariance);
-        minRadius = Number(systemOptions.minRadius);
-        mMinRadiusVariance = Number(systemOptions.minRadiusVariance);
-        mRotatePerSecond = Number(systemOptions.rotatePerSecond) * DEG2RAD;
-        mRotatePerSecondVariance = Number(systemOptions.rotatePerSecondVariance) * DEG2RAD;
-
-        mStartColor.red = Number(systemOptions.startColor.red);
-        mStartColor.green = Number(systemOptions.startColor.green);
-        mStartColor.blue = Number(systemOptions.startColor.blue);
-        mStartColor.alpha = Number(systemOptions.startColor.alpha);
-
-        mStartColorVariance.red = Number(systemOptions.startColorVariance.red);
-        mStartColorVariance.green = Number(systemOptions.startColorVariance.green);
-        mStartColorVariance.blue = Number(systemOptions.startColorVariance.blue);
-        mStartColorVariance.alpha = Number(systemOptions.startColorVariance.alpha);
-
-        mEndColor.red = Number(systemOptions.finishColor.red);
-        mEndColor.green = Number(systemOptions.finishColor.green);
-        mEndColor.blue = Number(systemOptions.finishColor.blue);
-        mEndColor.alpha = Number(systemOptions.finishColor.alpha);
-
-        mEndColorVariance.red = Number(systemOptions.finishColorVariance.red);
-        mEndColorVariance.green = Number(systemOptions.finishColorVariance.green);
-        mEndColorVariance.blue = Number(systemOptions.finishColorVariance.blue);
-        mEndColorVariance.alpha = Number(systemOptions.finishColorVariance.alpha);
-
-        mBlendFuncSource = String(systemOptions.blendFuncSource);
-        mBlendFuncDestination = String(systemOptions.blendFuncDestination);
-        mEmitAngleAlignedRotation = Boolean(systemOptions.emitAngleAlignedRotation);
-
-        exactBounds = Boolean(systemOptions.excactBounds);
-        mTexture = systemOptions.texture;
-        mPremultipliedAlpha = Boolean(systemOptions.premultipliedAlpha);
-
-        mFilter = systemOptions.filter;
-        mCustomFunc = systemOptions.customFunction;
-        mSortFunction = systemOptions.sortFunction;
-        forceSortFlag = systemOptions.forceSortFlag;
-
+        // bunch of code to parse stuff
         mFrameLUT = systemOptions.mFrameLUT;
 
         mAnimationLoopLength = mLastFrame - mFirstFrame + 1;
@@ -1299,75 +1194,7 @@ public class FFParticleSystem extends DisplayObject implements IAnimatable
             target = new SystemOptions(mTexture);
 
         const RAD2DEG:Number = 180 / Math.PI;
-
-        target.isAnimated = mTextureAnimation;
-        target.loops = mAnimationLoops;
-        target.firstFrame = mFirstFrame;
-        target.lastFrame = mLastFrame;
-        target.randomStartFrames = mRandomStartFrames;
-        target.tinted = mTinted;
-        target.premultipliedAlpha = mPremultipliedAlpha;
-        target.spawnTime = mSpawnTime;
-        target.fadeInTime = mFadeInTime;
-        target.fadeOutTime = mFadeOutTime;
-        target.emitterType = mEmitterType;
-        target.maxParticles = mMaxNumParticles;
-        target.sourceX = mEmitterX;
-        target.sourceY = mEmitterY;
-        target.sourceVarianceX = mEmitterXVariance;
-        target.sourceVarianceY = mEmitterYVariance;
-        target.lifespan = mLifespan;
-        target.lifespanVariance = mLifespanVariance;
-        target.angle = mEmitAngle * RAD2DEG;
-        target.angleVariance = mEmitAngleVariance * RAD2DEG;
-        target.startParticleSize = mStartSize;
-        target.startParticleSizeVariance = mStartSizeVariance;
-        target.finishParticleSize = mEndSize;
-        target.finishParticleSizeVariance = mEndSizeVariance;
-        target.rotationStart = mStartRotation * RAD2DEG;
-        target.rotationStartVariance = mStartRotationVariance * RAD2DEG;
-        target.rotationEnd = mEndRotation * RAD2DEG;
-        target.rotationEndVariance = mEndRotationVariance * RAD2DEG;
-        target.duration = mEmissionTimePredefined == Number.MAX_VALUE ? -1 : mEmissionTimePredefined;
-
-        target.gravityX = mGravityX;
-        target.gravityY = mGravityY;
-        target.speed = mSpeed;
-        target.speedVariance = mSpeedVariance;
-        target.radialAcceleration = mRadialAcceleration;
-        target.radialAccelerationVariance = mRadialAccelerationVariance;
-        target.tangentialAcceleration = mTangentialAcceleration;
-        target.tangentialAccelerationVariance = mTangentialAccelerationVariance;
-
-        target.maxRadius = mMaxRadius;
-        target.maxRadiusVariance = mMaxRadiusVariance;
-        target.minRadius = mMinRadius;
-        target.minRadiusVariance = mMinRadiusVariance;
-        target.rotatePerSecond = mRotatePerSecond * RAD2DEG;
-        target.rotatePerSecondVariance = mRotatePerSecondVariance * RAD2DEG;
-
-        target.startColor = mStartColor;
-        target.startColorVariance = mStartColorVariance;
-        target.finishColor = mEndColor;
-        target.finishColorVariance = mEndColorVariance;
-
-        target.blendFuncSource = mBlendFuncSource;
-        target.blendFuncDestination = mBlendFuncDestination;
-        target.emitAngleAlignedRotation = mEmitAngleAlignedRotation;
-
-        target.excactBounds = mExactBounds;
-        target.texture = mTexture;
-
-        target.filter = mFilter;
-        target.customFunction = mCustomFunc;
-        target.sortFunction = mSortFunction;
-        target.forceSortFlag = forceSortFlag;
-
-        target.mFrameLUT = mFrameLUT;
-
-        target.firstFrame = mFirstFrame;
-        target.lastFrame = mLastFrame;
-
+        //.. bunch of code here to set props
         return target;
     }
 
@@ -1501,7 +1328,6 @@ public class FFParticleSystem extends DisplayObject implements IAnimatable
             return true;
     }
 
-    /** @inheritDoc */
     private static var sHelperRect:Rectangle = new Rectangle();
 
     public override function render(support:RenderSupport, parentAlpha:Number):void
@@ -1515,8 +1341,7 @@ public class FFParticleSystem extends DisplayObject implements IAnimatable
             {
                 if (!mBatched)
                 {
-                    var first:int = parent.getChildIndex(this);
-                    var last:int = first;
+                    var last:int = parent.getChildIndex(this);
                     var numChildren:int = parent.numChildren;
 
                     while (++last < numChildren)
@@ -1588,8 +1413,6 @@ public class FFParticleSystem extends DisplayObject implements IAnimatable
         // to play it safe, it's done in a backwards-compatible way here.
         if (support.hasOwnProperty("raiseDrawCount"))
             support.raiseDrawCount();
-
-        //alpha *= this.alpha;
 
         var program:String = getImageProgramName(mTinted, mTexture.mipMapping, mTexture.repeat, mTexture.format, mSmoothing);
 
