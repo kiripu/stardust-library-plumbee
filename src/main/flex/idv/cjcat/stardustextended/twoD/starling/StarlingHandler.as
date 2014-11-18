@@ -1,15 +1,11 @@
 package idv.cjcat.stardustextended.twoD.starling {
 
 import flash.display.BitmapData;
-import flash.geom.Matrix;
-import flash.geom.Rectangle;
 
 import idv.cjcat.stardustextended.common.emitters.Emitter;
 import idv.cjcat.stardustextended.common.handlers.ParticleHandler;
 import idv.cjcat.stardustextended.common.particles.Particle;
-import idv.cjcat.stardustextended.twoD.handlers.DisplayObjectSpriteSheetHandler;
 import idv.cjcat.stardustextended.twoD.handlers.ISpriteSheetHandler;
-import idv.cjcat.stardustextended.twoD.particles.Particle2D;
 
 import starling.display.DisplayObjectContainer;
 import starling.display.Image;
@@ -50,6 +46,8 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
         if (renderer == null)
         {
             renderer = new Stage3DRenderer();
+            renderer.blendMode = _blendMode;
+            renderer.texSmoothing = _smoothing;
         }
         container.addChild(renderer);
     }
@@ -167,10 +165,18 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
         else {
             _smoothing = TextureSmoothing.NONE;
         }
+        if (renderer)
+        {
+            renderer.texSmoothing = _smoothing;
+        }
     }
 
     public function set blendMode(blendMode:String):void {
         _blendMode = blendMode;
+        if (renderer)
+        {
+            renderer.blendMode = blendMode;
+        }
     }
 
     public function get blendMode():String {

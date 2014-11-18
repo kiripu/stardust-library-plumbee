@@ -13,6 +13,7 @@ import idv.cjcat.stardustextended.twoD.particles.Particle2D;
 
 import starling.core.RenderSupport;
 import starling.core.Starling;
+import starling.display.BlendMode;
 
 import starling.display.DisplayObject;
 import starling.errors.MissingContextError;
@@ -35,10 +36,10 @@ public class Stage3DRenderer extends DisplayObject
     private var mFilter:FragmentFilter;
     private var mTinted : Boolean = true;
     private var mTexture : Texture;
-    private var mSmoothing : String;
     private var mBatched : Boolean;
     private var vertexData:Vector.<Number>;
     public var mNumParticles:int = 0;
+    public var texSmoothing : String;
 
     public function Stage3DRenderer()
     {
@@ -76,7 +77,7 @@ public class Stage3DRenderer extends DisplayObject
     }
 
     /** Set to true if any of the rendered particles have alpha value. Default is true, setting it to false
-     *  decreases load on the GPU, but particles will be rendered with 1 alpha and no tinting. */
+     *  decreases load on the GPU, but particles will be rendered with 1 alpha. */
     public function set tinted(value:Boolean):void {
         mTinted = value;
     }
@@ -116,12 +117,6 @@ public class Stage3DRenderer extends DisplayObject
         {
             vertexID = i << 2;
             particle = Particle2D(mParticles[i]);
-
-            /* TODO: implement without performance degradation
-            red = ( particle.color >> 16 ) & 0xFF / 255;
-            green = ( particle.color >> 8 ) & 0xFF / 255;
-            blue = particle.color & 0xFF / 255;
-            */
 
             particleAlpha = particle.alpha;
 
@@ -234,7 +229,7 @@ public class Stage3DRenderer extends DisplayObject
         else if (mTexture != null && texture != null)
         {
             return mTexture.base != texture.base || mTexture.repeat != texture.repeat ||
-                   mSmoothing != smoothing || mTinted != (tinted || parentAlpha != 1.0) ||
+                   texSmoothing != smoothing || mTinted != (tinted || parentAlpha != 1.0) ||
                    this.blendMode != blendMode || SOURCE_BLEND_FACTOR != blendFactorSource ||
                    DESTINATION_BLEND_FACTOR != blendFactorDestination || mFilter != filter;
         }
@@ -263,7 +258,7 @@ public class Stage3DRenderer extends DisplayObject
             // TODO: randomize particles + determine which texture to use for each particle
             var nextPS:Stage3DRenderer = parent.getChildAt(last) as Stage3DRenderer;
             if (nextPS != null && nextPS.mNumParticles > 0 &&
-                !nextPS.isStateChange(mTinted, alpha, mTexture, mSmoothing, blendMode, SOURCE_BLEND_FACTOR, DESTINATION_BLEND_FACTOR, mFilter))
+                !nextPS.isStateChange(mTinted, alpha, mTexture, texSmoothing, blendMode, SOURCE_BLEND_FACTOR, DESTINATION_BLEND_FACTOR, mFilter))
             {
                 if (mNumParticles + mNumBatchedParticles + nextPS.mNumParticles > MAX_PARTICLES)
                 {
@@ -310,12 +305,14 @@ public class Stage3DRenderer extends DisplayObject
             throw new MissingContextError();
         }
 
-        context.setBlendFactors(SOURCE_BLEND_FACTOR, DESTINATION_BLEND_FACTOR);
+        var blendFactors:Array = BlendMode.getBlendFactors(blendMode, false);
+        Starling.context.setBlendFactors(blendFactors[0], blendFactors[1]);
+
         const renderAlpha:Vector.<Number> = new <Number>[1, 1, 1, alpha];
         const renderMatrix:Matrix3D = new Matrix3D();
         MatrixUtil.convertTo3D(support.mvpMatrix, renderMatrix);
 
-        context.setProgram(ParticleProgram.getProgram(mTexture != null, mTinted, mTexture.mipMapping, mTexture.repeat, mTexture.format));
+        context.setProgram(ParticleProgram.getProgram(mTexture != null, mTinted, mTexture.mipMapping, mTexture.repeat, mTexture.format, texSmoothing));
         context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 0, renderAlpha, 1);
         context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 1, renderMatrix, true);
         context.setTextureAt(0, mTexture.base);
