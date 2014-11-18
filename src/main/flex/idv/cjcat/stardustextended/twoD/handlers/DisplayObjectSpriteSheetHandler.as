@@ -17,7 +17,6 @@ import idv.cjcat.stardustextended.twoD.utils.DisplayObjectPool;
 public class DisplayObjectSpriteSheetHandler extends DisplayObjectHandler implements ISpriteSheetHandler
 {
 
-    public static const CURRENT_FRAME : String = "currFrame";
     private static const slicedSpriteCache : Dictionary = new Dictionary();
     private var _spriteSheetStartAtRandomFrame : Boolean;
     private var _smoothing : Boolean;
@@ -48,7 +47,7 @@ public class DisplayObjectSpriteSheetHandler extends DisplayObjectHandler implem
     override public function readParticle(particle:Particle):void {
         if (_isSpriteSheet)
         {
-            var currFrame : uint = particle.dictionary[CURRENT_FRAME];
+            var currFrame : uint = particle.currentAnimationFrame;
             const nextFrame : uint = (currFrame + _time) % _totalFrames;
             const nextImageIndex : uint = uint(nextFrame / _spriteSheetAnimationSpeed);
             const currImageIndex : uint = uint(currFrame / _spriteSheetAnimationSpeed);
@@ -58,7 +57,7 @@ public class DisplayObjectSpriteSheetHandler extends DisplayObjectHandler implem
                 bmp.bitmapData = spriteCache.bds[nextImageIndex];
                 bmp.smoothing = _smoothing;
             }
-            particle.dictionary[CURRENT_FRAME] = nextFrame;
+            particle.currentAnimationFrame = nextFrame;
         }
         super.readParticle(particle);
     }
@@ -77,7 +76,7 @@ public class DisplayObjectSpriteSheetHandler extends DisplayObjectHandler implem
                 currFrame = Math.random() * _totalFrames;
             }
             bmp.bitmapData = spriteCache.bds[uint(currFrame / _spriteSheetAnimationSpeed)];
-            particle.dictionary[CURRENT_FRAME] = currFrame;
+            particle.currentAnimationFrame = currFrame;
         }
         else
         {

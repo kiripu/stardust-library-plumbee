@@ -78,15 +78,11 @@
 		public var dictionary:Dictionary;
 		
 		public var recyclers:Dictionary;
-		
-		/*
-		private var _handler:ParticleHandler;
-		public final function handler():ParticleHandler { return _handler; }
-		public final function setHandler(value:ParticleHandler):void {
-			if (!value) value = ParticleHandler.getSingleton();
-			_handler = value;
-		}
-		*/
+
+        /**
+         * The current frame to display if the particle is animated. Use the AnimateSpriteSheet action to set it.
+         */
+		public var currentAnimationFrame : int;
 		
 		public function Particle() {
 			dictionary = new Dictionary();
@@ -95,13 +91,9 @@
 		
 		/**
 		 * Initializes properties to default values.
-		 * 
-		 * <p>
-		 * life = 0. scale = 1. alpha = 1. mass = 1. mask = 1. collisoinRadius = 0. target = null. sortedIndex = NaN.
-		 * </p>
 		 */
 		public function init():void {
-			initLife = life = 0;
+			initLife = life = currentAnimationFrame = 0;
 			initScale = scale = 1;
 			initAlpha = alpha = 1;
 			mass = 1;

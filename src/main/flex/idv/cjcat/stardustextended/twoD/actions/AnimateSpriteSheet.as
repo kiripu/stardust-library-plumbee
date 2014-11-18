@@ -8,7 +8,7 @@ import idv.cjcat.stardustextended.twoD.handlers.DisplayObjectSpriteSheetHandler;
 public class AnimateSpriteSheet extends Action2D{
 
     override public function update(emitter:Emitter, particle:Particle, timeDelta:Number, currentTime:Number):void {
-        particle.dictionary[DisplayObjectSpriteSheetHandler.CURRENT_FRAME]++;
+        particle.currentAnimationFrame++;
     }
 
     //XML

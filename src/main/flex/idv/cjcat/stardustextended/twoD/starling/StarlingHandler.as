@@ -33,7 +33,7 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
     private var _spriteSheetStartAtRandomFrame : Boolean;
     private var _totalFrames : uint;
 
-    private var renderer : CustomRenderer;
+    private var renderer : Stage3DRenderer;
     private static const DEGREES_TO_RADIANS : Number = Math.PI / 180;
 
     public function set container(container:DisplayObjectContainer) : void {
@@ -44,18 +44,18 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
         if (_batch.parent) {
             _batch.parent.removeChild(_batch);
         }
-        container.addChild(_batch);*/
+        container.addChild(_batch);
+        */
 
         if (renderer == null)
         {
-            renderer = new CustomRenderer();
+            renderer = new Stage3DRenderer();
         }
         container.addChild(renderer);
     }
 
     override public function stepEnd(emitter:Emitter, particles:Vector.<Particle>, time:Number):void {
         renderer.advanceTime(particles, image.texture);
-        return;
         /*
         _batch.reset();
         for (var i:int = 0; i < particles.length; i++) {
@@ -76,20 +76,21 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
                 image.color = particle.color;
             }
 
-            if (_isSpriteSheet)
-            {
-                var currFrame : uint = particle.dictionary[DisplayObjectSpriteSheetHandler.CURRENT_FRAME];
-                const nextFrame : uint = (currFrame + time) % _totalFrames;
-                const nextImageIndex : uint = uint(nextFrame / _spriteSheetAnimationSpeed);
-                const currImageIndex : uint = uint(currFrame / _spriteSheetAnimationSpeed);
-                if ( nextImageIndex != currImageIndex )
-                {
+            //if (_isSpriteSheet)
+            //{
+            //    var currFrame : uint = particle.dictionary[DisplayObjectSpriteSheetHandler.CURRENT_FRAME];
+            //    const nextFrame : uint = (currFrame + time) % _totalFrames;
+            //    const nextImageIndex : uint = uint(nextFrame / _spriteSheetAnimationSpeed);
+            //    const currImageIndex : uint = uint(currFrame / _spriteSheetAnimationSpeed);
+            //    if ( nextImageIndex != currImageIndex )
+            //    {
 
-                }
-                particle.dictionary[DisplayObjectSpriteSheetHandler.CURRENT_FRAME] = nextFrame;
-            }
+            //    }
+            //    particle.dictionary[DisplayObjectSpriteSheetHandler.CURRENT_FRAME] = nextFrame;
+            //}
             _batch.addQuad(image, 1, image.texture, _smoothing, null, _blendMode);
-        }*/
+        }
+        */
     }
 
     override public function particleAdded(particle:Particle):void {
@@ -101,7 +102,7 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
             {
                 currFrame = Math.random() * _totalFrames;
             }
-            particle.dictionary[DisplayObjectSpriteSheetHandler.CURRENT_FRAME] = currFrame;
+            particle.currentAnimationFrame = currFrame;
         }
     }
 

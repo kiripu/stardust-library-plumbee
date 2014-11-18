@@ -753,7 +753,7 @@ public class FFParticleSystem extends DisplayObject implements IAnimatable
      * <p><strong>Note:   </strong>If you want to profit from batching, take a higher value, e. g. enough for 5 systems. But avoid
      * choosing an unrealistic high value, since the complete buffer will have to be uploaded each time a particle system (batch) is drawn.</p>
      *
-     * <p>The <em>numberOfBuffers</em> sets the amount of vertex buffers in use by the particle systems. Multi buffering can avoid stalling of
+     * <p>The <em>numberOfBuffers</em> sets the amount of vertex buffers in use by the particle systems. Multi buffering can avoid sing of
      * the GPU but will also increases it's memory consumption.</p>
      *
      * @param	poolSize Length of the particle pool.
