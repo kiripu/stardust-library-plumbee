@@ -5,6 +5,7 @@ import flash.display.BitmapData;
 import idv.cjcat.stardustextended.common.emitters.Emitter;
 import idv.cjcat.stardustextended.common.handlers.ParticleHandler;
 import idv.cjcat.stardustextended.common.particles.Particle;
+import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 import idv.cjcat.stardustextended.twoD.handlers.ISpriteSheetHandler;
 
 import starling.display.DisplayObjectContainer;
@@ -199,6 +200,27 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
     //////////////////////////////////////////////////////// XML
     override public function getXMLTagName():String {
         return "StarlingHandler";
+    }
+
+    override public function toXML():XML {
+        var xml:XML = super.toXML();
+        xml.@imgWidth = _spriteSheetSliceWidth;
+        xml.@imgHeight = _spriteSheetSliceHeight;
+        xml.@animSpeed = _spriteSheetAnimationSpeed;
+        xml.@startAtRandomFrame = _spriteSheetStartAtRandomFrame;
+        xml.@smoothing = smoothing;
+        xml.@blendMode = blendMode;
+        return xml;
+    }
+
+    override public function parseXML(xml:XML, builder:XMLBuilder = null):void {
+        super.parseXML(xml, builder);
+        spriteSheetSliceWidth = xml.@imgWidth;
+        spriteSheetSliceHeight = xml.@imgHeight;
+        spriteSheetAnimationSpeed = xml.@animSpeed;
+        spriteSheetStartAtRandomFrame = (xml.@startAtRandomFrame == "true");
+        smoothing = (xml.@smoothing == "true");
+        if (xml.@blendMode.length()) blendMode = (xml.@blendMode);
     }
 
 }
