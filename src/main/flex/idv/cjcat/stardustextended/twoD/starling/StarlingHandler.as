@@ -32,7 +32,7 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
             renderer = new Stage3DRenderer();
             renderer.blendMode = _blendMode;
             renderer.texSmoothing = _smoothing;
-            calculateTexture();
+            calculateTextureCoordinates();
         }
         container.addChild(renderer);
     }
@@ -40,7 +40,6 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
     override public function stepEnd(emitter:Emitter, particles:Vector.<Particle>, time:Number):void {
         if (_isSpriteSheet)
         {
-            // TODO take animation speed into account
             var mNumParticles:uint = particles.length;
             for (var i:int = 0; i < mNumParticles; ++i)
             {
@@ -74,9 +73,16 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
 
     public function set bitmapData(bitmapData:BitmapData):void {
         _bitmapData = bitmapData;
-        _spriteSheetSliceHeight = bitmapData.height;
-        _spriteSheetSliceWidth = bitmapData.width;
-        calculateTexture();
+        if (_spriteSheetSliceHeight > bitmapData.height)
+        {
+            _spriteSheetSliceHeight = bitmapData.height;
+        }
+        if (_spriteSheetSliceWidth > bitmapData.width)
+        {
+            _spriteSheetSliceWidth = bitmapData.width;
+        }
+        _texture = Texture.fromBitmapData(_bitmapData).root;
+        calculateTextureCoordinates();
     }
 
     public function get bitmapData():BitmapData {
@@ -85,7 +91,7 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
 
     public function set spriteSheetSliceWidth(value:uint):void {
         _spriteSheetSliceWidth = value;
-        calculateTexture();
+        calculateTextureCoordinates();
     }
 
     public function get spriteSheetSliceWidth() : uint {
@@ -94,7 +100,7 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
 
     public function set spriteSheetSliceHeight(value:uint):void {
         _spriteSheetSliceHeight = value;
-        calculateTexture();
+        calculateTextureCoordinates();
     }
 
     public function get spriteSheetSliceHeight() : uint {
@@ -103,7 +109,7 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
 
     public function set spriteSheetAnimationSpeed(spriteSheetAnimationSpeed:uint):void {
         _spriteSheetAnimationSpeed = spriteSheetAnimationSpeed;
-        calculateTexture();
+        calculateTextureCoordinates();
     }
 
     public function get spriteSheetAnimationSpeed():uint {
@@ -151,18 +157,22 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
         return _blendMode;
     }
 
-    private function calculateTexture() :void
+    public function get texture():Texture {
+        return _texture;
+    }
+
+    /** Set the texture directly. Texture atlases are not properly supported since the sprites must begin
+     * at (0,0) in the texture and they must come after each other. */
+    public function set texture(value:Texture):void {
+        _texture = value;
+    }
+
+    private function calculateTextureCoordinates() :void
     {
         if (renderer == null || _bitmapData == null)
         {
             return;
         }
-        if (_texture)
-        {
-            _texture.dispose();
-        }
-        _texture = Texture.fromBitmapData(_bitmapData).root;
-
         _isSpriteSheet = (_spriteSheetSliceWidth > 0 && _spriteSheetSliceHeight > 0) &&
                          (_bitmapData.width >= _spriteSheetSliceWidth * 2 || _bitmapData.height >= _spriteSheetSliceHeight * 2);
         if (_isSpriteSheet)
@@ -170,18 +180,18 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
             _totalFrames = _spriteSheetAnimationSpeed * (_bitmapData.width / _spriteSheetSliceWidth  + _bitmapData.height / _spriteSheetSliceHeight - 1);
             const xIter : int = Math.floor( _bitmapData.width / _spriteSheetSliceWidth );
             const yIter : int = Math.floor( _bitmapData.height / _spriteSheetSliceHeight );
-            const widthInTexCoords : Number = _spriteSheetSliceWidth / _texture.nativeWidth;
-            const heightInTexCoords : Number = _spriteSheetSliceHeight / _texture.nativeHeight;
+            const xInTexCoords : Number = _spriteSheetSliceWidth / _texture.nativeWidth;
+            const yInTexCoords : Number = _spriteSheetSliceHeight / _texture.nativeHeight;
             var frames:Vector.<Frame> = new <Frame>[];
             for ( var j : int = 0; j < yIter; j++ )
             {
                 for ( var i : int = 0; i < xIter; i++ )
                 {
                     var frame : Frame = new Frame(
-                            widthInTexCoords * i,
-                            heightInTexCoords * j,
-                            widthInTexCoords * (i + 1),
-                            heightInTexCoords * (j + 1),
+                            xInTexCoords * i,
+                            yInTexCoords * j,
+                            xInTexCoords * (i + 1),
+                            yInTexCoords * (j + 1),
                             _spriteSheetSliceWidth/2,
                             _spriteSheetSliceHeight/2);
                     for (var k:int = 0; k < _spriteSheetAnimationSpeed; k++)
@@ -206,23 +216,24 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
 
     override public function toXML():XML {
         var xml:XML = super.toXML();
-        xml.@imgWidth = _spriteSheetSliceWidth;
-        xml.@imgHeight = _spriteSheetSliceHeight;
-        xml.@animSpeed = _spriteSheetAnimationSpeed;
-        xml.@startAtRandomFrame = _spriteSheetStartAtRandomFrame;
+        xml.@spriteSheetSliceWidth = _spriteSheetSliceWidth;
+        xml.@spriteSheetSliceHeight = _spriteSheetSliceHeight;
+        xml.@spriteSheetAnimationSpeed = _spriteSheetAnimationSpeed;
+        xml.@spriteSheetStartAtRandomFrame = _spriteSheetStartAtRandomFrame;
         xml.@smoothing = smoothing;
-        xml.@blendMode = blendMode;
+        xml.@blendMode = _blendMode;
         return xml;
     }
 
     override public function parseXML(xml:XML, builder:XMLBuilder = null):void {
         super.parseXML(xml, builder);
-        spriteSheetSliceWidth = xml.@imgWidth;
-        spriteSheetSliceHeight = xml.@imgHeight;
-        spriteSheetAnimationSpeed = xml.@animSpeed;
-        spriteSheetStartAtRandomFrame = (xml.@startAtRandomFrame == "true");
+        _spriteSheetSliceWidth = xml.@spriteSheetSliceWidth;
+        _spriteSheetSliceHeight = xml.@spriteSheetSliceHeight;
+        _spriteSheetAnimationSpeed = xml.@spriteSheetAnimationSpeed;
+        _spriteSheetStartAtRandomFrame = (xml.@spriteSheetStartAtRandomFrame == "true");
         smoothing = (xml.@smoothing == "true");
-        if (xml.@blendMode.length()) blendMode = (xml.@blendMode);
+        _blendMode = (xml.@blendMode);
+        calculateTextureCoordinates();
     }
 
 }

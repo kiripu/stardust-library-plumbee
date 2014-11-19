@@ -194,23 +194,22 @@ public class DisplayObjectSpriteSheetHandler extends DisplayObjectHandler implem
 
     override public function toXML():XML {
         var xml:XML = super.toXML();
-
-        xml.@imgWidth = _spriteSheetSliceWidth;
-        xml.@imgHeight = _spriteSheetSliceHeight;
-        xml.@animSpeed = _spriteSheetAnimationSpeed;
-        xml.@startAtRandomFrame = _spriteSheetStartAtRandomFrame;
+        xml.@spriteSheetSliceWidth = _spriteSheetSliceWidth;
+        xml.@spriteSheetSliceHeight = _spriteSheetSliceHeight;
+        xml.@spriteSheetAnimationSpeed = _spriteSheetAnimationSpeed;
+        xml.@spriteSheetStartAtRandomFrame = _spriteSheetStartAtRandomFrame;
         xml.@smoothing = _smoothing;
         return xml;
     }
 
     override public function parseXML(xml:XML, builder:XMLBuilder = null):void {
         super.parseXML(xml, builder);
-
-        _spriteSheetSliceWidth = xml.@imgWidth;
-        _spriteSheetSliceHeight = xml.@imgHeight;
-        spriteSheetAnimationSpeed = xml.@animSpeed;
-        spriteSheetStartAtRandomFrame = (xml.@startAtRandomFrame == "true");
+        _spriteSheetSliceWidth = xml.@spriteSheetSliceWidth;
+        _spriteSheetSliceHeight = xml.@spriteSheetSliceHeight;
+        _spriteSheetAnimationSpeed = xml.@spriteSheetAnimationSpeed;
+        _spriteSheetStartAtRandomFrame = (xml.@spriteSheetStartAtRandomFrame == "true");
         _smoothing = (xml.@smoothing == "true");
+        makeSpriteSheetCache();
     }
 
     //------------------------------------------------------------------------------------------------

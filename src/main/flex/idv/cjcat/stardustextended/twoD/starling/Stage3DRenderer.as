@@ -7,7 +7,6 @@ import flash.display3D.Context3DVertexBufferFormat;
 import flash.display3D.textures.TextureBase;
 import flash.events.Event;
 import flash.geom.Matrix3D;
-import flash.geom.Rectangle;
 
 import idv.cjcat.stardustextended.common.particles.Particle;
 
@@ -20,7 +19,6 @@ import starling.display.BlendMode;
 import starling.display.DisplayObject;
 import starling.errors.MissingContextError;
 import starling.filters.FragmentFilter;
-import starling.textures.SubTexture;
 import starling.textures.Texture;
 import starling.utils.MatrixUtil;
 import starling.utils.VertexData;
@@ -53,7 +51,6 @@ public class Stage3DRenderer extends DisplayObject
             init();
         }
         vertexes = new <Number>[];
-        Starling.current.context.enableErrorChecking = true;
     }
 
     /** numberOfBuffers is the amount of vertex buffers used by the particle system for multi buffering. Multi buffering
