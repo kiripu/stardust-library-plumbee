@@ -4,8 +4,10 @@ import flash.display3D.Context3D;
 import flash.display3D.Context3DBlendFactor;
 import flash.display3D.Context3DProgramType;
 import flash.display3D.Context3DVertexBufferFormat;
+import flash.display3D.textures.TextureBase;
 import flash.events.Event;
 import flash.geom.Matrix3D;
+import flash.geom.Rectangle;
 
 import idv.cjcat.stardustextended.common.particles.Particle;
 
@@ -18,6 +20,7 @@ import starling.display.BlendMode;
 import starling.display.DisplayObject;
 import starling.errors.MissingContextError;
 import starling.filters.FragmentFilter;
+import starling.textures.SubTexture;
 import starling.textures.Texture;
 import starling.utils.MatrixUtil;
 import starling.utils.VertexData;
@@ -37,7 +40,9 @@ public class Stage3DRenderer extends DisplayObject
     private var mTinted : Boolean = true;
     private var mTexture : Texture;
     private var mBatched : Boolean;
-    private var vertexData:Vector.<Number>;
+    private var vertexes:Vector.<Number>;
+    private var frames : Vector.<Frame>;
+
     public var mNumParticles:int = 0;
     public var texSmoothing : String;
 
@@ -47,7 +52,7 @@ public class Stage3DRenderer extends DisplayObject
         {
             init();
         }
-        vertexData = new <Number>[];
+        vertexes = new <Number>[];
         Starling.current.context.enableErrorChecking = true;
     }
 
@@ -82,9 +87,14 @@ public class Stage3DRenderer extends DisplayObject
         mTinted = value;
     }
 
-    public function advanceTime(mParticles : Vector.<Particle>, texture : Texture):void
+    public function setTextures(texture: Texture, _frames:Vector.<Frame>):void
     {
         mTexture = texture;
+        frames = _frames;
+    }
+
+    public function advanceTime(mParticles : Vector.<Particle>):void
+    {
         mNumParticles = mParticles.length;
         var particle:Particle2D;
         var vertexID:int = 0;
@@ -107,12 +117,6 @@ public class Stage3DRenderer extends DisplayObject
         var sinY:Number;
         var position:uint;
 
-        var textureWidth : uint = 1;
-        var textureHeight : uint = 1;
-
-        var textureHalfWidth : uint = mTexture.width / 2;
-        var textureHalfHeight : uint = mTexture.height / 2;
-
         for (var i:int = 0; i < mNumParticles; ++i)
         {
             vertexID = i << 2;
@@ -124,13 +128,15 @@ public class Stage3DRenderer extends DisplayObject
             x = particle.x;
             y = particle.y;
 
-            xOffset = textureHalfWidth * particle.scale; //frameDimensions.particleHalfWidth;
-            yOffset = textureHalfHeight * particle.scale; //frameDimensions.particleHalfHeight;
-            var textureX : Number = 0;
-            var textureY : Number = 0;
+            var frame : Frame = frames[particle.currentAnimationFrame];
+            var textureWidth : Number = frame.textureWidth;
+            var textureHeight : Number = frame.textureHeight;
+            var textureX : Number = frame.textureX;
+            var textureY : Number = frame.textureY;
 
+            xOffset = frame.particleHalfWidth * particle.scale;
+            yOffset = frame.particleHalfHeight * particle.scale;
             position = vertexID << 3; // * 8
-
             if (rotation)
             {
                 angle = (rotation * 325.94932345220164765467394738691) & 2047;
@@ -141,84 +147,84 @@ public class Stage3DRenderer extends DisplayObject
                 sinX = sin * xOffset;
                 sinY = sin * yOffset;
 
-                vertexData[position] = x - cosX + sinY;  // 0-2: position
-                vertexData[++position] = y - sinX - cosY;
-                vertexData[++position] = red;// 2-5: Color [0-1]
-                vertexData[++position] = green;
-                vertexData[++position] = blue;
-                vertexData[++position] = particleAlpha;
-                vertexData[++position] = textureX; // 6,7: Texture coords [?-1]
-                vertexData[++position] = textureY;
+                vertexes[position] = x - cosX + sinY;  // 0-2: position
+                vertexes[++position] = y - sinX - cosY;
+                vertexes[++position] = red;// 2-5: Color [0-1]
+                vertexes[++position] = green;
+                vertexes[++position] = blue;
+                vertexes[++position] = particleAlpha;
+                vertexes[++position] = textureX; // 6,7: Texture coords [?-1]
+                vertexes[++position] = textureY;
 
-                vertexData[++position] = x + cosX + sinY;
-                vertexData[++position] = y + sinX - cosY;
-                vertexData[++position] = red;
-                vertexData[++position] = green;
-                vertexData[++position] = blue;
-                vertexData[++position] = particleAlpha;
-                vertexData[++position] = textureWidth;
-                vertexData[++position] = textureY;
+                vertexes[++position] = x + cosX + sinY;
+                vertexes[++position] = y + sinX - cosY;
+                vertexes[++position] = red;
+                vertexes[++position] = green;
+                vertexes[++position] = blue;
+                vertexes[++position] = particleAlpha;
+                vertexes[++position] = textureWidth;
+                vertexes[++position] = textureY;
 
-                vertexData[++position] = x - cosX - sinY;
-                vertexData[++position] = y - sinX + cosY;
-                vertexData[++position] = red;
-                vertexData[++position] = green;
-                vertexData[++position] = blue;
-                vertexData[++position] = particleAlpha;
-                vertexData[++position] = textureX;
-                vertexData[++position] = textureHeight;
+                vertexes[++position] = x - cosX - sinY;
+                vertexes[++position] = y - sinX + cosY;
+                vertexes[++position] = red;
+                vertexes[++position] = green;
+                vertexes[++position] = blue;
+                vertexes[++position] = particleAlpha;
+                vertexes[++position] = textureX;
+                vertexes[++position] = textureHeight;
 
-                vertexData[++position] = x + cosX - sinY;
-                vertexData[++position] = y + sinX + cosY;
-                vertexData[++position] = red;
-                vertexData[++position] = green;
-                vertexData[++position] = blue;
-                vertexData[++position] = particleAlpha;
-                vertexData[++position] = textureWidth;
-                vertexData[++position] = textureHeight;
+                vertexes[++position] = x + cosX - sinY;
+                vertexes[++position] = y + sinX + cosY;
+                vertexes[++position] = red;
+                vertexes[++position] = green;
+                vertexes[++position] = blue;
+                vertexes[++position] = particleAlpha;
+                vertexes[++position] = textureWidth;
+                vertexes[++position] = textureHeight;
             }
             else
             {
-                vertexData[position] = x - xOffset;
-                vertexData[++position] = y - yOffset;
-                vertexData[++position] = red;
-                vertexData[++position] = green;
-                vertexData[++position] = blue;
-                vertexData[++position] = particleAlpha;
-                vertexData[++position] = textureX;
-                vertexData[++position] = textureY;
+                vertexes[position] = x - xOffset;
+                vertexes[++position] = y - yOffset;
+                vertexes[++position] = red;
+                vertexes[++position] = green;
+                vertexes[++position] = blue;
+                vertexes[++position] = particleAlpha;
+                vertexes[++position] = textureX;
+                vertexes[++position] = textureY;
 
-                vertexData[++position] = x + xOffset;
-                vertexData[++position] = y - yOffset;
-                vertexData[++position] = red;
-                vertexData[++position] = green;
-                vertexData[++position] = blue;
-                vertexData[++position] = particleAlpha;
-                vertexData[++position] = textureWidth;
-                vertexData[++position] = textureY;
+                vertexes[++position] = x + xOffset;
+                vertexes[++position] = y - yOffset;
+                vertexes[++position] = red;
+                vertexes[++position] = green;
+                vertexes[++position] = blue;
+                vertexes[++position] = particleAlpha;
+                vertexes[++position] = textureWidth;
+                vertexes[++position] = textureY;
 
-                vertexData[++position] = x - xOffset;
-                vertexData[++position] = y + yOffset;
-                vertexData[++position] = red;
-                vertexData[++position] = green;
-                vertexData[++position] = blue;
-                vertexData[++position] = particleAlpha;
-                vertexData[++position] = textureX;
-                vertexData[++position] = textureHeight;
+                vertexes[++position] = x - xOffset;
+                vertexes[++position] = y + yOffset;
+                vertexes[++position] = red;
+                vertexes[++position] = green;
+                vertexes[++position] = blue;
+                vertexes[++position] = particleAlpha;
+                vertexes[++position] = textureX;
+                vertexes[++position] = textureHeight;
 
-                vertexData[++position] = x + xOffset;
-                vertexData[++position] = y + yOffset;
-                vertexData[++position] = red;
-                vertexData[++position] = green;
-                vertexData[++position] = blue;
-                vertexData[++position] = particleAlpha;
-                vertexData[++position] = textureWidth;
-                vertexData[++position] = textureHeight;
+                vertexes[++position] = x + xOffset;
+                vertexes[++position] = y + yOffset;
+                vertexes[++position] = red;
+                vertexes[++position] = green;
+                vertexes[++position] = blue;
+                vertexes[++position] = particleAlpha;
+                vertexes[++position] = textureWidth;
+                vertexes[++position] = textureHeight;
             }
         }
     }
 
-    public function isStateChange(tinted:Boolean, parentAlpha:Number, texture:Texture,
+    public function isStateChange(tinted:Boolean, parentAlpha:Number, texture:TextureBase, textureRepeat:Boolean,
                                   smoothing:String, blendMode:String, blendFactorSource:String,
                                   blendFactorDestination:String, filter:FragmentFilter):Boolean
     {
@@ -228,7 +234,7 @@ public class Stage3DRenderer extends DisplayObject
         }
         else if (mTexture != null && texture != null)
         {
-            return mTexture.base != texture.base || mTexture.repeat != texture.repeat ||
+            return mTexture.base != texture || mTexture.repeat != textureRepeat ||
                    texSmoothing != smoothing || mTinted != (tinted || parentAlpha != 1.0) ||
                    this.blendMode != blendMode || SOURCE_BLEND_FACTOR != blendFactorSource ||
                    DESTINATION_BLEND_FACTOR != blendFactorDestination || mFilter != filter;
@@ -255,25 +261,24 @@ public class Stage3DRenderer extends DisplayObject
 
         while (++last < parent.numChildren)
         {
-            // TODO: randomize particles + determine which texture to use for each particle
             var nextPS:Stage3DRenderer = parent.getChildAt(last) as Stage3DRenderer;
             if (nextPS != null && nextPS.mNumParticles > 0 &&
-                !nextPS.isStateChange(mTinted, alpha, mTexture, texSmoothing, blendMode, SOURCE_BLEND_FACTOR, DESTINATION_BLEND_FACTOR, mFilter))
+                !nextPS.isStateChange(mTinted, alpha, mTexture.base, mTexture.repeat, texSmoothing, blendMode, SOURCE_BLEND_FACTOR, DESTINATION_BLEND_FACTOR, mFilter))
             {
                 if (mNumParticles + mNumBatchedParticles + nextPS.mNumParticles > MAX_PARTICLES)
                 {
                     trace("Over " + MAX_PARTICLES + " particles! Aborting rendering");
                     break;
                 }
-                vertexData.fixed = false;
+                vertexes.fixed = false;
                 var targetIndex:int = (mNumParticles + mNumBatchedParticles) * 32; // 4 * 8
                 var sourceIndex:int = 0;
                 var sourceEnd:int = nextPS.mNumParticles * 32; // 4 * 8
                 while (sourceIndex < sourceEnd)
                 {
-                    nextPS.vertexData[int(targetIndex++)] = vertexData[int(sourceIndex++)];
+                    nextPS.vertexes[int(targetIndex++)] = vertexes[int(sourceIndex++)];
                 }
-                vertexData.fixed = true;
+                vertexes.fixed = true;
 
                 mNumBatchedParticles += nextPS.mNumParticles;
 
@@ -317,7 +322,7 @@ public class Stage3DRenderer extends DisplayObject
         context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 1, renderMatrix, true);
         context.setTextureAt(0, mTexture.base);
 
-        StarlingParticleBuffers.vertexBuffer.uploadFromVector(vertexData, 0, Math.min(MAX_PARTICLES * 4, vertexData.length / 8));
+        StarlingParticleBuffers.vertexBuffer.uploadFromVector(vertexes, 0, Math.min(MAX_PARTICLES * 4, vertexes.length / 8));
         context.setVertexBufferAt(0, StarlingParticleBuffers.vertexBuffer, VertexData.POSITION_OFFSET, Context3DVertexBufferFormat.FLOAT_2);
 
         if (mTinted)

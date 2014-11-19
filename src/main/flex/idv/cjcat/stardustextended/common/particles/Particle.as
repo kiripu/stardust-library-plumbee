@@ -82,7 +82,7 @@
         /**
          * The current frame to display if the particle is animated. Use the AnimateSpriteSheet action to set it.
          */
-		public var currentAnimationFrame : int;
+		public var currentAnimationFrame : int = 0;
 		
 		public function Particle() {
 			dictionary = new Dictionary();

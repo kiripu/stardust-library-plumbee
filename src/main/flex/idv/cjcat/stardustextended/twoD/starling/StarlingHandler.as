@@ -1,6 +1,7 @@
 package idv.cjcat.stardustextended.twoD.starling {
 
 import flash.display.BitmapData;
+import flash.geom.Rectangle;
 
 import idv.cjcat.stardustextended.common.emitters.Emitter;
 import idv.cjcat.stardustextended.common.handlers.ParticleHandler;
@@ -9,91 +10,56 @@ import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 import idv.cjcat.stardustextended.twoD.handlers.ISpriteSheetHandler;
 
 import starling.display.DisplayObjectContainer;
-import starling.display.Image;
-
-import starling.display.QuadBatch;
 import starling.textures.SubTexture;
 import starling.textures.Texture;
+import starling.textures.TextureAtlas;
 import starling.textures.TextureSmoothing;
 
 public class StarlingHandler extends ParticleHandler implements ISpriteSheetHandler{
 
     private var _blendMode:String;
     private var _bitmapData : BitmapData;
-    private var _batch:QuadBatch;
     private var _smoothing : String;
-    private var image:Image;
     private var _spriteSheetSliceWidth : uint;
     private var _spriteSheetSliceHeight : uint;
     private var _isSpriteSheet : Boolean;
     private var _spriteSheetAnimationSpeed : uint;
     private var _spriteSheetStartAtRandomFrame : Boolean;
     private var _totalFrames : uint;
-
+    private var _texture : Texture;
     private var renderer : Stage3DRenderer;
-    private static const DEGREES_TO_RADIANS : Number = Math.PI / 180;
 
     public function set container(container:DisplayObjectContainer) : void {
-
-        /*if (_batch == null) {
-            _batch = new QuadBatch();
-        }
-        if (_batch.parent) {
-            _batch.parent.removeChild(_batch);
-        }
-        container.addChild(_batch);
-        */
-
         if (renderer == null)
         {
             renderer = new Stage3DRenderer();
             renderer.blendMode = _blendMode;
             renderer.texSmoothing = _smoothing;
+            calculateTexture();
         }
         container.addChild(renderer);
     }
 
     override public function stepEnd(emitter:Emitter, particles:Vector.<Particle>, time:Number):void {
-        renderer.advanceTime(particles, image.texture);
-        /*
-        _batch.reset();
-        for (var i:int = 0; i < particles.length; i++) {
-            var particle : Particle2D = Particle2D(particles[i]);
-            image.x = particle.x;
-            image.y = particle.y;
-            image.scaleX = image.scaleY = particle.scale;
-            if (image.rotation != particle.rotation * DEGREES_TO_RADIANS)
+        if (_isSpriteSheet)
+        {
+            // TODO take animation speed into account
+            var mNumParticles:uint = particles.length;
+            for (var i:int = 0; i < mNumParticles; ++i)
             {
-                image.rotation = particle.rotation * DEGREES_TO_RADIANS;
+                var particle : Particle = particles[i];
+                var currFrame:int = particle.currentAnimationFrame;
+                currFrame++;
+                if (currFrame >= _totalFrames) {
+                    currFrame = 0;
+                }
+                particle.currentAnimationFrame = currFrame;
             }
-            if (image.alpha != particle.alpha)
-            {
-                image.alpha = particle.alpha;
-            }
-            if (image.color != particle.color)
-            {
-                image.color = particle.color;
-            }
-
-            //if (_isSpriteSheet)
-            //{
-            //    var currFrame : uint = particle.dictionary[DisplayObjectSpriteSheetHandler.CURRENT_FRAME];
-            //    const nextFrame : uint = (currFrame + time) % _totalFrames;
-            //    const nextImageIndex : uint = uint(nextFrame / _spriteSheetAnimationSpeed);
-            //    const currImageIndex : uint = uint(currFrame / _spriteSheetAnimationSpeed);
-            //    if ( nextImageIndex != currImageIndex )
-            //    {
-
-            //    }
-            //    particle.dictionary[DisplayObjectSpriteSheetHandler.CURRENT_FRAME] = nextFrame;
-            //}
-            _batch.addQuad(image, 1, image.texture, _smoothing, null, _blendMode);
         }
-        */
+        renderer.advanceTime(particles);
     }
 
     override public function particleAdded(particle:Particle):void {
-        particle.color = 0xFFFFFF;
         if (_isSpriteSheet)
         {
             var currFrame:uint = 0;
@@ -103,13 +69,17 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
             }
             particle.currentAnimationFrame = currFrame;
         }
+        else
+        {
+            particle.currentAnimationFrame = 0;
+        }
     }
 
     public function set bitmapData(bitmapData:BitmapData):void {
         _bitmapData = bitmapData;
-        image = new Image( Texture.fromBitmapData(_bitmapData) );
-        image.pivotX = image.width * 0.5;
-        image.pivotY = image.height * 0.5;
+        _spriteSheetSliceHeight = bitmapData.height;
+        _spriteSheetSliceWidth = bitmapData.width;
+        calculateTexture();
     }
 
     public function get bitmapData():BitmapData {
@@ -118,7 +88,7 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
 
     public function set spriteSheetSliceWidth(value:uint):void {
         _spriteSheetSliceWidth = value;
-        calculateSpriteSheetProperties();
+        calculateTexture();
     }
 
     public function get spriteSheetSliceWidth() : uint {
@@ -127,7 +97,7 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
 
     public function set spriteSheetSliceHeight(value:uint):void {
         _spriteSheetSliceHeight = value;
-        calculateSpriteSheetProperties();
+        calculateTexture();
     }
 
     public function get spriteSheetSliceHeight() : uint {
@@ -136,7 +106,7 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
 
     public function set spriteSheetAnimationSpeed(spriteSheetAnimationSpeed:uint):void {
         _spriteSheetAnimationSpeed = spriteSheetAnimationSpeed;
-        calculateSpriteSheetProperties();
+        calculateTexture();
     }
 
     public function get spriteSheetAnimationSpeed():uint {
@@ -184,17 +154,69 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
         return _blendMode;
     }
 
-    private function calculateSpriteSheetProperties() :void
+    private function calculateTexture() :void
     {
-        if (_bitmapData == null || _spriteSheetSliceWidth == 0 || _spriteSheetSliceHeight == 0)
+        if (renderer == null || _bitmapData == null)
         {
             return;
         }
-        _isSpriteSheet = _bitmapData.width > _spriteSheetSliceWidth || _bitmapData.height > _spriteSheetSliceHeight;
+        if (_texture)
+        {
+            _texture.dispose();
+        }
+        _texture = Texture.fromBitmapData(_bitmapData);
+
+        _isSpriteSheet = (_spriteSheetSliceWidth > 0 && _spriteSheetSliceHeight > 0) &&
+                         (_bitmapData.width >= _spriteSheetSliceWidth * 2 || _bitmapData.height >= _spriteSheetSliceHeight * 2);
         if (_isSpriteSheet)
         {
-            _totalFrames = _spriteSheetAnimationSpeed * (_bitmapData.width / _spriteSheetSliceWidth  + _bitmapData.height / _spriteSheetSliceHeight);
+            _totalFrames = _spriteSheetAnimationSpeed * (_bitmapData.width / _spriteSheetSliceWidth  + _bitmapData.height / _spriteSheetSliceHeight - 1);
+            const xIter : int = Math.floor( _bitmapData.width / _spriteSheetSliceWidth );
+            const yIter : int = Math.floor( _bitmapData.height / _spriteSheetSliceHeight );
+            var atlas : TextureAtlas = new TextureAtlas(_texture);
+            var name : uint = 1;
+            for ( var j : int = 0; j < yIter; j++ )
+            {
+                for ( var i : int = 0; i < xIter; i++ )
+                {
+                    atlas.addRegion(name.toString(), new Rectangle( i * _spriteSheetSliceWidth, j * _spriteSheetSliceHeight, _spriteSheetSliceWidth, _spriteSheetSliceHeight ));
+                    name++;
+                }
+            }
+            renderer.setTextures(_texture, calcFrameLUT(atlas.getTextures()));
         }
+        else
+        {
+            _totalFrames = 1;
+            renderer.setTextures(_texture, new <Frame>[new Frame(0, 0, 1, 1, _texture.width/2, _texture.height/2)]);
+        }
+    }
+
+    private function calcFrameLUT(textures:Vector.<Texture>) : Vector.<Frame>
+    {
+        var numFrames:uint = textures.length;
+        var frames:Vector.<Frame> = new <Frame>[];
+        for (var i:int = 0; i < numFrames; i++)
+        {
+            var texture:Texture = textures[i];
+            var frame : Frame;
+            if (texture is SubTexture)
+            {
+                var subTex : SubTexture = SubTexture(texture);
+                var rect : Rectangle = subTex.clipping;
+                frame = new Frame(rect.x, rect.y, rect.width, rect.height, subTex.width/2, subTex.height/2);
+            }
+            else
+            {
+                frame = new Frame(0, 0, 1, 1, texture.width/2, texture.height/2);
+            }
+            for (var j:int = 0; j < _spriteSheetAnimationSpeed; j++)
+            {
+                frames.push(frame);
+            }
+        }
+        frames.fixed = true;
+        return frames;
     }
 
     //////////////////////////////////////////////////////// XML
