@@ -181,7 +181,7 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
                             widthInTexCoords * i,
                             heightInTexCoords * j,
                             widthInTexCoords * (i + 1),
-                            heightInTexCoords,
+                            heightInTexCoords * (j + 1),
                             _spriteSheetSliceWidth/2,
                             _spriteSheetSliceHeight/2);
                     for (var k:int = 0; k < _spriteSheetAnimationSpeed; k++)
