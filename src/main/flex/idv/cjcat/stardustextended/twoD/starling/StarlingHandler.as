@@ -1,7 +1,6 @@
 package idv.cjcat.stardustextended.twoD.starling {
 
 import flash.display.BitmapData;
-import flash.geom.Rectangle;
 
 import idv.cjcat.stardustextended.common.emitters.Emitter;
 import idv.cjcat.stardustextended.common.handlers.ParticleHandler;
@@ -10,9 +9,7 @@ import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 import idv.cjcat.stardustextended.twoD.handlers.ISpriteSheetHandler;
 
 import starling.display.DisplayObjectContainer;
-import starling.textures.SubTexture;
 import starling.textures.Texture;
-import starling.textures.TextureAtlas;
 import starling.textures.TextureSmoothing;
 
 public class StarlingHandler extends ParticleHandler implements ISpriteSheetHandler{
@@ -164,7 +161,7 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
         {
             _texture.dispose();
         }
-        _texture = Texture.fromBitmapData(_bitmapData);
+        _texture = Texture.fromBitmapData(_bitmapData).root;
 
         _isSpriteSheet = (_spriteSheetSliceWidth > 0 && _spriteSheetSliceHeight > 0) &&
                          (_bitmapData.width >= _spriteSheetSliceWidth * 2 || _bitmapData.height >= _spriteSheetSliceHeight * 2);
@@ -173,50 +170,33 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
             _totalFrames = _spriteSheetAnimationSpeed * (_bitmapData.width / _spriteSheetSliceWidth  + _bitmapData.height / _spriteSheetSliceHeight - 1);
             const xIter : int = Math.floor( _bitmapData.width / _spriteSheetSliceWidth );
             const yIter : int = Math.floor( _bitmapData.height / _spriteSheetSliceHeight );
-            var atlas : TextureAtlas = new TextureAtlas(_texture);
-            var name : uint = 1;
+            const widthInTexCoords : Number = _spriteSheetSliceWidth / _texture.nativeWidth;
+            const heightInTexCoords : Number = _spriteSheetSliceHeight / _texture.nativeHeight;
+            var frames:Vector.<Frame> = new <Frame>[];
             for ( var j : int = 0; j < yIter; j++ )
             {
                 for ( var i : int = 0; i < xIter; i++ )
                 {
-                    atlas.addRegion(name.toString(), new Rectangle( i * _spriteSheetSliceWidth, j * _spriteSheetSliceHeight, _spriteSheetSliceWidth, _spriteSheetSliceHeight ));
-                    name++;
+                    var frame : Frame = new Frame(
+                            widthInTexCoords * i,
+                            heightInTexCoords * j,
+                            widthInTexCoords * (i + 1),
+                            heightInTexCoords,
+                            _spriteSheetSliceWidth/2,
+                            _spriteSheetSliceHeight/2);
+                    for (var k:int = 0; k < _spriteSheetAnimationSpeed; k++)
+                    {
+                        frames.push(frame);
+                    }
                 }
             }
-            renderer.setTextures(_texture, calcFrameLUT(atlas.getTextures()));
+            renderer.setTextures(_texture, frames);
         }
         else
         {
             _totalFrames = 1;
             renderer.setTextures(_texture, new <Frame>[new Frame(0, 0, 1, 1, _texture.width/2, _texture.height/2)]);
         }
-    }
-
-    private function calcFrameLUT(textures:Vector.<Texture>) : Vector.<Frame>
-    {
-        var numFrames:uint = textures.length;
-        var frames:Vector.<Frame> = new <Frame>[];
-        for (var i:int = 0; i < numFrames; i++)
-        {
-            var texture:Texture = textures[i];
-            var frame : Frame;
-            if (texture is SubTexture)
-            {
-                var subTex : SubTexture = SubTexture(texture);
-                var rect : Rectangle = subTex.clipping;
-                frame = new Frame(rect.x, rect.y, rect.width, rect.height, subTex.width/2, subTex.height/2);
-            }
-            else
-            {
-                frame = new Frame(0, 0, 1, 1, texture.width/2, texture.height/2);
-            }
-            for (var j:int = 0; j < _spriteSheetAnimationSpeed; j++)
-            {
-                frames.push(frame);
-            }
-        }
-        frames.fixed = true;
-        return frames;
     }
 
     //////////////////////////////////////////////////////// XML
