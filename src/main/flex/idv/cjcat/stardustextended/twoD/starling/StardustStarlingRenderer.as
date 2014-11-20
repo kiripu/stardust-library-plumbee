@@ -23,7 +23,7 @@ import starling.textures.Texture;
 import starling.utils.MatrixUtil;
 import starling.utils.VertexData;
 
-public class Stage3DRenderer extends DisplayObject
+public class StardustStarlingRenderer extends DisplayObject
 {
     public static const MAX_PARTICLES:int = 16383;
     private static const DEGREES_TO_RADIANS : Number = Math.PI / 180;
@@ -44,7 +44,7 @@ public class Stage3DRenderer extends DisplayObject
     public var mNumParticles:int = 0;
     public var texSmoothing : String;
 
-    public function Stage3DRenderer()
+    public function StardustStarlingRenderer()
     {
         if (StarlingParticleBuffers.buffersCreated == false)
         {
@@ -113,6 +113,11 @@ public class Stage3DRenderer extends DisplayObject
         var sinX:Number;
         var sinY:Number;
         var position:uint;
+        var frame : Frame;
+        var bottomRightX : Number;
+        var bottomRightY : Number;
+        var topLeftX : Number;
+        var topLeftY : Number;
 
         for (var i:int = 0; i < mNumParticles; ++i)
         {
@@ -125,14 +130,14 @@ public class Stage3DRenderer extends DisplayObject
             x = particle.x;
             y = particle.y;
 
-            var frame : Frame = frames[particle.currentAnimationFrame];
-            var textureWidth : Number = frame.textureWidth;
-            var textureHeight : Number = frame.textureHeight;
-            var textureX : Number = frame.textureX;
-            var textureY : Number = frame.textureY;
-
+            frame = frames[particle.currentAnimationFrame];
+            bottomRightX = frame.bottomRightX;
+            bottomRightY = frame.bottomRightY;
+            topLeftX = frame.topLeftX;
+            topLeftY = frame.topLeftY;
             xOffset = frame.particleHalfWidth * particle.scale;
             yOffset = frame.particleHalfHeight * particle.scale;
+
             position = vertexID << 3; // * 8
             if (rotation)
             {
@@ -144,14 +149,14 @@ public class Stage3DRenderer extends DisplayObject
                 sinX = sin * xOffset;
                 sinY = sin * yOffset;
 
-                vertexes[position] = x - cosX + sinY;  // 0-2: position
+                vertexes[position] = x - cosX + sinY;  // 0,1: position (in pixels)
                 vertexes[++position] = y - sinX - cosY;
-                vertexes[++position] = red;// 2-5: Color [0-1]
+                vertexes[++position] = red;// 2,3,4,5: Color and Alpha [0-1]
                 vertexes[++position] = green;
                 vertexes[++position] = blue;
                 vertexes[++position] = particleAlpha;
-                vertexes[++position] = textureX; // 6,7: Texture coords [?-1]
-                vertexes[++position] = textureY;
+                vertexes[++position] = topLeftX; // 6,7: Texture coords [0-1]
+                vertexes[++position] = topLeftY;
 
                 vertexes[++position] = x + cosX + sinY;
                 vertexes[++position] = y + sinX - cosY;
@@ -159,8 +164,8 @@ public class Stage3DRenderer extends DisplayObject
                 vertexes[++position] = green;
                 vertexes[++position] = blue;
                 vertexes[++position] = particleAlpha;
-                vertexes[++position] = textureWidth;
-                vertexes[++position] = textureY;
+                vertexes[++position] = bottomRightX;
+                vertexes[++position] = topLeftY;
 
                 vertexes[++position] = x - cosX - sinY;
                 vertexes[++position] = y - sinX + cosY;
@@ -168,8 +173,8 @@ public class Stage3DRenderer extends DisplayObject
                 vertexes[++position] = green;
                 vertexes[++position] = blue;
                 vertexes[++position] = particleAlpha;
-                vertexes[++position] = textureX;
-                vertexes[++position] = textureHeight;
+                vertexes[++position] = topLeftX;
+                vertexes[++position] = bottomRightY;
 
                 vertexes[++position] = x + cosX - sinY;
                 vertexes[++position] = y + sinX + cosY;
@@ -177,8 +182,8 @@ public class Stage3DRenderer extends DisplayObject
                 vertexes[++position] = green;
                 vertexes[++position] = blue;
                 vertexes[++position] = particleAlpha;
-                vertexes[++position] = textureWidth;
-                vertexes[++position] = textureHeight;
+                vertexes[++position] = bottomRightX;
+                vertexes[++position] = bottomRightY;
             }
             else
             {
@@ -188,8 +193,8 @@ public class Stage3DRenderer extends DisplayObject
                 vertexes[++position] = green;
                 vertexes[++position] = blue;
                 vertexes[++position] = particleAlpha;
-                vertexes[++position] = textureX;
-                vertexes[++position] = textureY;
+                vertexes[++position] = topLeftX;
+                vertexes[++position] = topLeftY;
 
                 vertexes[++position] = x + xOffset;
                 vertexes[++position] = y - yOffset;
@@ -197,8 +202,8 @@ public class Stage3DRenderer extends DisplayObject
                 vertexes[++position] = green;
                 vertexes[++position] = blue;
                 vertexes[++position] = particleAlpha;
-                vertexes[++position] = textureWidth;
-                vertexes[++position] = textureY;
+                vertexes[++position] = bottomRightX;
+                vertexes[++position] = topLeftY;
 
                 vertexes[++position] = x - xOffset;
                 vertexes[++position] = y + yOffset;
@@ -206,8 +211,8 @@ public class Stage3DRenderer extends DisplayObject
                 vertexes[++position] = green;
                 vertexes[++position] = blue;
                 vertexes[++position] = particleAlpha;
-                vertexes[++position] = textureX;
-                vertexes[++position] = textureHeight;
+                vertexes[++position] = topLeftX;
+                vertexes[++position] = bottomRightY;
 
                 vertexes[++position] = x + xOffset;
                 vertexes[++position] = y + yOffset;
@@ -215,8 +220,8 @@ public class Stage3DRenderer extends DisplayObject
                 vertexes[++position] = green;
                 vertexes[++position] = blue;
                 vertexes[++position] = particleAlpha;
-                vertexes[++position] = textureWidth;
-                vertexes[++position] = textureHeight;
+                vertexes[++position] = bottomRightX;
+                vertexes[++position] = bottomRightY;
             }
         }
     }
@@ -258,7 +263,7 @@ public class Stage3DRenderer extends DisplayObject
 
         while (++last < parent.numChildren)
         {
-            var nextPS:Stage3DRenderer = parent.getChildAt(last) as Stage3DRenderer;
+            var nextPS:StardustStarlingRenderer = parent.getChildAt(last) as StardustStarlingRenderer;
             if (nextPS != null && nextPS.mNumParticles > 0 &&
                 !nextPS.isStateChange(mTinted, alpha, mTexture.base, mTexture.repeat, texSmoothing, blendMode, SOURCE_BLEND_FACTOR, DESTINATION_BLEND_FACTOR, mFilter))
             {

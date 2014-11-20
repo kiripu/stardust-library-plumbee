@@ -26,12 +26,12 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
     private var _spriteSheetStartAtRandomFrame : Boolean;
     private var _totalFrames : uint;
     private var _texture : Texture;
-    private var _renderer : Stage3DRenderer;
+    private var _renderer : StardustStarlingRenderer;
 
     public function set container(container:DisplayObjectContainer) : void {
         if (_renderer == null)
         {
-            _renderer = new Stage3DRenderer();
+            _renderer = new StardustStarlingRenderer();
             _renderer.blendMode = _blendMode;
             _renderer.texSmoothing = _smoothing;
             calculateTextureCoordinates();
@@ -177,7 +177,7 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
         _texture = value;
     }
 
-    public function get renderer():Stage3DRenderer
+    public function get renderer():StardustStarlingRenderer
     {
         return _renderer;
     }
@@ -192,7 +192,6 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
                          (_bitmapData.width >= _spriteSheetSliceWidth * 2 || _bitmapData.height >= _spriteSheetSliceHeight * 2);
         if (_isSpriteSheet)
         {
-            _totalFrames = _spriteSheetAnimationSpeed * (_bitmapData.width / _spriteSheetSliceWidth  + _bitmapData.height / _spriteSheetSliceHeight - 1);
             const xIter : int = Math.floor( _bitmapData.width / _spriteSheetSliceWidth );
             const yIter : int = Math.floor( _bitmapData.height / _spriteSheetSliceHeight );
             const xInTexCoords : Number = _spriteSheetSliceWidth / _texture.nativeWidth;
@@ -215,6 +214,7 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
                     }
                 }
             }
+            _totalFrames = frames.length;
             _renderer.setTextures(_texture, frames);
         }
         else

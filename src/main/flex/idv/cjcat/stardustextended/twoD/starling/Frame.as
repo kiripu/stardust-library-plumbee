@@ -2,35 +2,26 @@ package idv.cjcat.stardustextended.twoD.starling {
 
 public class Frame {
 
-    public var particleHalfWidth:Number = 1.0;
-    public var particleHalfHeight:Number = 1.0;
-    public var textureX:Number = 0.0;
-    public var textureY:Number = 0.0;
-    public var textureWidth:Number = 1.0;
-    public var textureHeight:Number = 1.0;
+    public var particleHalfWidth:Number;
+    public var particleHalfHeight:Number;
+    public var topLeftX:Number;
+    public var topLeftY:Number;
+    public var bottomRightX:Number;
+    public var bottomRightY:Number;
 
-    public function Frame(x:Number,
-                          y:Number,
-                          width:Number,
-                          height:Number,
-                          halfWidth:Number,
-                          halfHeight:Number)
+    public function Frame(_topLeftX:Number,
+                          _topLeftY:Number,
+                          _bottomRightX:Number,
+                          _bottomRightY:Number,
+                          _halfWidth:Number,
+                          _halfHeight:Number)
     {
-        textureX = x;
-        textureY = y;
-        textureWidth = width;
-        textureHeight = height;
-        particleHalfWidth = halfWidth;
-        particleHalfHeight = halfHeight;
-
-        /*
-        textureX = x / nativeTextureWidth;
-        textureY = y / nativeTextureHeight;
-        textureWidth = (x + width) / nativeTextureWidth;
-        textureHeight = (y + height) / nativeTextureHeight;
-        particleHalfWidth = (width) >> 1;
-        particleHalfHeight = (height) >> 1;
-        */
+        topLeftX = _topLeftX;
+        topLeftY = _topLeftY;
+        bottomRightX = _bottomRightX;
+        bottomRightY = _bottomRightY;
+        particleHalfWidth = _halfWidth;
+        particleHalfHeight = _halfHeight;
     }
 }
 }
