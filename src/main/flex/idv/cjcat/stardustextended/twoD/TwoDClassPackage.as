@@ -1,7 +1,6 @@
 ﻿package idv.cjcat.stardustextended.twoD {
 	import idv.cjcat.stardustextended.common.xml.ClassPackage;
 	import idv.cjcat.stardustextended.twoD.actions.Accelerate;
-    import idv.cjcat.stardustextended.twoD.actions.AnimateSpriteSheet;
     import idv.cjcat.stardustextended.twoD.actions.Collide;
 	import idv.cjcat.stardustextended.twoD.actions.Damping;
 	import idv.cjcat.stardustextended.twoD.actions.DeathZone;
@@ -36,7 +35,8 @@
 	import idv.cjcat.stardustextended.twoD.fields.UniformField;
 	import idv.cjcat.stardustextended.twoD.handlers.BitmapHandler;
 	import idv.cjcat.stardustextended.twoD.handlers.DisplayObjectHandler;
-	import idv.cjcat.stardustextended.twoD.handlers.PixelHandler;
+import idv.cjcat.stardustextended.twoD.handlers.DisplayObjectSpriteSheetHandler;
+import idv.cjcat.stardustextended.twoD.handlers.PixelHandler;
 	import idv.cjcat.stardustextended.twoD.handlers.SingularBitmapHandler;
     import idv.cjcat.stardustextended.twoD.initializers.DisplayObjectClass;
 	import idv.cjcat.stardustextended.twoD.initializers.DisplayObjectParent;
@@ -98,7 +98,6 @@
 			classes.push(Spin);
 			classes.push(StardustSpriteUpdate);
 			classes.push(VelocityField);
-			classes.push(AnimateSpriteSheet);
 
 			//2D action triggers
 			classes.push(DeflectorTrigger);
@@ -136,7 +135,8 @@
 			classes.push(DisplayObjectHandler);
 			classes.push(SingularBitmapHandler);
 			classes.push(PixelHandler);
-			
+			classes.push(DisplayObjectSpriteSheetHandler);
+
 			//2D zones
 			classes.push(BitmapZone);
 			classes.push(CircleContour);

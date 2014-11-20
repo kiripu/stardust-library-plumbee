@@ -8,33 +8,35 @@ import idv.cjcat.stardustextended.common.particles.Particle;
 import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 import idv.cjcat.stardustextended.twoD.handlers.ISpriteSheetHandler;
 
+import starling.display.BlendMode;
+
 import starling.display.DisplayObjectContainer;
 import starling.textures.Texture;
 import starling.textures.TextureSmoothing;
 
 public class StarlingHandler extends ParticleHandler implements ISpriteSheetHandler{
 
-    private var _blendMode:String;
+    private var _blendMode:String = BlendMode.NORMAL;
+    private var _spriteSheetSliceWidth : uint = 32;
+    private var _spriteSheetSliceHeight : uint = 32;
+    private var _spriteSheetAnimationSpeed : uint = 1;
     private var _bitmapData : BitmapData;
     private var _smoothing : String;
-    private var _spriteSheetSliceWidth : uint;
-    private var _spriteSheetSliceHeight : uint;
     private var _isSpriteSheet : Boolean;
-    private var _spriteSheetAnimationSpeed : uint;
     private var _spriteSheetStartAtRandomFrame : Boolean;
     private var _totalFrames : uint;
     private var _texture : Texture;
-    private var renderer : Stage3DRenderer;
+    private var _renderer : Stage3DRenderer;
 
     public function set container(container:DisplayObjectContainer) : void {
-        if (renderer == null)
+        if (_renderer == null)
         {
-            renderer = new Stage3DRenderer();
-            renderer.blendMode = _blendMode;
-            renderer.texSmoothing = _smoothing;
+            _renderer = new Stage3DRenderer();
+            _renderer.blendMode = _blendMode;
+            _renderer.texSmoothing = _smoothing;
             calculateTextureCoordinates();
         }
-        container.addChild(renderer);
+        container.addChild(_renderer);
     }
 
     override public function stepEnd(emitter:Emitter, particles:Vector.<Particle>, time:Number):void {
@@ -52,7 +54,7 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
                 particle.currentAnimationFrame = currFrame;
             }
         }
-        renderer.advanceTime(particles);
+        _renderer.advanceTime(particles);
     }
 
     override public function particleAdded(particle:Particle):void {
@@ -73,6 +75,10 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
 
     public function set bitmapData(bitmapData:BitmapData):void {
         _bitmapData = bitmapData;
+        if (_bitmapData == null)
+        {
+            return;
+        }
         if (_spriteSheetSliceHeight > bitmapData.height)
         {
             _spriteSheetSliceHeight = bitmapData.height;
@@ -139,37 +145,46 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
         else {
             _smoothing = TextureSmoothing.NONE;
         }
-        if (renderer)
+        if (_renderer)
         {
-            renderer.texSmoothing = _smoothing;
+            _renderer.texSmoothing = _smoothing;
         }
     }
 
-    public function set blendMode(blendMode:String):void {
+    public function set blendMode(blendMode:String):void
+    {
         _blendMode = blendMode;
-        if (renderer)
+        if (_renderer)
         {
-            renderer.blendMode = blendMode;
+            _renderer.blendMode = blendMode;
         }
     }
 
-    public function get blendMode():String {
+    public function get blendMode():String
+    {
         return _blendMode;
     }
 
-    public function get texture():Texture {
+    public function get texture():Texture
+    {
         return _texture;
     }
 
     /** Set the texture directly. Texture atlases are not properly supported since the sprites must begin
      * at (0,0) in the texture and they must come after each other. */
-    public function set texture(value:Texture):void {
+    public function set texture(value:Texture):void
+    {
         _texture = value;
+    }
+
+    public function get renderer():Stage3DRenderer
+    {
+        return _renderer;
     }
 
     private function calculateTextureCoordinates() :void
     {
-        if (renderer == null || _bitmapData == null)
+        if (_renderer == null || _bitmapData == null)
         {
             return;
         }
@@ -200,12 +215,12 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
                     }
                 }
             }
-            renderer.setTextures(_texture, frames);
+            _renderer.setTextures(_texture, frames);
         }
         else
         {
             _totalFrames = 1;
-            renderer.setTextures(_texture, new <Frame>[new Frame(0, 0, 1, 1, _texture.width/2, _texture.height/2)]);
+            _renderer.setTextures(_texture, new <Frame>[new Frame(0, 0, 1, 1, _texture.width/2, _texture.height/2)]);
         }
     }
 
