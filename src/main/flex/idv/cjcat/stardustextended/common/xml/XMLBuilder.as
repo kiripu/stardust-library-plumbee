@@ -176,8 +176,13 @@
 			var element:StardustElement;
 			var node:XML;
 			for each (node in xml.*.*) {
-				var NodeClass : Class = elementClasses[node.name().toString()];
-				element = StardustElement(new NodeClass());
+				try {
+					var NodeClass : Class = elementClasses[node.name().toString()];
+					element = StardustElement(new NodeClass());
+				} catch (err:TypeError) {
+					throw new Error("Unable to instantiate class " + node.name().toString() + " Perhaps you forgot to " +
+					"call XMLBuilder.registerClass for this type? Original error: " + err.toString());
+				}
 				if (elements[node.@name] != undefined) {
 					throw new DuplicateElementNameError("Duplicate element name: " + node.@name, node.@name, elements[node.@name], element);
 				}
