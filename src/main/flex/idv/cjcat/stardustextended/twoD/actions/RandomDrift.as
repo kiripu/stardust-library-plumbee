@@ -28,8 +28,8 @@
 		 * The accleration's y component ranges from -maxY to maxY.
 		 */
 		public var maxY:Number;
-		private var _randomX:Random;
-		private var _randomY:Random;
+		protected var _randomX:Random;
+		protected var _randomY:Random;
 		public function RandomDrift(maxX:Number = 0.2, maxY:Number = 0.2, randomX:Random = null, randomY:Random = null) {
 			priority = -3;
 			
@@ -42,10 +42,10 @@
 		
 		/**
 		 * The random object used to generate a random number for the acceleration's x component in the range [-maxX, maxX], uniform random by default. 
-		 * You don't have to set the ranodm object's range. The range is automatically set each time before the random generation.
+		 * You don't have to set the random object's range. The range is automatically set each time before the random generation.
 		 */
-		public function get randomX():Random { return _randomX; }
-		public function set randomX(value:Random):void {
+		final public function get randomX():Random { return _randomX; }
+		final public function set randomX(value:Random):void {
 			if (!value) value = new UniformRandom();
 			_randomX = value;
 		}
@@ -63,10 +63,10 @@
 		override public function update(emitter:Emitter, particle:Particle, timeDelta:Number, currentTime:Number):void {
 			var p2D:Particle2D = Particle2D(particle);
 			
-			randomX.setRange( -maxX, maxX);
-			randomY.setRange( -maxY, maxY);
-			var rx:Number = randomX.random();
-			var ry:Number = randomY.random();
+			_randomX.setRange( -maxX, maxX);
+			_randomY.setRange( -maxY, maxY);
+			var rx:Number = _randomX.random();
+			var ry:Number = _randomY.random();
 			
 			if (!massless) {
 				var factor:Number = 1 / p2D.mask;

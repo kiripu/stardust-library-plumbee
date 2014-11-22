@@ -1,9 +1,11 @@
 ﻿package idv.cjcat.stardustextended.twoD.actions {
-	import idv.cjcat.stardustextended.common.emitters.Emitter;
+import idv.cjcat.stardustextended.common.actions.Action;
+import idv.cjcat.stardustextended.common.emitters.Emitter;
 	import idv.cjcat.stardustextended.common.particles.Particle;
 	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 	import idv.cjcat.stardustextended.sd;
-	import idv.cjcat.stardustextended.twoD.deflectors.Deflector;
+import idv.cjcat.stardustextended.twoD.actions.triggers.DeflectorTrigger;
+import idv.cjcat.stardustextended.twoD.deflectors.Deflector;
 	import idv.cjcat.stardustextended.twoD.geom.MotionData4D;
 	import idv.cjcat.stardustextended.twoD.particles.Particle2D;
 	
@@ -66,21 +68,34 @@
 		private var p2D:Particle2D;
 		private var md4D:MotionData4D;
 		private var deflector:Deflector;
+		private var hasTrigger:Boolean;
 		override public function update(emitter:Emitter, particle:Particle, timeDelta:Number, currentTime:Number):void {
 			p2D = Particle2D(particle);
 			for each (deflector in deflectors) {
 				md4D = deflector.getMotionData4D(p2D);
 				if (md4D) {
-					p2D.dictionary[deflector] = true;
+					if (hasTrigger)	p2D.dictionary[deflector] = true;
 					p2D.x = md4D.x;
 					p2D.y = md4D.y;
 					p2D.vx = md4D.vx;
 					p2D.vy = md4D.vy;
 					md4D = null;
 				} else {
-					p2D.dictionary[deflector] = false;
+					if (hasTrigger) p2D.dictionary[deflector] = false;
 				}
 			}
+		}
+
+		override public function preUpdate(emitter:Emitter, time:Number):void {
+			for each (var action:Action in emitter.actions)
+			{
+				if (action is DeflectorTrigger)
+				{
+					hasTrigger = true;
+					return;
+				}
+			}
+			hasTrigger = false;
 		}
 		
 		//XML

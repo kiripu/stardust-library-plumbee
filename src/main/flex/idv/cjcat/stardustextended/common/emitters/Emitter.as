@@ -27,24 +27,24 @@
 		
 		//signals
 		//------------------------------------------------------------------------------------------------
-		
-		private const _onEmpty:ISignal = new Signal(Emitter);
+
+		protected const _onEmpty:ISignal = new Signal(Emitter);
 		/**
 		 * Dispatched when the emitter is empty of particles.
 		 * <p/>
 		 * Signature: (emitter:Emitter)
 		 */
 		public function get onEmpty():ISignal { return _onEmpty; }
-		
-		private const _onStepBegin:ISignal = new Signal(Emitter, Vector.<Particle>, Number);
+
+		protected const _onStepBegin:ISignal = new Signal(Emitter, Vector.<Particle>, Number);
 		/**
 		 * Dispatched at the beginning of each step.
 		 * <p/>
 		 * Signature: (emitter:Emitter, particles:ParticleCollection, time:Number)
 		 */
 		public function get onStepBegin():ISignal { return _onStepBegin; }
-		
-		private const _onStepEnd:ISignal = new Signal(Emitter, Vector.<Particle>, Number);
+
+		protected const _onStepEnd:ISignal = new Signal(Emitter, Vector.<Particle>, Number);
 		/**
 		 * Dispatched at the end of each step.
 		 * <p/>
@@ -71,9 +71,9 @@
 		
 		//------------------------------------------------------------------------------------------------
 		//end of particle collections
-		
-		
-		private var _clock:Clock;
+
+
+		protected var _clock:Clock;
 		/**
 		 * Whether the emitter is active, true by default.
 		 * 
@@ -89,12 +89,12 @@
 		/** @private */
 		protected var factory:PooledParticleFactory;
 		
-		private const _actionCollection:ActionCollection = new ActionCollection();
-        private const activeActions : Vector.<Action> = new Vector.<Action>();
+		protected const _actionCollection:ActionCollection = new ActionCollection();
+		protected const activeActions : Vector.<Action> = new Vector.<Action>();
 
         public var currentTime : Number = 0;
 
-		private var _particleHandler:ParticleHandler;
+		protected var _particleHandler:ParticleHandler;
 		public function get particleHandler():ParticleHandler { return _particleHandler; }
 		public function set particleHandler(value:ParticleHandler):void {
 			if (!value) value = ParticleHandler.getSingleton();
@@ -177,9 +177,10 @@
                 p = _particles[m];
 				for (i = 0; i < len; ++i) {
 					action = activeActions[i];
-					
 					//update particle
-					if (p.mask & action.mask) action.update(this, p, time, currentTime);
+					if (p.mask & action.mask) {
+						action.update(this, p, time, currentTime);
+					}
 				}
 
 				if (p.isDead) {
