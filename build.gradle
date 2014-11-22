@@ -49,8 +49,9 @@ dependencies {
 }
 
 additionalCompilerOptions = [
+    '-inline',
     '-debug=true',
-    '-keep-as3-metadata+=Inject,Embed,ChangeEvent,NonCommittingChangeEvent,PreDestroy,Bindable'
+    '-keep-as3-metadata+=Inline,Inject,Embed,ChangeEvent,NonCommittingChangeEvent,PreDestroy,Bindable'
 ]
 
 sdkAutoInstall {
