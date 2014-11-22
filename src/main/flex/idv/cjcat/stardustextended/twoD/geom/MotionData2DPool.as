@@ -4,7 +4,8 @@
 		
 		private static var _vec:Vector.<MotionData2D> = new <MotionData2D>[new MotionData2D()];
 		private static var _position:int = 0;
-		
+
+		[Inline]
 		public static function get(x:Number = 0, y:Number = 0):MotionData2D {
 			if (_position == _vec.length) {
 				_vec.length <<= 1;
@@ -19,22 +20,14 @@
 			obj.y = y;
 			return obj;
 		}
-		
+
+		[Inline]
 		public static function recycle(obj:MotionData2D):void {
 			if (_position == 0) return;
 			if (!obj) return;
 			
 			_vec[_position - 1] = obj;
 			if (_position) _position--;
-			
-			//if (_vec.length >= 16) {
-				//if (_position < (_vec.length >> 4)) {
-					//
-					//trace("MotionData2DPool contracted");
-					//
-					//_vec.length >>= 1;
-				//}
-			//}
 		}
 	}
 }

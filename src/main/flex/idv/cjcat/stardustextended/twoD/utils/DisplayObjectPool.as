@@ -11,8 +11,9 @@
 		private var _params:Array;
 		private var _vec:Array = [];
 		private var _position:int = 0;
-		
-		public function reset(c:Class, params:Array):void {
+
+		[Inline]
+		final public function reset(c:Class, params:Array):void {
 			_position = 0;
 			_vec = new Array(DEFAULT_SIZE);
 			_class = c;
@@ -22,7 +23,8 @@
 			}
 		}
 
-		public function get():DisplayObject {
+		[Inline]
+		final public function get():DisplayObject {
 			if (_position == _vec.length) {
 				_vec.length <<= 1;
 				
@@ -35,8 +37,9 @@
 			_position++;
 			return _vec[_position - 1];
 		}
-		
-		public function recycle(obj:DisplayObject):void {
+
+		[Inline]
+		final public function recycle(obj:DisplayObject):void {
 			if (_position == 0) return;
 			if (!obj) return;
 			
@@ -45,11 +48,7 @@
 			if (_position < 0) _position = 0;
 			
 			if (_vec.length > DEFAULT_SIZE * 2) {
-				
 				if (_position < (_vec.length >> 4)) {
-
-                    //trace("DisplayObjectPool contracted. New size:", _vec.length);
-					
 					_vec.length >>= 1;
 				}
 			}

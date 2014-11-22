@@ -102,7 +102,12 @@ public class StarlingParticleBuffers {
 
     public static function get buffersCreated() : Boolean
     {
-        return (vertexBuffers && vertexBuffers.length > 0);
+        // this has to look like this otherwise ASC 2.0 generates some garbage code
+        if (vertexBuffers && vertexBuffers.length > 0)
+        {
+            return true;
+        }
+        return false;
     }
 }
 }

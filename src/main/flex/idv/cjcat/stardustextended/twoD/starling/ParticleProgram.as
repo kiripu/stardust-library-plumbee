@@ -13,7 +13,7 @@ import starling.textures.TextureSmoothing;
 public class ParticleProgram
 {
 
-    private static var sProgramNameCache:Dictionary = new Dictionary();
+    private static const sProgramNameCache:Dictionary = new Dictionary();
 
     public static function getProgram(hasTexure : Boolean,
                                       texTinted:Boolean = false,
@@ -95,7 +95,7 @@ public class ParticleProgram
 
         if (name == null)
         {
-            name = "QB_i." + bitField.toString(16);
+            name = "__STARDUST_RENDERER." + bitField.toString(16);
             sProgramNameCache[bitField] = name;
         }
         return name;

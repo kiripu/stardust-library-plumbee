@@ -7,6 +7,7 @@ import flash.display3D.Context3DVertexBufferFormat;
 import flash.display3D.textures.TextureBase;
 import flash.events.Event;
 import flash.geom.Matrix3D;
+import flash.geom.Rectangle;
 
 import idv.cjcat.stardustextended.common.particles.Particle;
 
@@ -25,7 +26,7 @@ import starling.utils.VertexData;
 
 public class StardustStarlingRenderer extends DisplayObject
 {
-    public static const MAX_PARTICLES:int = 16383;
+    public static var MAX_PARTICLES:int = 16383;
     private static const DEGREES_TO_RADIANS : Number = Math.PI / 180;
     private static const SOURCE_BLEND_FACTOR:String = Context3DBlendFactor.SOURCE_ALPHA;
     private static const DESTINATION_BLEND_FACTOR:String = Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA;
@@ -33,7 +34,8 @@ public class StardustStarlingRenderer extends DisplayObject
     private static const sSinLUT:Vector.<Number> = new Vector.<Number>(0x800, true);
     private static var numberOfVertexBuffers:int;
     private static var sLUTsCreated:Boolean = false;
-
+    
+    private var boundsRect : Rectangle;
     private var mFilter:FragmentFilter;
     private var mTinted : Boolean = true;
     private var mTexture : Texture;
@@ -54,7 +56,9 @@ public class StardustStarlingRenderer extends DisplayObject
     }
 
     /** numberOfBuffers is the amount of vertex buffers used by the particle system for multi buffering. Multi buffering
-     *  can avoid stalling of the GPU but will also increases it's memory consumption. */
+     *  can avoid stalling of the GPU but will also increases it's memory consumption.
+     *  This call requires that there is a Starling context
+     *  */
     public static function init(numberOfBuffers:uint = 2):void
     {
         numberOfVertexBuffers = numberOfBuffers;
@@ -313,7 +317,7 @@ public class StardustStarlingRenderer extends DisplayObject
         }
 
         var blendFactors:Array = BlendMode.getBlendFactors(blendMode, false);
-        Starling.context.setBlendFactors(blendFactors[0], blendFactors[1]);
+        context.setBlendFactors(blendFactors[0], blendFactors[1]);
 
         const renderAlpha:Vector.<Number> = new <Number>[1, 1, 1, alpha];
         const renderMatrix:Matrix3D = new Matrix3D();
@@ -348,6 +352,15 @@ public class StardustStarlingRenderer extends DisplayObject
             mFilter = value;
         }
         super.filter = value;
+    }
+
+    override public function getBounds(targetSpace:DisplayObject,resultRect:Rectangle = null):Rectangle
+    {
+        if (boundsRect == null)
+        {
+            boundsRect = new Rectangle();
+        }
+        return boundsRect;
     }
 
 }

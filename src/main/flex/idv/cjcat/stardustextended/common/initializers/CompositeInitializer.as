@@ -31,8 +31,8 @@
 		public function removeInitializer(initializer:Initializer):void {
 			var index:int;
 			if ((index = initializers.indexOf(initializer)) >= 0) {
-				var initializer:Initializer = initializers.splice(index, 1)[0] as Initializer;
-				initializer.onPriorityChange.remove(sortInitializers);
+				var toRem:Initializer = initializers.splice(index, 1)[0] as Initializer;
+				toRem.onPriorityChange.remove(sortInitializers);
 			}
 		}
 		

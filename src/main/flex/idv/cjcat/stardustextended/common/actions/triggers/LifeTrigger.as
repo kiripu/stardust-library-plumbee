@@ -29,7 +29,7 @@
 		private var _lowerBound:Number;
 		private var _upperBound:Number;
 		public function LifeTrigger(lowerBound:Number = 0, upperBound:Number = Number.MAX_VALUE, triggerWithinBounds:Boolean = true, triggerEvery:Number = 1 ) {
-			priority = 05;
+			priority = -5;
 			
 			this.lowerBound = lowerBound;
 			this.upperBound = upperBound;

@@ -25,8 +25,8 @@
 		public final function removeAction(action:Action):void {
 			var index:int;
 			if ((index = actions.indexOf(action)) >= 0) {
-				var action:Action = Action(actions.splice(index, 1)[0]);
-				action.onPriorityChange.remove(sortActions);
+				var toRem:Action = Action(actions.splice(index, 1)[0]);
+				toRem.onPriorityChange.remove(sortActions);
 			}
 		}
 		
