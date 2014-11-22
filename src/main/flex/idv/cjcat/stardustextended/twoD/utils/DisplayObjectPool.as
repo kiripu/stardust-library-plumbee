@@ -7,10 +7,10 @@
 		
 		private static const DEFAULT_SIZE:int = 32;
 		
-		private var _class:Class;
-		private var _params:Array;
-		private var _vec:Array = [];
-		private var _position:int = 0;
+		protected var _class:Class;
+		protected var _params:Array;
+		protected var _vec:Array = [];
+		protected var _position:int = 0;
 
 		[Inline]
 		final public function reset(c:Class, params:Array):void {
@@ -27,9 +27,6 @@
 		final public function get():DisplayObject {
 			if (_position == _vec.length) {
 				_vec.length <<= 1;
-				
-				//trace("DisplayObjectPool expanded. New size:", _vec.length);
-				
 				for (var i:int = _position; i < _vec.length; i++) {
 					_vec[i] = construct(_class, _params);
 				}

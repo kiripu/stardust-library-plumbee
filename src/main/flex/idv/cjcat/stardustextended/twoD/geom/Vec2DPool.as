@@ -2,8 +2,8 @@
 	
 	public class Vec2DPool {
 		
-		private static const _vec : Vector.<Vec2D> = new <Vec2D>[new Vec2D()];
-		private static var _position:int = 0;
+		protected static const _vec : Vector.<Vec2D> = new <Vec2D>[new Vec2D()];
+		protected static var _position:int = 0;
 
 		[Inline]
 		public static function get(x:Number = 0, y:Number = 0):Vec2D {
@@ -26,16 +26,6 @@
 			
 			_vec[_position - 1] = obj;
 			if (_position) _position--;
-			
-			//if (_vec.length >= 16) {
-				//
-				//if (_position < (_vec.length >> 4)) {
-					//
-					//trace("Vec2DPool contracted");
-					//
-					//_vec.length >>= 1;
-				//}
-			//}
 		}
 	}
 }

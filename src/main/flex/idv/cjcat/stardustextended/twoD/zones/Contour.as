@@ -6,7 +6,7 @@
 	 */
 	public class Contour extends Zone {
 		
-		private var _virtualThickness:Number;
+		protected var _virtualThickness:Number;
 		
 		public function Contour() {
 			_virtualThickness = 1;

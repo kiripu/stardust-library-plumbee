@@ -15,10 +15,10 @@ import starling.utils.VertexData;
 public class StarlingParticleBuffers {
 
     public static var indexBuffer:IndexBuffer3D;
-    private static var vertexBuffers:Vector.<VertexBuffer3D>;
+    protected static var vertexBuffers:Vector.<VertexBuffer3D>;
     private static var indices:Vector.<uint>;
-    private static var sNumberOfVertexBuffers:int;
-    private static var vertexBufferIdx:int = -1;
+    protected static var sNumberOfVertexBuffers:int;
+    protected static var vertexBufferIdx:int = -1;
 
     /** Creates buffers for the simulation.
      * numberOfBuffers is the amount of vertex buffers used by the particle system for multi buffering. Multi buffering
