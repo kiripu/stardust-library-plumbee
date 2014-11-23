@@ -13,7 +13,7 @@ import idv.cjcat.stardustextended.twoD.zones.Zone;
 	 * Default priority = -6;
 	 * </p>
 	 */
-	public class DeathZone extends Action2D {
+	public class DeathZone extends Action2D implements IZoneContainer {
 		
 		/**
 		 * If a particle leave this zone (<code>Zone.contains()</code> returns false), it will be marked dead.

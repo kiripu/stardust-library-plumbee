@@ -7,6 +7,7 @@ import flash.utils.ByteArray;
 
 import idv.cjcat.stardustextended.common.particles.Particle;
 import idv.cjcat.stardustextended.common.xml.XMLBuilder;
+import idv.cjcat.stardustextended.twoD.actions.IZoneContainer;
 import idv.cjcat.stardustextended.twoD.geom.MotionData2D;
 import idv.cjcat.stardustextended.twoD.geom.MotionData2DPool;
 import idv.cjcat.stardustextended.twoD.particles.Particle2D;
@@ -18,11 +19,11 @@ import idv.cjcat.stardustextended.twoD.zones.Zone;
  * Sets a particle's initial position based on the zone plus on a value in the positions array.
  * The current position is: positions[currentFrame] + random point in the zone.
  */
-public class PositionAnimated extends Initializer2D
+public class PositionAnimated extends Initializer2D implements IZoneContainer
 {
 
     private var _zone : Zone;
-    private var _positons : Vector.<Point>;
+    private var _positions : Vector.<Point>;
     private var currentPos : uint;
     public var inheritVelocity : Boolean = false;
 
@@ -33,9 +34,9 @@ public class PositionAnimated extends Initializer2D
 
     override public function doInitialize( particles : Vector.<Particle>, currentTime : Number ) : void
     {
-        if ( _positons )
+        if ( _positions )
         {
-            currentPos = currentTime % _positons.length;
+            currentPos = currentTime % _positions.length;
         }
         super.doInitialize( particles, currentTime );
     }
@@ -44,16 +45,16 @@ public class PositionAnimated extends Initializer2D
     {
         var p2D : Particle2D = Particle2D( particle );
         var md2D : MotionData2D = zone.getPoint();
-        if ( _positons )
+        if ( _positions )
         {
-            p2D.x = md2D.x + _positons[currentPos].x;
-            p2D.y = md2D.y + _positons[currentPos].y;
+            p2D.x = md2D.x + _positions[currentPos].x;
+            p2D.y = md2D.y + _positions[currentPos].y;
 
             if ( inheritVelocity )
             {
-                var prevPos : int = (currentPos > 0) ? currentPos - 1 : _positons.length - 1;
-                p2D.vx += _positons[currentPos].x - _positons[prevPos].x;
-                p2D.vy += _positons[currentPos].y - _positons[prevPos].y;
+                var prevPos : int = (currentPos > 0) ? currentPos - 1 : _positions.length - 1;
+                p2D.vx += _positions[currentPos].x - _positions[prevPos].x;
+                p2D.vy += _positions[currentPos].y - _positions[prevPos].y;
             }
         }
         else
@@ -80,19 +81,19 @@ public class PositionAnimated extends Initializer2D
 
     public function set positions( value : Vector.<Point> ) : void
     {
-        _positons = value;
+        _positions = value;
     }
 
     public function get positions() : Vector.<Point>
     {
-        return _positons;
+        return _positions;
     }
 
     public function get currentPosition() : Point
     {
-        if ( _positons )
+        if ( _positions )
         {
-            return _positons[currentPos];
+            return _positions[currentPos];
         }
         return null;
     }
@@ -115,13 +116,13 @@ public class PositionAnimated extends Initializer2D
         var xml : XML = super.toXML();
         xml.@zone = zone.name;
         xml.@inheritVelocity = inheritVelocity;
-        if ( _positons && _positons.length > 0 )
+        if ( _positions && _positions.length > 0 )
         {
             registerClassAlias( "String", String );
             registerClassAlias( "Point", Point );
             registerClassAlias( "VecPoint", Vector.<Point> as Class );
             var ba : ByteArray = new ByteArray();
-            ba.writeObject( _positons );
+            ba.writeObject( _positions );
             xml.@positions = Base64.encode( ba );
         }
         return xml;
@@ -141,7 +142,7 @@ public class PositionAnimated extends Initializer2D
             registerClassAlias( "VecPoint", Vector.<Point> as Class );
             const ba : ByteArray = Base64.decode(xml.@positions);
             ba.position = 0;
-            _positons = ba.readObject();
+            _positions = ba.readObject();
         }
         if ( xml.@inheritVelocity.length() )
         {

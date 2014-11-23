@@ -2,7 +2,8 @@
 	import idv.cjcat.stardustextended.common.particles.Particle;
 	import idv.cjcat.stardustextended.common.emitters.Emitter;
 	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
-	import idv.cjcat.stardustextended.twoD.particles.Particle2D;
+import idv.cjcat.stardustextended.twoD.actions.IZoneContainer;
+import idv.cjcat.stardustextended.twoD.particles.Particle2D;
 	import idv.cjcat.stardustextended.twoD.zones.SinglePoint;
 	import idv.cjcat.stardustextended.twoD.zones.Zone;
 	
@@ -13,7 +14,7 @@
 	 * Default priority = -6;
 	 * </p>
 	 */
-	public class ZoneTrigger extends ActionTrigger2D {
+	public class ZoneTrigger extends ActionTrigger2D implements IZoneContainer {
 		
 		private var _zone:Zone;
 		public function ZoneTrigger(zone:Zone = null) {
