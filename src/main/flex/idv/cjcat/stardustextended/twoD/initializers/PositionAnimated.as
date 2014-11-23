@@ -24,6 +24,7 @@ public class PositionAnimated extends Initializer2D implements IZoneContainer
 
     private var _zone : Zone;
     private var _positions : Vector.<Point>;
+    private var prevPos : uint;
     private var currentPos : uint;
     public var inheritVelocity : Boolean = false;
 
@@ -37,6 +38,7 @@ public class PositionAnimated extends Initializer2D implements IZoneContainer
         if ( _positions )
         {
             currentPos = currentTime % _positions.length;
+            prevPos = (currentPos > 0) ? currentPos - 1 : _positions.length - 1;
         }
         super.doInitialize( particles, currentTime );
     }
@@ -44,7 +46,7 @@ public class PositionAnimated extends Initializer2D implements IZoneContainer
     override public function initialize( particle : Particle ) : void
     {
         var p2D : Particle2D = Particle2D( particle );
-        var md2D : MotionData2D = zone.getPoint();
+        var md2D : MotionData2D = _zone.getPoint();
         if ( _positions )
         {
             p2D.x = md2D.x + _positions[currentPos].x;
@@ -52,7 +54,6 @@ public class PositionAnimated extends Initializer2D implements IZoneContainer
 
             if ( inheritVelocity )
             {
-                var prevPos : int = (currentPos > 0) ? currentPos - 1 : _positions.length - 1;
                 p2D.vx += _positions[currentPos].x - _positions[prevPos].x;
                 p2D.vy += _positions[currentPos].y - _positions[prevPos].y;
             }
