@@ -17,6 +17,7 @@
 		 * @param	upperBound
 		 * @return
 		 */
+		[Inline]
 		public static function clamp(input:Number, lowerBound:Number, upperBound:Number):Number {
 			if (input < lowerBound) return lowerBound;
 			if (input > upperBound) return upperBound;
@@ -32,21 +33,24 @@
 		 * @param	x3
 		 * @return
 		 */
+		[Inline]
 		public static function interpolate(x1:Number, y1:Number, x2:Number, y2:Number, x3:Number):Number {
 			return y1 - ((y1 - y2) * (x1 - x3) / (x1 - x2));
 		}
 		
 		/**
-		 * The remainder of value1 divided by value2, negative value1 exception taken into accound. 
+		 * The remainder of value1 divided by value2, negative value1 exception taken into account.
 		 * Value2 must be positive.
 		 * @param	value1
 		 * @param	value2
 		 */
+		[Inline]
 		public static function mod(value1:Number, value2:Number):Number {
 			var remainder:Number = value1 % value2;
 			return (remainder < 0)?(remainder + value2):(remainder);
 		}
-		
+
+		[Inline]
 		public static function randomFloor(num:Number):int {
 			var floor:int = num | 0;
 			return floor + int(((num - floor) > Math.random())?(1):(0));

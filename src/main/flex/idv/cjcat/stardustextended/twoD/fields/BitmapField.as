@@ -94,8 +94,6 @@
 			}
 			
 			color = _bmpd.getPixel(int(px), int(py));
-			finalX;
-			finalY;
 			switch (channelX) {
 				case 1:
 					finalX = 2 * ((((color & 0xFF0000) >> 16) / 255) - 0.5) * max;
