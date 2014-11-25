@@ -23,7 +23,8 @@
 			this.center = center;
 			this.radius = radius;
 		}
-		
+
+		[Inline]
 		override public final function random():Number {
 			if (radius) return radius * 2 * (Math.random() - 0.5) + center;
 			else return center;

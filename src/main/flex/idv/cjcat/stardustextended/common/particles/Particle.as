@@ -64,14 +64,19 @@
 		 * </p>
 		 */
 		public var target:*;
+
 		/**
-		 * Particle color.
-		 * 
-		 * <p>
-		 * This information can be used by the <code>PixelRenderer</code> class for determining pixel colors.
-		 * </p>
+		 * Red color component; in the [0,1] range.
 		 */
-		public var color:uint;
+		public var colorR:Number;
+		/**
+		 * Green color component; in the [0,1] range.
+		 */
+		public var colorG:Number;
+		/**
+		 * Blue color component; in the [0,1] range.
+		 */
+		public var colorB:Number;
 		/**
 		 * Dictionary for storing additional information.
 		 */
@@ -100,7 +105,9 @@
 			mask = 1;
 			isDead = false;
 			collisionRadius = 0;
-			color = 0;
+			colorR = 1;
+			colorB = 1;
+			colorG = 1;
 		}
 		
 		public function destroy():void {

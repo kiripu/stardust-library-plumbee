@@ -2,7 +2,8 @@ package idv.cjcat.stardustextended.twoD.handlers {
 	import flash.display.BitmapData;
 	import idv.cjcat.stardustextended.common.handlers.ParticleHandler;
 	import idv.cjcat.stardustextended.common.particles.Particle;
-	import idv.cjcat.stardustextended.twoD.particles.Particle2D;
+import idv.cjcat.stardustextended.common.utils.ColorUtil;
+import idv.cjcat.stardustextended.twoD.particles.Particle2D;
 	
 	/**
 	 * This handler draws pixels into a <code>BitmapData</code> object according to the <code>color</code> property of <code>Particle</code> objects.
@@ -28,8 +29,9 @@ package idv.cjcat.stardustextended.twoD.handlers {
 			if ((x < 0) || (x >= targetBitmapData.width)) return;
 			y = int(p2D.y + 0.5);
 			if ((y < 0) || (y >= targetBitmapData.height)) return;
-			
-			finalColor = (particle.color & 0xFFFFFF) | uint(uint(particle.alpha * 255) << 24);
+
+			var rgbColor : uint = ColorUtil.rgbToHex(particle.colorR, particle.colorG, particle.colorB);
+			finalColor = (rgbColor & 0xFFFFFF) | uint(uint(particle.alpha * 255) << 24);
 			targetBitmapData.setPixel32(x, y, finalColor);
 		}
 		

@@ -2,7 +2,8 @@
 	import flash.display.BitmapData;
 
     import idv.cjcat.stardustextended.common.particles.Particle;
-    import idv.cjcat.stardustextended.twoD.particles.Particle2D;
+import idv.cjcat.stardustextended.common.utils.ColorUtil;
+import idv.cjcat.stardustextended.twoD.particles.Particle2D;
 	
 	public class PixelBurster extends Burster2D {
 		
@@ -38,7 +39,10 @@
 					var color:uint = bitmapData.getPixel32(i, j);
 					p.alpha = Number(uint(color & 0xFF000000) >> 24) * inv255;
 					if (!p.alpha) continue;
-					p.color = color & 0xFFFFFF;
+					const colorNoAlpha : uint = color & 0xFFFFFF;
+					p.colorR = ColorUtil.extractRed(colorNoAlpha);
+					p.colorG = ColorUtil.extractGreen(colorNoAlpha);
+					p.colorB = ColorUtil.extractBlue(colorNoAlpha);
 					p.x = i + offsetX;
 					p.y = j + offsetY;
 

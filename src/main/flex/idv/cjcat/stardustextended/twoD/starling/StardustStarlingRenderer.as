@@ -100,9 +100,9 @@ public class StardustStarlingRenderer extends DisplayObject
         var particle:Particle2D;
         var vertexID:int = 0;
 
-        var red:Number = 1;
-        var green:Number = 1;
-        var blue:Number = 1;
+        var red:Number;
+        var green:Number;
+        var blue:Number;
         var particleAlpha:Number;
 
         var rotation:Number;
@@ -127,13 +127,16 @@ public class StardustStarlingRenderer extends DisplayObject
         {
             vertexID = i << 2;
             particle = Particle2D(mParticles[i]);
-
+            // color & alpha
             particleAlpha = particle.alpha;
-
+            red = particle.colorR;
+            green = particle.colorB;
+            blue = particle.colorG;
+            // position & rotation
             rotation = particle.rotation * DEGREES_TO_RADIANS;
             x = particle.x;
             y = particle.y;
-
+            // texture
             frame = frames[particle.currentAnimationFrame];
             bottomRightX = frame.bottomRightX;
             bottomRightY = frame.bottomRightY;
