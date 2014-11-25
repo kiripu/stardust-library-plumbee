@@ -12,7 +12,7 @@ import idv.cjcat.stardustextended.common.particles.Particle;
 
 		/**
 		 * Initializes a particle to the given color. Color values are in the [0-1] range where 0
-		 * is the lack of the color. For example  (0,0,0) means black, (1,1,1) means white.
+		 * is the lack of the color. For example (0,0,0) means black, (1,1,1) means white.
 		 */
 		public function Color()
 		{
@@ -39,11 +39,18 @@ import idv.cjcat.stardustextended.common.particles.Particle;
 
 		override public function toXML():XML {
 			var xml:XML = super.toXML();
+			xml.@colorR = colorR.name;
+			xml.@colorG = colorG.name;
+			xml.@colorB = colorB.name;
 			return xml;
 		}
 		
 		override public function parseXML(xml:XML, builder:XMLBuilder = null):void {
 			super.parseXML(xml, builder);
+
+			colorR = builder.getElementByName(xml.@colorR) as UniformRandom;
+			colorG = builder.getElementByName(xml.@colorG) as UniformRandom;
+			colorB = builder.getElementByName(xml.@colorB) as UniformRandom;
 		}
 		//------------------------------------------------------------------------------------------------
 		//end of XML

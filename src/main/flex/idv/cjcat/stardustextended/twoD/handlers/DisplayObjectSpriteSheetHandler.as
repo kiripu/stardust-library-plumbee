@@ -57,6 +57,7 @@ public class DisplayObjectSpriteSheetHandler extends DisplayObjectHandler implem
                 bmp.bitmapData = spriteCache.bds[nextImageIndex];
                 bmp.smoothing = _smoothing;
             }
+            // TODO: set tinting if needed
             particle.currentAnimationFrame = nextFrame;
         }
         super.readParticle(particle);
