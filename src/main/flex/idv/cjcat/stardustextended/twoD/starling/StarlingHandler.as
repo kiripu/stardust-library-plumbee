@@ -40,7 +40,7 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
     }
 
     override public function stepEnd(emitter:Emitter, particles:Vector.<Particle>, time:Number):void {
-        if (_isSpriteSheet)
+        if (_isSpriteSheet && _spriteSheetAnimationSpeed > 0)
         {
             var mNumParticles:uint = particles.length;
             for (var i:int = 0; i < mNumParticles; ++i)
@@ -208,7 +208,12 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
                             yInTexCoords * (j + 1),
                             _spriteSheetSliceWidth/2,
                             _spriteSheetSliceHeight/2);
-                    for (var k:int = 0; k < _spriteSheetAnimationSpeed; k++)
+                    var numFrames : uint = _spriteSheetAnimationSpeed;
+                    if (numFrames == 0)
+                    {
+                        numFrames = 1; // if animation speed is 0, add each frame once
+                    }
+                    for (var k:int = 0; k < numFrames; k++)
                     {
                         frames.push(frame);
                     }

@@ -45,7 +45,7 @@ public class DisplayObjectSpriteSheetHandler extends DisplayObjectHandler implem
     }
 
     override public function readParticle(particle:Particle):void {
-        if (_isSpriteSheet)
+        if (_isSpriteSheet && _spriteSheetAnimationSpeed > 0)
         {
             var currFrame : uint = particle.currentAnimationFrame;
             const nextFrame : uint = (currFrame + _time) % _totalFrames;
@@ -76,7 +76,14 @@ public class DisplayObjectSpriteSheetHandler extends DisplayObjectHandler implem
             {
                 currFrame = Math.random() * _totalFrames;
             }
-            bmp.bitmapData = spriteCache.bds[uint(currFrame / _spriteSheetAnimationSpeed)];
+            if (_spriteSheetAnimationSpeed > 0)
+            {
+                bmp.bitmapData = spriteCache.bds[uint(currFrame / _spriteSheetAnimationSpeed)];
+            }
+            else
+            {
+                bmp.bitmapData = spriteCache.bds[currFrame];
+            }
             particle.currentAnimationFrame = currFrame;
         }
         else
@@ -174,7 +181,12 @@ public class DisplayObjectSpriteSheetHandler extends DisplayObjectHandler implem
                 slicedSpriteCache[_bitmapData][sizeKey] = new SpriteSheetBitmapSlicedCache(_bitmapData, _spriteSheetSliceWidth, _spriteSheetSliceHeight);
             }
             spriteCache = slicedSpriteCache[_bitmapData][sizeKey];
-            _totalFrames = _spriteSheetAnimationSpeed * spriteCache.bds.length;
+            var numStates : uint = _spriteSheetAnimationSpeed;
+            if (numStates == 0)
+            {
+                numStates = 1; // frame can only change at particle birth
+            }
+            _totalFrames = numStates * spriteCache.bds.length;
         }
     }
 
