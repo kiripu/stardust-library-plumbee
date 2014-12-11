@@ -80,7 +80,7 @@
 		 * @param	builder
 		 */
 		public function parseXML(xml:XML, builder:XMLBuilder = null):void {
-			name = xml.@name;
+			//name = xml.@name;
 		}
 		
 		//------------------------------------------------------------------------------------------------
