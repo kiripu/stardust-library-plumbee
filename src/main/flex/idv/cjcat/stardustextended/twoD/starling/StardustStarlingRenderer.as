@@ -127,9 +127,10 @@ public class StardustStarlingRenderer extends DisplayObject
             particle = Particle2D(mParticles[i]);
             // color & alpha
             particleAlpha = particle.alpha;
-            red = particle.colorR;
-            green = particle.colorB;
-            blue = particle.colorG;
+            red = particle.colorR * particleAlpha; // premultiply alpha
+            green = particle.colorB * particleAlpha;
+            blue = particle.colorG * particleAlpha;
+
             // position & rotation
             rotation = particle.rotation * DEGREES_TO_RADIANS;
             x = particle.x;
@@ -255,7 +256,7 @@ public class StardustStarlingRenderer extends DisplayObject
         if (mNumParticles > 0 && !mBatched)
         {
             var mNumBatchedParticles : int = batchNeighbours();
-            renderCustom(support, mNumBatchedParticles);
+            renderCustom(support, mNumBatchedParticles, parentAlpha);
         }
         //reset filter
         super.filter = mFilter;
@@ -300,7 +301,7 @@ public class StardustStarlingRenderer extends DisplayObject
         return mNumBatchedParticles
     }
 
-    private function renderCustom(support:RenderSupport, mNumBatchedParticles : int):void
+    private function renderCustom(support:RenderSupport, mNumBatchedParticles : int, parentAlpha:Number):void
     {
         StarlingParticleBuffers.switchVertexBuffer();
 
@@ -322,7 +323,7 @@ public class StardustStarlingRenderer extends DisplayObject
         var blendFactors:Array = BlendMode.getBlendFactors(blendMode, true);
         context.setBlendFactors(blendFactors[0], blendFactors[1]);
 
-        const renderAlpha:Vector.<Number> = new <Number>[1, 1, 1, alpha];
+        const renderAlpha:Vector.<Number> = new <Number>[parentAlpha, parentAlpha, parentAlpha, parentAlpha];
         const renderMatrix:Matrix3D = new Matrix3D();
         MatrixUtil.convertTo3D(support.mvpMatrix, renderMatrix);
 
