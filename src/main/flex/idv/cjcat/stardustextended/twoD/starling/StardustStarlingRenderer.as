@@ -28,8 +28,6 @@ public class StardustStarlingRenderer extends DisplayObject
 {
     public static var MAX_PARTICLES:int = 16383;
     private static const DEGREES_TO_RADIANS : Number = Math.PI / 180;
-    private static const SOURCE_BLEND_FACTOR:String = Context3DBlendFactor.SOURCE_ALPHA;
-    private static const DESTINATION_BLEND_FACTOR:String = Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA;
     private static const sCosLUT:Vector.<Number> = new Vector.<Number>(0x800, true);
     private static const sSinLUT:Vector.<Number> = new Vector.<Number>(0x800, true);
     private static var numberOfVertexBuffers:int;
@@ -243,10 +241,11 @@ public class StardustStarlingRenderer extends DisplayObject
         }
         else if (mTexture != null && texture != null)
         {
+            var blendFactors:Array = BlendMode.getBlendFactors(blendMode, true);
             return mTexture.base != texture || mTexture.repeat != textureRepeat ||
                    texSmoothing != smoothing || mTinted != (tinted || parentAlpha != 1.0) ||
-                   this.blendMode != blendMode || SOURCE_BLEND_FACTOR != blendFactorSource ||
-                   DESTINATION_BLEND_FACTOR != blendFactorDestination || mFilter != filter;
+                   this.blendMode != blendMode || blendFactors[0] != blendFactorSource ||
+                    blendFactors[1] != blendFactorDestination || mFilter != filter;
         }
         return true;
     }
@@ -270,9 +269,10 @@ public class StardustStarlingRenderer extends DisplayObject
 
         while (++last < parent.numChildren)
         {
+            var blendFactors:Array = BlendMode.getBlendFactors(blendMode, true);
             var nextPS:StardustStarlingRenderer = parent.getChildAt(last) as StardustStarlingRenderer;
             if (nextPS != null && nextPS.mNumParticles > 0 &&
-                !nextPS.isStateChange(mTinted, alpha, mTexture.base, mTexture.repeat, texSmoothing, blendMode, SOURCE_BLEND_FACTOR, DESTINATION_BLEND_FACTOR, mFilter))
+                !nextPS.isStateChange(mTinted, alpha, mTexture.base, mTexture.repeat, texSmoothing, blendMode, blendFactors[0], blendFactors[1], mFilter))
             {
                 if (mNumParticles + mNumBatchedParticles + nextPS.mNumParticles > MAX_PARTICLES)
                 {
@@ -319,7 +319,7 @@ public class StardustStarlingRenderer extends DisplayObject
             throw new MissingContextError();
         }
 
-        var blendFactors:Array = BlendMode.getBlendFactors(blendMode, false);
+        var blendFactors:Array = BlendMode.getBlendFactors(blendMode, true);
         context.setBlendFactors(blendFactors[0], blendFactors[1]);
 
         const renderAlpha:Vector.<Number> = new <Number>[1, 1, 1, alpha];
