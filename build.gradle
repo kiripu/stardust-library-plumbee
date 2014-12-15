@@ -48,7 +48,7 @@ repositories {
 dependencies {
     flexSDK group: 'org.apache', name: 'apache-flex-sdk', version: '4.13.0', ext: 'tar.gz'
 
-    internal group: 'com.gamua', name: 'starling-framework', version: '1.5.1', ext: 'swc'
+    internal group: 'com.gamua', name: 'starling-framework', version: '1.6.0', ext: 'swc'
 }
 
 additionalCompilerOptions = [
