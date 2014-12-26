@@ -4,6 +4,7 @@ import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.DisplayObject;
 import flash.display.DisplayObjectContainer;
+import flash.geom.ColorTransform;
 import flash.utils.Dictionary;
 
 import idv.cjcat.stardustextended.common.emitters.Emitter;
@@ -57,7 +58,6 @@ public class DisplayObjectSpriteSheetHandler extends DisplayObjectHandler implem
                 bmp.bitmapData = spriteCache.bds[nextImageIndex];
                 bmp.smoothing = _smoothing;
             }
-            // TODO: set tinting if needed
             particle.currentAnimationFrame = nextFrame;
         }
         super.readParticle(particle);
@@ -93,6 +93,9 @@ public class DisplayObjectSpriteSheetHandler extends DisplayObjectHandler implem
         bmp.smoothing = _smoothing;
         bmp.x = - bmp.width * 0.5;
         bmp.y = - bmp.height * 0.5;
+
+        bmp.transform.colorTransform = new ColorTransform(particle.colorR, particle.colorG, particle.colorB);
+
         super.particleAdded(particle);
     }
 

@@ -1,7 +1,6 @@
 package idv.cjcat.stardustextended.twoD.starling {
 
 import flash.display3D.Context3D;
-import flash.display3D.Context3DBlendFactor;
 import flash.display3D.Context3DProgramType;
 import flash.display3D.Context3DVertexBufferFormat;
 import flash.display3D.textures.TextureBase;
@@ -128,8 +127,8 @@ public class StardustStarlingRenderer extends DisplayObject
             // color & alpha
             particleAlpha = particle.alpha;
             red = particle.colorR * particleAlpha; // premultiply alpha
-            green = particle.colorB * particleAlpha;
-            blue = particle.colorG * particleAlpha;
+            green = particle.colorG * particleAlpha;
+            blue = particle.colorB * particleAlpha;
 
             // position & rotation
             rotation = particle.rotation * DEGREES_TO_RADIANS;
