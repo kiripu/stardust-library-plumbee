@@ -1,3 +1,5 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+
 buildscript {
     repositories {
         mavenLocal()
@@ -19,14 +21,11 @@ apply plugin: 'gradlefx'
 apply plugin: 'ideafx'
 apply plugin: 'maven'
 
-group = 'com.plumbee'
-version = '3.0'
+group = 'com.funkypandagame'
+version = '3.2'
 type = 'swc'
 output = 'stardust-library'
-frameworkLinkage = 'none'
-
-playerVersion = '14.0'
-
+playerVersion = '15.0'
 srcDirs	= ['src/main/flex']
 
 repositories {
@@ -39,29 +38,30 @@ repositories {
         }
     }
     ivy {
-        name 'Apache'
-        //artifactPattern 'http://apache.cu.be/flex/[revision]/binaries/[module]-[revision]-bin.[ext]'
-        artifactPattern 'http://archive.apache.org/dist/flex/[revision]/binaries/[module]-[revision]-bin.[ext]'
+        name 'Adobe Air SDK'
+        artifactPattern  Os.isFamily(Os.FAMILY_WINDOWS) ?
+                'http://airdownload.adobe.com/air/win/download/[revision]/[module]_Compiler.[ext]' :
+                'http://airdownload.adobe.com/air/mac/download/[revision]/[module]_Compiler.[ext]'
     }
 }
 
 dependencies {
-    flexSDK group: 'org.apache', name: 'apache-flex-sdk', version: '4.13.0', ext: 'tar.gz'
+    airSDK group: 'com.adobe', name: 'AIRSDK', version: '15.0', ext: Os.isFamily(Os.FAMILY_WINDOWS) ? 'zip' : 'tbz2'
 
-    internal group: 'com.gamua', name: 'starling-framework', version: '1.6.0', ext: 'swc'
+    external 'com.gamua:starling-framework:1.6.0'
 }
 
 additionalCompilerOptions = [
-    //'-inline', // Inline is only in ASC 2.0
-    '-debug=true',
-    '-keep-as3-metadata+=Inline,Embed,ChangeEvent,NonCommittingChangeEvent,PreDestroy,Bindable'
+        '-inline',
+        // AS3 metadata
+        '-keep-as3-metadata+=Inline,Embed,SWF,Transient'
 ]
 
 sdkAutoInstall {
     showPrompts = false
 }
 
-///////////////////////////////////////// wrapper
+///////////////////////////////////////// Wrapper
 task wrapper(type: Wrapper) {
     group = 'Buildmaster'
     description = 'Generates gradlew and gradlew.bat bootstrap scripts.'
@@ -76,6 +76,19 @@ uploadArchives {
     repositories {
         mavenDeployer {
             repository url: mavenLocal().url
+
+            //The publication doesn't know about our dependencies, so we have to manually add them to the pom
+            pom.withXml {
+                def dependenciesNode = asNode().appendNode('dependencies')
+                project.configurations["external"].allDependencies.each { Dependency dependency ->
+                    def dependencyNode = dependenciesNode.appendNode('dependency')
+                    dependencyNode.appendNode('groupId', dependency.group)
+                    dependencyNode.appendNode('artifactId', dependency.name)
+                    dependencyNode.appendNode('version', dependency.version)
+                    dependencyNode.appendNode('type', 'swc')
+
+                }
+            }
         }
         //if (deployToRepoManager) {
         //    mavenDeployer {
