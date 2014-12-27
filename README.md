@@ -1,4 +1,4 @@
-#stardust-library-plumbee
+#stardust-library
 
 Fork of the Stardust particle engine. 
 
