@@ -13,7 +13,7 @@ buildscript {
     }
 
     dependencies {
-        classpath group: 'org.gradlefx', name: 'gradlefx', version: '1.1-FP-3'
+        classpath group: 'org.gradlefx', name: 'gradlefx', version: '1.1'
     }
 }
 
@@ -22,7 +22,7 @@ apply plugin: 'ideafx'
 apply plugin: 'maven'
 
 group = 'com.funkypandagame'
-version = '3.2'
+version = '3.3'
 type = 'swc'
 output = 'stardust-library'
 playerVersion = '15.0'

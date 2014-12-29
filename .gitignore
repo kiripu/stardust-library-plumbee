@@ -3,3 +3,4 @@ target/*
 .gradle/*
 .idea/*
 build/*
+!build/stardust-library.swc

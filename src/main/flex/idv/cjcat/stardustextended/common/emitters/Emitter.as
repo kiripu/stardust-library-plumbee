@@ -220,7 +220,7 @@
 		//actions & initializers
 		//------------------------------------------------------------------------------------------------
 		/** @private */
-		sd final function get actions():Array { return _actionCollection.sd::actions; }
+		public final function get actions():Array { return _actionCollection.sd::actions; }
 		
 		/**
 		 * Adds an action to the emitter.
@@ -253,7 +253,7 @@
 		}
 		
 		/** @private */
-		sd final function get initializers():Array { return factory.sd::initializerCollection.sd::initializers; }
+		public final function get initializers():Array { return factory.sd::initializerCollection.sd::initializers; }
 		
 		/**
 		 * Adds an initializer to the emitter.
