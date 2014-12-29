@@ -16,7 +16,7 @@ import idv.cjcat.stardustextended.twoD.deflectors.Deflector;
 	 * 
 	 * <p>
 	 * Each deflector returns a <code>MotionData4D</code> object, which contains four numeric properties: x, y, vx, and vy, 
-	 * according to the particle's positoin and velocity. 
+	 * according to the particle's position and velocity.
 	 * The particle's position and velocity are then reassigned to the new values (x, y) and (vx, vy), respectively.
 	 * </p>
 	 * 
@@ -34,10 +34,10 @@ import idv.cjcat.stardustextended.twoD.deflectors.Deflector;
 		
 		/** @private */
 		sd var deflectors:Array;
-		
+		private var hasTrigger:Boolean;
+
 		public function Deflect() {
 			priority = -5;
-			
 			deflectors = [];
 		}
 		
@@ -64,24 +64,19 @@ import idv.cjcat.stardustextended.twoD.deflectors.Deflector;
 		public function clearDeflectors():void {
 			deflectors = [];
 		}
-		
-		private var p2D:Particle2D;
-		private var md4D:MotionData4D;
-		private var deflector:Deflector;
-		private var hasTrigger:Boolean;
+
 		override public function update(emitter:Emitter, particle:Particle, timeDelta:Number, currentTime:Number):void {
-			p2D = Particle2D(particle);
-			for each (deflector in deflectors) {
-				md4D = deflector.getMotionData4D(p2D);
+			var p2D : Particle2D = Particle2D(particle);
+			for each (var deflector : Deflector in deflectors) {
+				var md4D : MotionData4D = deflector.getMotionData4D(p2D);
 				if (md4D) {
 					if (hasTrigger)	p2D.dictionary[deflector] = true;
 					p2D.x = md4D.x;
 					p2D.y = md4D.y;
 					p2D.vx = md4D.vx;
 					p2D.vy = md4D.vy;
-					md4D = null;
-				} else {
-					if (hasTrigger) p2D.dictionary[deflector] = false;
+				} else if (hasTrigger) {
+					p2D.dictionary[deflector] = false;
 				}
 			}
 		}

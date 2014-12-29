@@ -20,31 +20,27 @@
 		 * When set to true, it simulates a gravity that applies equal acceleration on all particles.
 		 */
 		public var massless:Boolean;
-		/**
-		 * The accleration's x component ranges from -maxX to maxX.
-		 */
-		public var maxX:Number;
-		/**
-		 * The accleration's y component ranges from -maxY to maxY.
-		 */
-		public var maxY:Number;
+		protected var _maxX:Number;
+		protected var _maxY:Number;
 		protected var _randomX:Random;
 		protected var _randomY:Random;
 		public function RandomDrift(maxX:Number = 0.2, maxY:Number = 0.2, randomX:Random = null, randomY:Random = null) {
 			priority = -3;
 			
 			this.massless = true;
-			this.maxX = maxX;
-			this.maxY = maxY;
 			this.randomX = randomX;
 			this.randomY = randomY;
+			this._maxX = maxX;
+			this._maxY = maxY;
 		}
 		
 		/**
 		 * The random object used to generate a random number for the acceleration's x component in the range [-maxX, maxX], uniform random by default. 
 		 * You don't have to set the random object's range. The range is automatically set each time before the random generation.
 		 */
+		[Inline]
 		final public function get randomX():Random { return _randomX; }
+		[Inline]
 		final public function set randomX(value:Random):void {
 			if (!value) value = new UniformRandom();
 			_randomX = value;
@@ -54,17 +50,39 @@
 		 * The random object used to generate a random number for the acceleration's y component in the range [-maxX, maxX], uniform random by default. 
 		 * You don't have to set the ranodm object's range. The range is automatically set each time before the random generation.
 		 */
-		public function get randomY():Random { return _randomY; }
-		public function set randomY(value:Random):void {
+		[Inline]
+		final public function get randomY():Random { return _randomY; }
+		[Inline]
+		final public function set randomY(value:Random):void {
 			if (!value) value = new UniformRandom();
 			_randomY = value;
+		}
+
+		/**
+		 * The acceleration's x component ranges from -maxX to maxX.
+		 */
+		[Inline]
+		final public function get maxX():Number { return _maxX; }
+		[Inline]
+		final public function set maxX(value:Number):void {
+			_maxX = value;
+			_randomX.setRange( -_maxX, _maxX);
+		}
+
+		/**
+		 * The acceleration's y component ranges from -maxY to maxY.
+		 */
+		[Inline]
+		final public function get maxY():Number {	return _maxY; }
+		[Inline]
+		final public function set maxY(value:Number):void {
+			_maxY = value;
+			_randomY.setRange( -_maxY, _maxY);
 		}
 		
 		override public function update(emitter:Emitter, particle:Particle, timeDelta:Number, currentTime:Number):void {
 			var p2D:Particle2D = Particle2D(particle);
 			
-			_randomX.setRange( -maxX, maxX);
-			_randomY.setRange( -maxY, maxY);
 			var rx:Number = _randomX.random();
 			var ry:Number = _randomY.random();
 			
@@ -93,8 +111,8 @@
 			var xml:XML = super.toXML();
 			
 			xml.@massless = massless;
-			xml.@maxX = maxX;
-			xml.@maxY = maxY;
+			xml.@maxX = _maxX;
+			xml.@maxY = _maxY;
 			xml.@randomX = _randomX.name;
 			xml.@randomY = _randomY.name;
 			
@@ -105,8 +123,8 @@
 			super.parseXML(xml, builder);
 			
 			if (xml.@massless.length()) massless = (xml.@massless == "true");
-			if (xml.@maxX.length()) maxX = parseFloat(xml.@maxX);
-			if (xml.@maxY.length()) maxY = parseFloat(xml.@maxY);
+			if (xml.@maxX.length()) _maxX = parseFloat(xml.@maxX);
+			if (xml.@maxY.length()) _maxY = parseFloat(xml.@maxY);
 			if (xml.@randomX.length()) randomX = builder.getElementByName(xml.@randomX) as Random;
 			if (xml.@randomY.length()) randomY = builder.getElementByName(xml.@randomY) as Random;
 		}
