@@ -180,7 +180,7 @@
 					var NodeClass : Class = elementClasses[node.name().toString()];
 					element = StardustElement(new NodeClass());
 				} catch (err:TypeError) {
-					throw new Error("Unable to instantiate class " + node.name().toString() + " Perhaps you forgot to " +
+					throw new Error("Unable to instantiate class " + node.name().toString() + ". Perhaps you forgot to " +
 					"call XMLBuilder.registerClass for this type? Original error: " + err.toString());
 				}
 				if (elements[node.@name] != undefined) {
