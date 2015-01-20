@@ -14,6 +14,7 @@
 		public function SinglePoint(x:Number = 0, y:Number = 0) {
 			this.x = x;
 			this.y = y;
+			updateArea();
 		}
 		
 		override public function contains(x:Number, y:Number):Boolean {

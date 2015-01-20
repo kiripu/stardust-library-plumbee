@@ -7,7 +7,7 @@
 	import idv.cjcat.stardustextended.twoD.particles.Particle2D;
 	
 	/**
-	 * Creates a shock wave that spreads out from a single point, applying acceleration to particles along the way of propogation.
+	 * Creates a shock wave that spreads out from a single point, applying acceleration to particles along the way of propagation.
 	 */
 	public class Explode extends Action2D {
 		
@@ -40,8 +40,11 @@
 		 * This is to prevent the simulation to blow up for particles too close to the center.
 		 */
 		public var epsilon:Number;
-		
-		private var _discharged:Boolean;
+
+		/**
+		 * True is its not in the middle of an explosion
+		 */
+		public var discharged:Boolean;
 		private var _currentInnerRadius:Number;
 		private var _currentOuterRadius:Number;
 		
@@ -54,7 +57,7 @@
 			this.attenuationPower = attenuationPower;
 			this.epsilon = epsilon;
 			
-			_discharged = true;
+			discharged = true;
 		}
 		
 		/**
@@ -62,13 +65,13 @@
 		 * @param	e
 		 */
 		public function explode():void {
-			_discharged = false;
+			discharged = false;
 			_currentInnerRadius = 0;
 			_currentOuterRadius = growSpeed;
 		}
 		
 		override public function update(emitter:Emitter, particle:Particle, timeDelta:Number, currentTime:Number):void {
-			if (_discharged) return;
+			if (discharged) return;
 			
 			var p2D:Particle2D = Particle2D(particle);
 			var r:Vec2D = Vec2DPool.get(p2D.x - x, p2D.y - y);
@@ -84,11 +87,11 @@
 		}
 		
 		override public function postUpdate(emitter:Emitter, time:Number):void {
-			if (_discharged) return;
+			if (discharged) return;
 			
 			_currentInnerRadius += growSpeed;
 			_currentOuterRadius += growSpeed;
-			if (_currentInnerRadius > maxDistance) _discharged = true;
+			if (_currentInnerRadius > maxDistance) discharged = true;
 		}
 		
 		
