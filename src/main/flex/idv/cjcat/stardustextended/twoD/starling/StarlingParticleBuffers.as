@@ -18,14 +18,15 @@ public class StarlingParticleBuffers {
     protected static var vertexBuffers:Vector.<VertexBuffer3D>;
     private static var indices:Vector.<uint>;
     protected static var sNumberOfVertexBuffers:int;
-    protected static var vertexBufferIdx:int = -1;
+    protected static var _vertexBufferIdx:int = -1;
 
     /** Creates buffers for the simulation.
      * numberOfBuffers is the amount of vertex buffers used by the particle system for multi buffering. Multi buffering
      * can avoid stalling of the GPU but will also increases it's memory consumption. */
     public static function createBuffers(numParticles:uint, numberOfVertexBuffers : int):void
     {
-        vertexBufferIdx = -1;
+        sNumberOfVertexBuffers = numberOfVertexBuffers;
+        _vertexBufferIdx = -1;
         if (vertexBuffers)
         {
             for (var i:int = 0; i < vertexBuffers.length; ++i)
@@ -45,7 +46,7 @@ public class StarlingParticleBuffers {
         vertexBuffers = new Vector.<VertexBuffer3D>();
         if (ApplicationDomain.currentDomain.hasDefinition("flash.display3D.Context3DBufferUsage"))
         {
-            for (i = 0; i < numberOfVertexBuffers; ++i)
+            for (i = 0; i < sNumberOfVertexBuffers; ++i)
             {
                 // Context3DBufferUsage.DYNAMIC_DRAW; hardcoded for FP 11.x compatibility
                 vertexBuffers[i] = context.createVertexBuffer.call(context, numParticles * 4, VertexData.ELEMENTS_PER_VERTEX, "dynamicDraw");
@@ -53,7 +54,7 @@ public class StarlingParticleBuffers {
         }
         else
         {
-            for (i = 0; i < numberOfVertexBuffers; ++i)
+            for (i = 0; i < sNumberOfVertexBuffers; ++i)
             {
                 vertexBuffers[i] = context.createVertexBuffer(numParticles * 4, VertexData.ELEMENTS_PER_VERTEX);
             }
@@ -61,7 +62,7 @@ public class StarlingParticleBuffers {
 
         var zeroBytes:ByteArray = new ByteArray();
         zeroBytes.length = numParticles * 16 * VertexData.ELEMENTS_PER_VERTEX;
-        for (i = 0; i < numberOfVertexBuffers; ++i)
+        for (i = 0; i < sNumberOfVertexBuffers; ++i)
         {
             vertexBuffers[i].uploadFromByteArray(zeroBytes, 0, 0, numParticles * 4);
         }
@@ -92,12 +93,17 @@ public class StarlingParticleBuffers {
      *  buffering. Has only effect if numberOfVertexBuffers > 1 */
     public static function switchVertexBuffer() : void
     {
-        vertexBufferIdx = ++vertexBufferIdx % sNumberOfVertexBuffers;
+        _vertexBufferIdx = ++_vertexBufferIdx % sNumberOfVertexBuffers;
     }
 
     public static function get vertexBuffer() : VertexBuffer3D
     {
-        return vertexBuffers[vertexBufferIdx];
+        return vertexBuffers[_vertexBufferIdx];
+    }
+
+    public static function get vertexBufferIdx() : uint
+    {
+        return _vertexBufferIdx;
     }
 
     public static function get buffersCreated() : Boolean
