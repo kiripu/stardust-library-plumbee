@@ -86,7 +86,7 @@ public class StardustStarlingRenderer extends DisplayObject
 
     private static function onContextCreated(event:Event):void
     {
-        StarlingParticleBuffers.createBuffers(MAX_POSSIBLE_PARTICLES, numberOfVertexBuffers);
+        StarlingParticleBuffers.createBuffers(maxParticles, numberOfVertexBuffers);
     }
 
     /** Set to true if any of the rendered particles have alpha value. Default is true, setting it to false
