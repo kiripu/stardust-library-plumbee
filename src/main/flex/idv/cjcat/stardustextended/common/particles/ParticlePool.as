@@ -49,9 +49,10 @@
 
 		[Inline]
 		public final function recycle(particle:Particle):void {
-			if (_position == 0) return;
-			_array[_position - 1] = particle;
-			if (_position) _position--;
+			if (_position > 0 && particle) {
+                _array[_position - 1] = particle;
+                _position--;
+            }
 		}
 	}
 }

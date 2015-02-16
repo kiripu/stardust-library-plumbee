@@ -14,12 +14,7 @@
 	 * </p>
 	 */
 	public class DeathLife extends Action {
-		
-		public var threshold:Number;
-		public function DeathLife() {
-			
-		}
-		
+
 		override public final function update(emitter:Emitter, particle:Particle, timeDelta:Number, currentTime:Number):void {
 			if (particle.life <= 0) {
 				particle.isDead = true;

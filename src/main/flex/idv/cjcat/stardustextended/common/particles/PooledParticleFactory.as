@@ -12,7 +12,8 @@
 		override protected final function createNewParticle():Particle {
 			return particlePool.get();
 		}
-		
+
+        [Inline]
 		public final function recycle(particle:Particle):void {
 			particlePool.recycle(particle);
 		}

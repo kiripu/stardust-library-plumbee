@@ -14,18 +14,18 @@
 				}
 			}
 			const obj:Vec2D = _vec[_position];
-            obj.setTo(x, y);
+            obj.x = x;
+            obj.y = y;
             _position++;
             return obj;
 		}
 
 		[Inline]
 		public static function recycle(obj:Vec2D):void {
-			if (_position == 0) return;
-			if (!obj) return;
-			
-			_vec[_position - 1] = obj;
-			if (_position) _position--;
+			if (_position > 0 && obj) {
+                _vec[_position - 1] = obj;
+                _position--;
+            }
 		}
 	}
 }

@@ -22,11 +22,10 @@
 
 		[Inline]
 		public static function recycle(obj:MotionData2D):void {
-			if (_position == 0) return;
-			if (!obj) return;
-			
-			_vec[_position - 1] = obj;
-			if (_position) _position--;
+			if (_position > 0 && obj) {
+                _vec[_position - 1] = obj;
+                _position--;
+            }
 		}
 	}
 }

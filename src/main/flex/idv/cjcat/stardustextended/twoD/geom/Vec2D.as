@@ -18,6 +18,17 @@ import idv.cjcat.stardustextended.common.math.StardustMath;
             return new Vec2D(x,y);
         }
 
+        [Inline] //? doesnt seem to work in most cases
+        final override public function get length() : Number {
+            return Math.sqrt(x * x + y * y);
+        }
+
+        [Inline]  //? doesnt seem to work in most cases
+        final override public function setTo(xc : Number, yc : Number) : void {
+            x = xc;
+            y = yc;
+        }
+
         final public function set length(value:Number):void {
             if ((x == 0) && (y == 0)) return;
             var factor:Number = value / length;
