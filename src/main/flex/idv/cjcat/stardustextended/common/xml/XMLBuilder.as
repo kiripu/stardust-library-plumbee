@@ -29,7 +29,7 @@
 		 */
 		public static function buildXML(rootElement:StardustElement):XML {
 			const root:XML = <StardustParticleSystem/>;
-			root.@version = Stardust.VERSION;
+			root.@version = Stardust.VERSION.toString();
 			
 			const relatedElements:Dictionary = new Dictionary();
 			traverseRelatedObjects(rootElement, relatedElements);
