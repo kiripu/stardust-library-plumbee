@@ -67,6 +67,11 @@
 			else if ((y < this.y) || (y > (this.y + height))) return false;
 			return true;
 		}
+
+        override public function setPosition(xc : Number, yc : Number):void {
+            x = xc;
+            y = yc;
+        }
 		
 		
 		//XML

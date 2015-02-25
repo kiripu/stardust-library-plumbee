@@ -44,14 +44,17 @@
 			area = (_r1SQ - _r2SQ) * Math.PI * virtualThickness;
 		}
 		
-		override public function contains(x:Number, y:Number):Boolean {
-			var dx:Number = this.x - x;
-			var dy:Number = this.y - y;
+		override public function contains(xc:Number, yc:Number):Boolean {
+			var dx:Number = x - xc;
+			var dy:Number = y - yc;
 			var dSQ:Number = dx * dx + dy * dy;
-			
-			if ((dSQ > _r1SQ) || (dSQ < _r2SQ)) return false;
-			return true;
+			return !((dSQ > _r1SQ) || (dSQ < _r2SQ));
 		}
+
+        override public function setPosition(xc : Number, yc : Number):void {
+            x = xc;
+            y = yc;
+        }
 		
 		override public function calculateMotionData2D():MotionData2D {
 			var theta:Number = StardustMath.TWO_PI * Math.random();
@@ -72,11 +75,9 @@
 		
 		override public function toXML():XML {
 			var xml:XML = super.toXML();
-			
 			xml.@x = x;
 			xml.@y = y;
 			xml.@radius = radius;
-			
 			return xml;
 		}
 		

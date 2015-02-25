@@ -39,6 +39,11 @@
 			
 			updateArea();
 		}
+
+        override public function setPosition(xc : Number, yc : Number):void {
+            x = xc;
+            y = yc;
+        }
 		
 		/**
 		 * The minimum radius of the sector.

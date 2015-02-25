@@ -16,6 +16,11 @@
 			this.y = y;
 			updateArea();
 		}
+
+        override public function setPosition(xc : Number, yc : Number):void {
+            x = xc;
+            y = yc;
+        }
 		
 		override public function contains(x:Number, y:Number):Boolean {
 			if ((this.x == x) && (this.y == y)) return true;

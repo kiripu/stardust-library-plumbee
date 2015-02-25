@@ -70,6 +70,15 @@
 			this.random = random;
 			updateArea();
 		}
+
+        override public function setPosition(xc : Number, yc : Number):void {
+            var xDiff : Number = _x2 - _x1;
+            var yDiff : Number = _y2 - _y1;
+            _x1 = xc;
+            _x2 = xc + xDiff;
+            _y1 = yc;
+            _y2 = yc + yDiff;
+        }
 		
 		public function get random():Random { return _random; }
 		public function set random(value:Random):void {

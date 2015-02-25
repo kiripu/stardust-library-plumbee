@@ -8,8 +8,6 @@
 	import idv.cjcat.stardustextended.twoD.geom.MotionData2DPool;
 	import idv.cjcat.stardustextended.twoD.particles.Particle2D;
 	
-	use namespace sd;
-	
 	/**
 	 * Applies accelerations to particles according to the associated gravity fields, in pixels.
 	 * 
@@ -20,14 +18,13 @@
 	 * @see idv.cjcat.stardustextended.twoD.fields.Field
 	 */
 	public class Gravity extends Action2D {
-		
-		/** @private */
-		sd var fields : Vector.<Field>;
+
+		private var _fields : Vector.<Field>;
 		
 		public function Gravity() {
 			priority = -3;
 			
-			fields = new Vector.<Field>();
+			_fields = new Vector.<Field>();
 		}
 		
 		/**
@@ -35,7 +32,7 @@
 		 * @param	field
 		 */
 		public function addField(field:Field):void {
-			if (fields.indexOf(field) < 0) fields.push(field);
+			if (_fields.indexOf(field) < 0) _fields.push(field);
 		}
 		
 		/**
@@ -43,22 +40,26 @@
 		 * @param	field
 		 */
 		public function removeField(field:Field):void {
-			var index:int = fields.indexOf(field);
-			if (index >= 0) fields.splice(index, 1);
+			var index:int = _fields.indexOf(field);
+			if (index >= 0) _fields.splice(index, 1);
 		}
+
+        public function get fields() : Vector.<Field> {
+            return _fields;
+        }
 		
 		/**
 		 * Removes all gravity fields from the simulation.
 		 */
 		public function clearFields():void {
-			fields = new Vector.<Field>();
+			_fields = new Vector.<Field>();
 		}
 
 		override public function update(emitter:Emitter, particle:Particle, timeDelta:Number, currentTime:Number):void {
 			const p2D : Particle2D = Particle2D(particle);
             var md2D : MotionData2D;
-			for (var i : int = 0; i < fields.length; i++) {
-				md2D = fields[i].getMotionData2D(p2D);
+			for (var i : int = 0; i < _fields.length; i++) {
+				md2D = _fields[i].getMotionData2D(p2D);
 				if (md2D) {
 					p2D.vx += md2D.x * timeDelta;
 					p2D.vy += md2D.y * timeDelta;
@@ -72,8 +73,8 @@
 		
 		override public function getRelatedObjects():Array {
             const result:Array = [];
-            for(var i : int = 0; i < fields.length; i++) {
-                result[result.length] = fields[i];
+            for(var i : int = 0; i < _fields.length; i++) {
+                result[result.length] = _fields[i];
             }
 			return result;
 		}
@@ -85,10 +86,10 @@
 		override public function toXML():XML {
 			var xml:XML = super.toXML();
 			
-			if (fields.length > 0) {
+			if (_fields.length > 0) {
 				xml.appendChild(<fields/>);
 				var field:Field;
-				for each (field in fields) {
+				for each (field in _fields) {
 					xml.fields.appendChild(field.getXMLTag());
 				}
 			}

@@ -74,6 +74,12 @@
 			_line4.virtualThickness = value;
 			updateArea();
 		}
+
+        override public function setPosition(xc : Number, yc : Number):void {
+            _x = xc;
+            _y = yc;
+            updateContour();
+        }
 		
 		private function updateContour():void {
 			_line1.x1 = x;

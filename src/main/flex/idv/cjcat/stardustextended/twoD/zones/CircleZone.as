@@ -19,14 +19,12 @@
 		public var y:Number;
 		
 		private var _radius:Number;
-		//private var _randomR:Random;
 		private var _radiusSQ:Number;
 		
 		public function CircleZone(x:Number = 0, y:Number = 0, radius:Number = 100) {
 			this.x = x;
 			this.y = y;
 			this.radius = radius;
-			//this.randomR = randomR;
 		}
 		
 		/**
@@ -38,17 +36,14 @@
 			_radiusSQ = value * value;
 			updateArea();
 		}
-		
-		//public function get randomR():Random { return _randomR; }
-		//public function set randomR(value:Random):void {
-			//if (!value) value = new UniformRandom();
-			//_randomR = value;
-		//}
+
+        override public function setPosition(xc : Number, yc : Number):void {
+            x = xc;
+            y = yc;
+        }
 		
 		override public function calculateMotionData2D():MotionData2D {
-			//randomR.setRange(0, 1);
 			var theta:Number = StardustMath.TWO_PI * Math.random();
-			//var r:Number = _radius * Math.sqrt(randomR.random());
 			var r:Number = _radius * Math.sqrt(Math.random());
 			return MotionData2DPool.get(r * Math.cos(theta) + x, r * Math.sin(theta) + y);
 		}
@@ -69,7 +64,6 @@
 		
 		override public function getRelatedObjects():Array {
 			return [];
-			//return [_randomR];
 		}
 		
 		override public function getXMLTagName():String {
@@ -82,7 +76,6 @@
 			xml.@x = x;
 			xml.@y = y;
 			xml.@radius = radius;
-			//xml.@randomR = _randomR.name;
 			
 			return xml;
 		}
@@ -93,7 +86,6 @@
 			if (xml.@x.length()) x = parseFloat(xml.@x);
 			if (xml.@y.length()) y = parseFloat(xml.@y);
 			if (xml.@radius.length()) radius = parseFloat(xml.@radius);
-			//randomR = builder.getElementByName(xml.@randomR) as Random;
 		}
 		
 		//------------------------------------------------------------------------------------------------

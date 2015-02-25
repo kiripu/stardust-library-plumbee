@@ -59,11 +59,12 @@
         public function get zones():Vector.<Zone> {
             return _zones;
         }
-		
-		override protected function updateArea():void {
-			// this can not be calculated here properly because
-            // changes is subzones are not detected
-		}
+
+        override public function setPosition(xc : Number, yc : Number):void {
+            for each (var zone:Zone in _zones) {
+                zone.setPosition(xc, yc);
+            }
+        }
 
 		//XML
 		//------------------------------------------------------------------------------------------------

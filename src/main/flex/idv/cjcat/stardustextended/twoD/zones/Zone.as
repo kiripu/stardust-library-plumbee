@@ -61,8 +61,7 @@
 		 * @return
 		 */
 		public function calculateMotionData2D():MotionData2D {
-			//abstract method
-			return null;
+			throw new Error("calculateMotionData2D() must be overridden in the subclasses");
 		}
 		
 		/**
@@ -73,8 +72,16 @@
 		public final function getArea():Number {
 			return area;
 		}
-		
-		//XML
+
+        /**
+         * [Abstract Method] Sets the position of this zone.
+         */
+        public function setPosition(xc : Number, yc : Number):void {
+            throw new Error("This method must be overridden by subclasses");
+        }
+
+
+        //XML
 		//------------------------------------------------------------------------------------------------
 		
 		override public function getXMLTagName():String {
@@ -87,10 +94,7 @@
 		
 		override public function toXML():XML {
 			var xml:XML = super.toXML();
-			
-			
 			xml.@rotation = rotation;
-			
 			return xml;
 		}
 		

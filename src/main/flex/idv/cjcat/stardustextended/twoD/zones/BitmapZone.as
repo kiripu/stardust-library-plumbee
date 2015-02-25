@@ -67,6 +67,11 @@
 				}
 			}
 		}
+
+        override public function setPosition(xc : Number, yc : Number):void {
+            x = xc;
+            y = yc;
+        }
 		
 		override public function contains(x:Number, y:Number):Boolean {
 			x = int(x + 0.5);
