@@ -23,6 +23,7 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
     private var _bitmapData : BitmapData;
     private var _smoothing : String;
     private var _isSpriteSheet : Boolean;
+    private var _premultiplyAlpha : Boolean = true;
     private var _spriteSheetStartAtRandomFrame : Boolean;
     private var _totalFrames : uint;
     private var _texture : Texture;
@@ -34,6 +35,7 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
             _renderer = new StardustStarlingRenderer();
             _renderer.blendMode = _blendMode;
             _renderer.texSmoothing = _smoothing;
+            _renderer.premultiplyAlpha = _premultiplyAlpha;
             calculateTextureCoordinates();
         }
         container.addChild(_renderer);
@@ -152,11 +154,15 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
     }
 
     public function get premultiplyAlpha():Boolean {
-        return _renderer.premultiplyAlpha;
+        return _premultiplyAlpha;
     }
 
     public function set premultiplyAlpha(value:Boolean):void {
-        _renderer.premultiplyAlpha = value;
+        _premultiplyAlpha = value;
+        if (_renderer)
+        {
+            _renderer.premultiplyAlpha = value;
+        }
     }
 
     public function set blendMode(blendMode:String):void
@@ -250,6 +256,7 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
         xml.@spriteSheetStartAtRandomFrame = _spriteSheetStartAtRandomFrame;
         xml.@smoothing = smoothing;
         xml.@blendMode = _blendMode;
+        xml.@premultiplyAlpha = _premultiplyAlpha;
         return xml;
     }
 
@@ -260,7 +267,8 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
         _spriteSheetAnimationSpeed = xml.@spriteSheetAnimationSpeed;
         _spriteSheetStartAtRandomFrame = (xml.@spriteSheetStartAtRandomFrame == "true");
         smoothing = (xml.@smoothing == "true");
-        _blendMode = (xml.@blendMode);
+        blendMode = (xml.@blendMode);
+        if (xml.@premultiplyAlpha.length()) premultiplyAlpha = (xml.@premultiplyAlpha == "true");
         calculateTextureCoordinates();
     }
 
