@@ -1,7 +1,8 @@
 ﻿package idv.cjcat.stardustextended.common {
 	import idv.cjcat.stardustextended.common.actions.Age;
 	import idv.cjcat.stardustextended.common.actions.AlphaCurve;
-	import idv.cjcat.stardustextended.common.actions.CompositeAction;
+import idv.cjcat.stardustextended.common.actions.ColorCurve;
+import idv.cjcat.stardustextended.common.actions.CompositeAction;
 	import idv.cjcat.stardustextended.common.actions.DeathLife;
 	import idv.cjcat.stardustextended.common.actions.Die;
 	import idv.cjcat.stardustextended.common.actions.ScaleCurve;
@@ -51,7 +52,8 @@
 			classes.push(DeathLife);
 			classes.push(Die);
 			classes.push(ScaleCurve);
-			
+			classes.push(ColorCurve);
+
 			//common action triggers
 			classes.push(DeathTrigger);
 			classes.push(LifeTrigger);

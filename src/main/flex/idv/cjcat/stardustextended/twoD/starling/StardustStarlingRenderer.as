@@ -44,6 +44,8 @@ public class StardustStarlingRenderer extends DisplayObject
     public var mNumParticles:int = 0;
     public var texSmoothing : String;
 
+    public var premultiplyAlpha : Boolean = true;
+
     public function StardustStarlingRenderer()
     {
         if (initCalled == false)
@@ -139,10 +141,18 @@ public class StardustStarlingRenderer extends DisplayObject
             particle = Particle2D(mParticles[i]);
             // color & alpha
             particleAlpha = particle.alpha;
-            red = particle.colorR * particleAlpha; // premultiply alpha
-            green = particle.colorG * particleAlpha;
-            blue = particle.colorB * particleAlpha;
-
+            if (premultiplyAlpha)
+            {
+                red = particle.colorR * particleAlpha;
+                green = particle.colorG * particleAlpha;
+                blue = particle.colorB * particleAlpha;
+            }
+            else
+            {
+                red = particle.colorR;
+                green = particle.colorG;
+                blue = particle.colorB;
+            }
             // position & rotation
             rotation = particle.rotation * DEGREES_TO_RADIANS;
             x = particle.x;
@@ -246,7 +256,7 @@ public class StardustStarlingRenderer extends DisplayObject
 
     public function isStateChange(tinted:Boolean, parentAlpha:Number, texture:TextureBase, textureRepeat:Boolean,
                                   smoothing:String, blendMode:String, blendFactorSource:String,
-                                  blendFactorDestination:String, filter:FragmentFilter):Boolean
+                                  blendFactorDestination:String, filter:FragmentFilter, premultiplyAlpha:Boolean):Boolean
     {
         if (mNumParticles == 0)
         {
@@ -258,7 +268,8 @@ public class StardustStarlingRenderer extends DisplayObject
             return mTexture.base != texture || mTexture.repeat != textureRepeat ||
                    texSmoothing != smoothing || mTinted != (tinted || parentAlpha != 1.0) ||
                    this.blendMode != blendMode || blendFactors[0] != blendFactorSource ||
-                    blendFactors[1] != blendFactorDestination || mFilter != filter;
+                   blendFactors[1] != blendFactorDestination || mFilter != filter ||
+                   this.premultiplyAlpha != premultiplyAlpha;
         }
         return true;
     }
@@ -286,7 +297,9 @@ public class StardustStarlingRenderer extends DisplayObject
             var blendFactors:Array = BlendMode.getBlendFactors(blendMode, true);
             var nextPS:StardustStarlingRenderer = parent.getChildAt(last) as StardustStarlingRenderer;
             if (nextPS != null && nextPS.mNumParticles > 0 &&
-                !nextPS.isStateChange(mTinted, alpha, mTexture.base, mTexture.repeat, texSmoothing, blendMode, blendFactors[0], blendFactors[1], mFilter))
+                !nextPS.isStateChange(mTinted, alpha, mTexture.base,
+                        mTexture.repeat, texSmoothing, blendMode,
+                        blendFactors[0], blendFactors[1], mFilter, premultiplyAlpha))
             {
                 if (mNumParticles + mNumBatchedParticles + nextPS.mNumParticles > maxParticles)
                 {
@@ -336,7 +349,10 @@ public class StardustStarlingRenderer extends DisplayObject
         var blendFactors:Array = BlendMode.getBlendFactors(blendMode, true);
         context.setBlendFactors(blendFactors[0], blendFactors[1]);
 
-        const renderAlpha:Vector.<Number> = new <Number>[parentAlpha, parentAlpha, parentAlpha, parentAlpha];
+        const renderAlpha:Vector.<Number> = new Vector.<Number>(4);
+        renderAlpha[0] = renderAlpha[1] = renderAlpha[2] = premultiplyAlpha ? parentAlpha : 1;
+        renderAlpha[3] = parentAlpha;
+
         const renderMatrix:Matrix3D = new Matrix3D();
         MatrixUtil.convertTo3D(support.mvpMatrix, renderMatrix);
 

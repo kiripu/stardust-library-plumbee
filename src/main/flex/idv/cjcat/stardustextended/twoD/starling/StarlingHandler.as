@@ -151,6 +151,14 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
         }
     }
 
+    public function get premultiplyAlpha():Boolean {
+        return _renderer.premultiplyAlpha;
+    }
+
+    public function set premultiplyAlpha(value:Boolean):void {
+        _renderer.premultiplyAlpha = value;
+    }
+
     public function set blendMode(blendMode:String):void
     {
         _blendMode = blendMode;

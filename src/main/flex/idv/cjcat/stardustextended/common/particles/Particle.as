@@ -66,17 +66,42 @@
 		public var target:*;
 
 		/**
-		 * Red color component; in the [0,1] range.
+		 * current Red color component; in the [0,1] range.
 		 */
 		public var colorR:Number;
 		/**
-		 * Green color component; in the [0,1] range.
+		 * current Green color component; in the [0,1] range.
 		 */
 		public var colorG:Number;
 		/**
-		 * Blue color component; in the [0,1] range.
+		 * current Blue color component; in the [0,1] range.
 		 */
 		public var colorB:Number;
+
+        /**
+         * initial Red color component; in the [0,1] range.
+         */
+        public var initColorR:Number;
+        /**
+         * initial Green color component; in the [0,1] range.
+         */
+        public var initColorG:Number;
+        /**
+         * initial Blue color component; in the [0,1] range.
+         */
+        public var initColorB:Number;
+        /**
+         * Red color component; in the [0,1] range.
+         */
+        public var endColorR:Number;
+        /**
+         * Green color component; in the [0,1] range.
+         */
+        public var endColorG:Number;
+        /**
+         * Blue color component; in the [0,1] range.
+         */
+        public var endColorB:Number;
 		/**
 		 * Dictionary for storing additional information.
 		 */
@@ -105,17 +130,25 @@
 			mask = 1;
 			isDead = false;
 			collisionRadius = 0;
-			colorR = 1;
-			colorB = 1;
-			colorG = 1;
+
+            initColorR = 1;
+            initColorB = 1;
+            initColorG = 1;
+
+            colorR = 1;
+            colorB = 1;
+            colorG = 1;
+
+            endColorR = 0;
+            endColorB = 0;
+            endColorG = 0;
 		}
 		
 		public function destroy():void {
 			target = null;
-			var key:*;
+			var key : *;
 			for (key in dictionary) delete dictionary[key];
 			for (key in recyclers) delete recyclers[key];
-			//_handler = null;
 		}
 
         public static function compareFunction(p1 : Particle, p2 : Particle) : Number
