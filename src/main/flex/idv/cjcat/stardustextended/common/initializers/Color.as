@@ -71,9 +71,9 @@ import idv.cjcat.stardustextended.common.particles.Particle;
 			colorR = builder.getElementByName(xml.@colorR) as UniformRandom;
 			colorG = builder.getElementByName(xml.@colorG) as UniformRandom;
 			colorB = builder.getElementByName(xml.@colorB) as UniformRandom;
-            endColorR = builder.getElementByName(xml.@endColorR) as UniformRandom;
-			endColorG = builder.getElementByName(xml.@endColorG) as UniformRandom;
-			endColorB = builder.getElementByName(xml.@endColorB) as UniformRandom;
+            if (xml.@endColorR.length()) endColorR = builder.getElementByName(xml.@endColorR) as UniformRandom;
+            if (xml.@endColorG.length()) endColorG = builder.getElementByName(xml.@endColorG) as UniformRandom;
+            if (xml.@endColorB.length()) endColorB = builder.getElementByName(xml.@endColorB) as UniformRandom;
 		}
 		//------------------------------------------------------------------------------------------------
 		//end of XML

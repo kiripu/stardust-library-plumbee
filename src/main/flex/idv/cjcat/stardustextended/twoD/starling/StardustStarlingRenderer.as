@@ -68,7 +68,7 @@ public class StardustStarlingRenderer extends DisplayObject
         if (maxParticlesPerBuffer > MAX_POSSIBLE_PARTICLES)
         {
             maxParticlesPerBuffer = MAX_POSSIBLE_PARTICLES;
-            trace("StardustStarlingRenderer WARNING: Tried to set more than 16383 particles, setting vale to 16383");
+            trace("StardustStarlingRenderer WARNING: Tried to render than 16383 particles, setting value to 16383");
         }
         maxParticles = maxParticlesPerBuffer;
         StarlingParticleBuffers.createBuffers(maxParticlesPerBuffer, numberOfBuffers);

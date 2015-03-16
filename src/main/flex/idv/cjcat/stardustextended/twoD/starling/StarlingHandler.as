@@ -89,7 +89,7 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
         {
             _spriteSheetSliceWidth = bitmapData.width;
         }
-        _texture = Texture.fromBitmapData(_bitmapData).root;
+        _texture = Texture.fromBitmapData(_bitmapData);
         calculateTextureCoordinates();
     }
 
@@ -198,18 +198,18 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
 
     private function calculateTextureCoordinates() :void
     {
-        if (_renderer == null || _bitmapData == null)
+        if (_renderer == null || _texture == null)
         {
             return;
         }
         _isSpriteSheet = (_spriteSheetSliceWidth > 0 && _spriteSheetSliceHeight > 0) &&
-                         (_bitmapData.width >= _spriteSheetSliceWidth * 2 || _bitmapData.height >= _spriteSheetSliceHeight * 2);
+                         (_texture.width >= _spriteSheetSliceWidth * 2 || _texture.height >= _spriteSheetSliceHeight * 2);
         if (_isSpriteSheet)
         {
-            const xIter : int = Math.floor( _bitmapData.width / _spriteSheetSliceWidth );
-            const yIter : int = Math.floor( _bitmapData.height / _spriteSheetSliceHeight );
-            const xInTexCoords : Number = _spriteSheetSliceWidth / _texture.nativeWidth;
-            const yInTexCoords : Number = _spriteSheetSliceHeight / _texture.nativeHeight;
+            const xIter : int = Math.floor( _texture.width / _spriteSheetSliceWidth );
+            const yIter : int = Math.floor( _texture.height / _spriteSheetSliceHeight );
+            const xInTexCoords : Number = _spriteSheetSliceWidth / _texture.root.width;
+            const yInTexCoords : Number = _spriteSheetSliceHeight / _texture.root.height;
             var frames:Vector.<Frame> = new <Frame>[];
             for ( var j : int = 0; j < yIter; j++ )
             {
@@ -239,7 +239,10 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
         else
         {
             _totalFrames = 1;
-            _renderer.setTextures(_texture, new <Frame>[new Frame(0, 0, 1, 1, _texture.width/2, _texture.height/2)]);
+            _renderer.setTextures(_texture, new <Frame>[
+                new Frame(0, 0,
+                        _texture.width / _texture.root.width, _texture.height / _texture.root.height,
+                        _texture.width / 2, _texture.height / 2)]);
         }
     }
 
