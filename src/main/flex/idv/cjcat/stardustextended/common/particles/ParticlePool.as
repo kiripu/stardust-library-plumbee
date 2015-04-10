@@ -1,8 +1,5 @@
 ﻿package idv.cjcat.stardustextended.common.particles {
-	import idv.cjcat.stardustextended.sd;
-	
-	use namespace sd;
-	
+
 	/**
 	 * This is an object pool for particle objects.
 	 * 

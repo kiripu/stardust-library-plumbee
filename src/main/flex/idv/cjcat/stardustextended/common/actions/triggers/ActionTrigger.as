@@ -4,9 +4,6 @@
 	import idv.cjcat.stardustextended.common.emitters.Emitter;
 	import idv.cjcat.stardustextended.common.particles.Particle;
 	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
-	import idv.cjcat.stardustextended.sd;
-	
-	use namespace sd;
 	
 	/**
 	 * <code>ActionTrigger</code> is a conditional composite action.
@@ -34,13 +31,9 @@
 			//abstract method
 			return false;
 		}
-		
-		//
+
 		/**
 		 * Used if the trigger is added to a composite action.
-		 * @param	emitter
-		 * @param	particle
-		 * @param	time
 		 */
 		override public final function update(emitter:Emitter, particle:Particle, timeDelta:Number, currentTime:Number):void {
 			var aa:Array = actionCollection.actions;

@@ -1,16 +1,15 @@
 ﻿package idv.cjcat.stardustextended.twoD.actions {
-import idv.cjcat.stardustextended.common.actions.Action;
-import idv.cjcat.stardustextended.common.emitters.Emitter;
+
+	import idv.cjcat.stardustextended.common.actions.Action;
+	import idv.cjcat.stardustextended.common.emitters.Emitter;
 	import idv.cjcat.stardustextended.common.particles.Particle;
 	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
-	import idv.cjcat.stardustextended.sd;
-import idv.cjcat.stardustextended.twoD.actions.triggers.DeflectorTrigger;
-import idv.cjcat.stardustextended.twoD.deflectors.Deflector;
+	import idv.cjcat.stardustextended.twoD.actions.triggers.DeflectorTrigger;
+	import idv.cjcat.stardustextended.twoD.deflectors.Deflector;
 	import idv.cjcat.stardustextended.twoD.geom.MotionData4D;
 	import idv.cjcat.stardustextended.twoD.particles.Particle2D;
 	
-	use namespace sd;
-	
+
 	/**
 	 * This action is useful to manipulate a particle's position and velocity as you like.
 	 * 
@@ -32,13 +31,12 @@ import idv.cjcat.stardustextended.twoD.deflectors.Deflector;
 	 */
 	public class Deflect extends Action2D {
 		
-		/** @private */
-		sd var deflectors:Array;
-		private var hasTrigger:Boolean;
+		protected var _deflectors:Array;
+		protected var hasTrigger:Boolean;
 
 		public function Deflect() {
 			priority = -5;
-			deflectors = [];
+			_deflectors = [];
 		}
 		
 		/**
@@ -46,7 +44,7 @@ import idv.cjcat.stardustextended.twoD.deflectors.Deflector;
 		 * @param	deflector
 		 */
 		public function addDeflector(deflector:Deflector):void {
-			if (deflectors.indexOf(deflector) < 0) deflectors.push(deflector);
+			if (_deflectors.indexOf(deflector) < 0) _deflectors.push(deflector);
 		}
 		
 		/**
@@ -54,20 +52,24 @@ import idv.cjcat.stardustextended.twoD.deflectors.Deflector;
 		 * @param	deflector
 		 */
 		public function removeDeflector(deflector:Deflector):void {
-			var index:int = deflectors.indexOf(deflector);
-			if (index >= 0) deflectors.splice(index, 1);
+			var index:int = _deflectors.indexOf(deflector);
+			if (index >= 0) _deflectors.splice(index, 1);
 		}
 		
 		/**
 		 * Removes all deflectors from the simulation.
 		 */
 		public function clearDeflectors():void {
-			deflectors = [];
+			_deflectors = [];
+		}
+
+		public function get deflectors():Array {
+			return _deflectors;
 		}
 
 		override public function update(emitter:Emitter, particle:Particle, timeDelta:Number, currentTime:Number):void {
 			var p2D : Particle2D = Particle2D(particle);
-			for each (var deflector : Deflector in deflectors) {
+			for each (var deflector : Deflector in _deflectors) {
 				var md4D : MotionData4D = deflector.getMotionData4D(p2D);
 				if (md4D) {
 					if (hasTrigger)	p2D.dictionary[deflector] = true;
@@ -97,7 +99,7 @@ import idv.cjcat.stardustextended.twoD.deflectors.Deflector;
 		//------------------------------------------------------------------------------------------------
 		
 		override public function getRelatedObjects():Array {
-			return deflectors;
+			return _deflectors;
 		}
 		
 		override public function getXMLTagName():String {
@@ -107,10 +109,10 @@ import idv.cjcat.stardustextended.twoD.deflectors.Deflector;
 		override public function toXML():XML {
 			var xml:XML = super.toXML();
 			
-			if (deflectors.length > 0) {
+			if (_deflectors.length > 0) {
 				xml.appendChild(<deflectors/>);
 				var deflector:Deflector;
-				for each (deflector in deflectors) {
+				for each (deflector in _deflectors) {
 					xml.deflectors.appendChild(deflector.getXMLTag());
 				}
 			}

@@ -4,9 +4,6 @@
 	import idv.cjcat.stardustextended.common.initializers.Initializer;
 	import idv.cjcat.stardustextended.common.particles.Particle;
 	import idv.cjcat.stardustextended.common.particles.ParticleFactory;
-	import idv.cjcat.stardustextended.sd;
-	
-	use namespace sd;
 	
 	public class Particle2DFactory extends ParticleFactory {
 		

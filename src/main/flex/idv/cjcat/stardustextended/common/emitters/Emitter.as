@@ -16,7 +16,7 @@
     import idv.cjcat.stardustextended.common.StardustElement;
     import idv.cjcat.stardustextended.common.xml.XMLBuilder;
     import idv.cjcat.stardustextended.sd;
-	
+
 	use namespace sd;
 	
 	/**
@@ -220,7 +220,7 @@
 		//actions & initializers
 		//------------------------------------------------------------------------------------------------
 		/** @private */
-		public final function get actions():Array { return _actionCollection.sd::actions; }
+		public final function get actions():Array { return _actionCollection.actions; }
 		
 		/**
 		 * Adds an action to the emitter.

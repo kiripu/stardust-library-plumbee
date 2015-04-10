@@ -5,9 +5,7 @@
 	import idv.cjcat.stardustextended.common.particles.Particle;
 	import idv.cjcat.stardustextended.common.particles.ParticleFactory;
 	import idv.cjcat.stardustextended.sd;
-	
-	use namespace sd;
-	
+
 	public class Particle3DFactory extends ParticleFactory {
 		
 		public function Particle3DFactory() {

@@ -1,11 +1,8 @@
 ﻿package idv.cjcat.stardustextended.common.actions {
+
 	import idv.cjcat.stardustextended.common.emitters.Emitter;
 	import idv.cjcat.stardustextended.common.particles.Particle;
 	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
-	import idv.cjcat.stardustextended.sd;
-	
-	use namespace sd;
-	
 	/**
 	 * This actions is a group of actions. Multiple actions can be grouped together into one single composite action.
 	 * 
@@ -20,17 +17,17 @@
 		
 		public var checkComponentMasks:Boolean;
 		
-		/** @private */
-		sd var actionCollection:ActionCollection;
+		protected var _actionCollection:ActionCollection;
+
 		public function CompositeAction() {
 			checkComponentMasks = false;
-			actionCollection = new ActionCollection();
+			_actionCollection = new ActionCollection();
 		}
 		
 		private var activeActions:Array;
 		override public final function preUpdate(emitter:Emitter, time:Number):void {
 			activeActions = [];
-			for each (var action:Action in actionCollection.actions) {
+			for each (var action:Action in _actionCollection.actions) {
 				if (action.active) {
 					if (action.mask) {
 						activeActions.push(action);
@@ -62,7 +59,7 @@
 		 * @param	action
 		 */
 		public function addAction(action:Action):void {
-			actionCollection.actions.push(action);
+			_actionCollection.actions.push(action);
 			action.onPriorityChange.add(sortActions);
 			sortActions();
 		}
@@ -73,25 +70,29 @@
 		 */
 		public function removeAction(action:Action):void {
 			var index:int;
-			while ((index = actionCollection.actions.indexOf(action)) >= 0) {
-				var act:Action = actionCollection.actions.splice(index, 1)[0];
+			while ((index = _actionCollection.actions.indexOf(action)) >= 0) {
+				var act:Action = _actionCollection.actions.splice(index, 1)[0];
 				act.onPriorityChange.remove(sortActions);
 			}
 		}
-		
+
+		public function get actionCollection():ActionCollection {
+			return _actionCollection;
+		}
+
 		/**
 		 * Removes all actions from the composite action.
 		 */
 		public function clearActions():void {
-			for each (var action:Action in actionCollection.actions) removeAction(action);
+			for each (var action:Action in _actionCollection.actions) removeAction(action);
 		}
 		
 		public final function sortActions(action:Action = null):void {
-			actionCollection.actions.sortOn("priority", Array.NUMERIC | Array.DESCENDING);
+			_actionCollection.actions.sortOn("priority", Array.NUMERIC | Array.DESCENDING);
 		}
 		
 		override public final function get needsSortedParticles():Boolean {
-			for each (var action:Action in actionCollection.actions) {
+			for each (var action:Action in _actionCollection.actions) {
 				if (action.needsSortedParticles) return true;
 			}
 			return false;
@@ -102,7 +103,7 @@
 		//------------------------------------------------------------------------------------------------
 		
 		override public function getRelatedObjects():Array {
-			return actionCollection.actions.concat();
+			return _actionCollection.actions.concat();
 		}
 		
 		override public function getXMLTagName():String {
@@ -114,10 +115,10 @@
 			
 			if (xml.@checkComponentMasks.length()) xml.@checkComponentMasks = checkComponentMasks;
 			
-			if (actionCollection.actions.length > 0) {
+			if (_actionCollection.actions.length > 0) {
 				xml.appendChild(<actions/>);
 				var action:Action;
-				for each (action in actionCollection.actions) {
+				for each (action in _actionCollection.actions) {
 					xml.actions.appendChild(action.getXMLTag());
 				}
 			}
