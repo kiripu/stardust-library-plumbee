@@ -111,6 +111,9 @@ import idv.cjcat.stardustextended.twoD.zones.Zone;
 			xml.@zone = _zone.name;
 			xml.@inverted = inverted;
 			xml.@acceleration = acceleration;
+			xml.@useParticleDirection = useParticleDirection;
+			xml.@directionX = _direction.x;
+			xml.@directionY = _direction.y;
 			return xml;
 		}
 		
@@ -119,6 +122,9 @@ import idv.cjcat.stardustextended.twoD.zones.Zone;
 			_zone = builder.getElementByName(xml.@zone) as Zone;
 			inverted = (xml.@inverted == "true");
 			acceleration = parseFloat(xml.@acceleration);
+			useParticleDirection = (xml.@useParticleDirection == "true");
+			_direction.x = parseFloat(xml.@directionX);
+			_direction.y = parseFloat(xml.@directionY);
 		}
 		
 		//------------------------------------------------------------------------------------------------
