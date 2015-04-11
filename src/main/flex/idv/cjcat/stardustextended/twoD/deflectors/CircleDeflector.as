@@ -43,8 +43,7 @@
 			//normal displacement
 			cr = particle.collisionRadius * particle.scale;
 			r = Vec2DPool.get(particle.x - x, particle.y - y);
-			
-			
+
 			//no collision detected
 			len = r.length - cr;
 			if (len > radius) {
@@ -61,7 +60,8 @@
 			
 			Vec2DPool.recycle(r);
 			Vec2DPool.recycle(v);
-			return MotionData4DPool.get(x + r.x, y + r.y, particle.vx - v.x * factor, particle.vy - v.y * factor);
+			return MotionData4DPool.get(x + r.x, y + r.y,
+					                   (particle.vx - v.x * factor) * slipperiness, (particle.vy - v.y * factor) * slipperiness);
 		}
 		
 		//XML

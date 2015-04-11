@@ -13,10 +13,16 @@
 		
 		public var active:Boolean;
 		public var bounce:Number;
-		
+		/**
+		 * Determines how slippery the surfaces are. A value of 1 (default) means that the surface is fully slippery,
+		 * a value of 0 means that particles will not slide on its surface at all.
+		 */
+		public var slipperiness:Number;
+
 		public function Deflector() {
 			active = true;
 			bounce = 0.8;
+			slipperiness = 1;
 		}
 		
 		public final function getMotionData4D(particle:Particle2D):MotionData4D {
@@ -28,7 +34,7 @@
 		
 		/**
 		 * [Abstract Method] Returns a <code>MotionData4D</code> object representing the deflected position and velocity coordinates for a particle. 
-		 * Returns null if no deflection occured. A non-null value can trigger the <code>DeflectorTrigger</code> action trigger.
+		 * Returns null if no deflection occurred. A non-null value can trigger the <code>DeflectorTrigger</code> action trigger.
 		 * @param	particle
 		 * @return
 		 * @see idv.cjcat.stardustextended.twoD.actions.triggers.DeflectorTrigger
@@ -51,11 +57,9 @@
 		
 		override public function toXML():XML {
 			var xml:XML = super.toXML();
-			
-			
 			xml.@active = active;
 			xml.@bounce = bounce;
-			
+			xml.@slipperiness = slipperiness;
 			return xml;
 		}
 		
@@ -64,6 +68,7 @@
 			
 			if (xml.@active.length()) active = (xml.@active == "true");
 			if (xml.@bounce.length()) bounce = parseFloat(xml.@bounce);
+			if (xml.@slipperiness.length()) slipperiness = parseFloat(xml.@slipperiness);
 		}
 		
 		//------------------------------------------------------------------------------------------------
