@@ -30,8 +30,8 @@
 			this.massless = true;
 			this.randomX = randomX;
 			this.randomY = randomY;
-			this._maxX = maxX;
-			this._maxY = maxY;
+			this.maxX = maxX;
+			this.maxY = maxY;
 		}
 		
 		/**
