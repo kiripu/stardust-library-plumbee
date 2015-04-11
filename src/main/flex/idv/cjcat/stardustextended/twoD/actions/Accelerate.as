@@ -25,7 +25,11 @@
 			var v:Vec2D = Vec2DPool.get(p2D.vx, p2D.vy);
             const vecLength : Number = v.length;
 			if (vecLength > 0) {
-				v.length = vecLength + acceleration * timeDelta;
+				var finalVal : Number = vecLength + acceleration * timeDelta;
+				if (finalVal < 0) {
+					finalVal = 0;
+				}
+				v.length = finalVal;
 				p2D.vx = v.x;
 				p2D.vy = v.y;
 			}
