@@ -1,8 +1,8 @@
 ﻿package idv.cjcat.stardustextended.common {
 	import idv.cjcat.stardustextended.common.actions.Age;
 	import idv.cjcat.stardustextended.common.actions.AlphaCurve;
-import idv.cjcat.stardustextended.common.actions.ColorCurve;
-import idv.cjcat.stardustextended.common.actions.CompositeAction;
+	import idv.cjcat.stardustextended.common.actions.ColorCurve;
+	import idv.cjcat.stardustextended.common.actions.CompositeAction;
 	import idv.cjcat.stardustextended.common.actions.DeathLife;
 	import idv.cjcat.stardustextended.common.actions.Die;
 	import idv.cjcat.stardustextended.common.actions.ScaleCurve;
@@ -12,7 +12,6 @@ import idv.cjcat.stardustextended.common.actions.CompositeAction;
 	import idv.cjcat.stardustextended.common.clocks.ImpulseClock;
 	import idv.cjcat.stardustextended.common.clocks.RandomClock;
 	import idv.cjcat.stardustextended.common.clocks.SteadyClock;
-	import idv.cjcat.stardustextended.common.handlers.PollingStation;
 	import idv.cjcat.stardustextended.common.initializers.Alpha;
 	import idv.cjcat.stardustextended.common.initializers.CollisionRadius;
 	import idv.cjcat.stardustextended.common.initializers.Color;
@@ -39,11 +38,6 @@ import idv.cjcat.stardustextended.common.actions.CompositeAction;
 			if (!_instance) _instance = new CommonClassPackage();
 			return _instance;
 		}
-		
-		public function CommonClassPackage() {
-			
-		}
-		
 		
 		override protected final function populateClasses():void {
 			//common actions
@@ -78,9 +72,6 @@ import idv.cjcat.stardustextended.common.actions.CompositeAction;
 			classes.push(Mass);
 			classes.push(Scale);
 			classes.push(SwitchInitializer);
-			
-			//common particle handlers
-			classes.push(PollingStation);
 			
 			//common randoms
 			classes.push(AveragedRandom);

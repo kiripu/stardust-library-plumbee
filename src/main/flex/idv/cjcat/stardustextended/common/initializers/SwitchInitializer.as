@@ -5,6 +5,7 @@
 	
 	/**
 	 * This initializer chooses among different initializers randomly according to each initializer's weight.
+	 * Since its unlikely that the editor will support this, its not recommended to use it.
 	 */
 	public class SwitchInitializer extends Initializer {
 		

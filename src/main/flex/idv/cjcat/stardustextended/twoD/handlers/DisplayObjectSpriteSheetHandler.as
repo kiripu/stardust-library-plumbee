@@ -11,7 +11,6 @@ import idv.cjcat.stardustextended.common.emitters.Emitter;
 
 import idv.cjcat.stardustextended.common.particles.Particle;
 import idv.cjcat.stardustextended.common.xml.XMLBuilder;
-import idv.cjcat.stardustextended.twoD.display.IStardustSprite;
 import idv.cjcat.stardustextended.twoD.display.SpriteSheetBitmapSlicedCache;
 import idv.cjcat.stardustextended.twoD.utils.DisplayObjectPool;
 
@@ -105,7 +104,6 @@ public class DisplayObjectSpriteSheetHandler extends DisplayObjectHandler implem
         var obj:DisplayObject = DisplayObject(particle.target);
         if (obj)
         {
-            if (obj is IStardustSprite) IStardustSprite(obj).disable();
             _pool.recycle(obj);
         }
     }

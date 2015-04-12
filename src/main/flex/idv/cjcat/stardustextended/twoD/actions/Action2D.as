@@ -8,8 +8,6 @@
 		
 		public function Action2D() {
 			_supports3D = false;
-			
-			//priority = Action2DPriority.getInstance().getPriority(Object(this).constructor as Class);
 		}
 		
 		

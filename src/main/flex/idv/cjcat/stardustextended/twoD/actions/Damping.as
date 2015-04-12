@@ -6,7 +6,7 @@
 	
 	/**
 	 * Causes particles to decelerate.
-	 * 
+	 * Its recommended to use Accelerate with <0 values instead of this class.
 	 * <p>
 	 * Default priority = -1;
 	 * </p>

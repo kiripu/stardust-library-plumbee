@@ -97,7 +97,7 @@ package idv.cjcat.stardustextended.twoD.utils
                 c3 = byteString[int(i++)];
                 if (c3 == 61)
                 {
-                    byteString.length = outPos
+                    byteString.length = outPos;
                     return byteString;
                 }
 
@@ -111,7 +111,7 @@ package idv.cjcat.stardustextended.twoD.utils
                 c4 = byteString[int(i++)];
                 if (c4 == 61)
                 {
-                    byteString.length = outPos
+                    byteString.length = outPos;
                     return byteString;
                 }
 
@@ -121,7 +121,7 @@ package idv.cjcat.stardustextended.twoD.utils
 
                 byteString[int(outPos++)] = ((c3 & 0x03) << 6) | c4;
             }
-            byteString.length = outPos
+            byteString.length = outPos;
             return byteString;
         }
 

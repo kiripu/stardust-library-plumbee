@@ -8,7 +8,7 @@ package idv.cjcat.stardustextended.common.handlers {
 	 * A handler monitors the beginning of an emitter step, the end of an emitter step, 
 	 * the adding of a new particle, and the removal of a dead particle. 
 	 * Also, the <code>readParticle()<code> method is used to read data out of <code>Particle</code> 
-	 * objects when each paritcle is completely updated by actions.
+	 * objects when each particle is completely updated by actions.
 	 */
 	public class ParticleHandler extends StardustElement {
 		

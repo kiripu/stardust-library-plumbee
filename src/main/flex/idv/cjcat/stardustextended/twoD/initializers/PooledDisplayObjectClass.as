@@ -6,7 +6,6 @@ import flash.utils.getQualifiedClassName;
 
 import idv.cjcat.stardustextended.common.particles.Particle;
 import idv.cjcat.stardustextended.common.xml.XMLBuilder;
-import idv.cjcat.stardustextended.twoD.display.IStardustSprite;
 	import idv.cjcat.stardustextended.twoD.utils.DisplayObjectPool;
 
 	/**
@@ -55,7 +54,6 @@ import idv.cjcat.stardustextended.twoD.display.IStardustSprite;
 		override public function recycleInfo(particle:Particle):void {
 			var obj:DisplayObject = DisplayObject(particle.target);
 			if (obj) {
-				if (obj is IStardustSprite) IStardustSprite(obj).disable();
 				if (obj is _displayObjectClass) _pool.recycle(obj);
 			}
 		}

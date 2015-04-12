@@ -15,13 +15,9 @@
 	import idv.cjcat.stardustextended.twoD.actions.NormalDrift;
 	import idv.cjcat.stardustextended.twoD.actions.Oriented;
 	import idv.cjcat.stardustextended.twoD.actions.RandomDrift;
-	import idv.cjcat.stardustextended.twoD.actions.ReorderDisplayObject;
-	import idv.cjcat.stardustextended.twoD.actions.Snapshot;
-	import idv.cjcat.stardustextended.twoD.actions.SnapshotRestore;
 	import idv.cjcat.stardustextended.twoD.actions.Spawn;
 	import idv.cjcat.stardustextended.twoD.actions.SpeedLimit;
 	import idv.cjcat.stardustextended.twoD.actions.Spin;
-	import idv.cjcat.stardustextended.twoD.actions.StardustSpriteUpdate;
 	import idv.cjcat.stardustextended.twoD.actions.triggers.DeflectorTrigger;
 	import idv.cjcat.stardustextended.twoD.actions.triggers.ZoneTrigger;
 	import idv.cjcat.stardustextended.twoD.actions.VelocityField;
@@ -47,7 +43,6 @@
 	import idv.cjcat.stardustextended.twoD.initializers.Position;
     import idv.cjcat.stardustextended.twoD.initializers.PositionAnimated;
     import idv.cjcat.stardustextended.twoD.initializers.Rotation;
-	import idv.cjcat.stardustextended.twoD.initializers.StardustSpriteInit;
 	import idv.cjcat.stardustextended.twoD.initializers.Velocity;
 	import idv.cjcat.stardustextended.twoD.zones.BitmapZone;
 	import idv.cjcat.stardustextended.twoD.zones.CircleContour;
@@ -86,13 +81,9 @@
 			classes.push(MutualGravity);
 			classes.push(NormalDrift);
 			classes.push(Oriented);
-			classes.push(ReorderDisplayObject);
-			classes.push(Snapshot);
-			classes.push(SnapshotRestore);
 			classes.push(Spawn);
 			classes.push(SpeedLimit);
 			classes.push(Spin);
-			classes.push(StardustSpriteUpdate);
 			classes.push(VelocityField);
 			classes.push(AccelerationZone);
 
@@ -123,7 +114,6 @@
 			classes.push(PooledDisplayObjectClass);
 			classes.push(Position);
 			classes.push(Rotation);
-			classes.push(StardustSpriteInit);
 			classes.push(Velocity);
 			classes.push(PositionAnimated);
 

@@ -66,12 +66,10 @@
 		
 		/**
 		 * [Abstract Method] Generates XML representation.
-		 * @param	nameOnly
 		 * @return
 		 */
 		public function toXML():XML {
-			var xml:XML = getXMLTag();
-			return xml;
+			return getXMLTag();
 		}
 		
 		/**
@@ -80,7 +78,6 @@
 		 * @param	builder
 		 */
 		public function parseXML(xml:XML, builder:XMLBuilder = null):void {
-			//name = xml.@name;
 		}
 		
 		//------------------------------------------------------------------------------------------------

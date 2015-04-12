@@ -38,8 +38,6 @@
 			priorities[Oriented] = -6;
 			priorities[ZoneTrigger] = -6;
 			priorities[DeflectorTrigger] = -6;
-			
-			priorities[SnapshotRestore] = -7;
 		}
 	}
 }
