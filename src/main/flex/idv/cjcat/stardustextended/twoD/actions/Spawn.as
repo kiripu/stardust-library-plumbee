@@ -1,17 +1,16 @@
 ﻿package idv.cjcat.stardustextended.twoD.actions {
-	import idv.cjcat.stardustextended.common.emitters.Emitter;
+import idv.cjcat.stardustextended.common.actions.Action;
+import idv.cjcat.stardustextended.common.emitters.Emitter;
 	import idv.cjcat.stardustextended.common.initializers.Initializer;
 	import idv.cjcat.stardustextended.common.initializers.InitializerCollector;
 	import idv.cjcat.stardustextended.common.math.Random;
 	import idv.cjcat.stardustextended.common.math.StardustMath;
 	import idv.cjcat.stardustextended.common.math.UniformRandom;
 	import idv.cjcat.stardustextended.common.particles.Particle;
+	import idv.cjcat.stardustextended.common.particles.PooledParticleFactory;
 	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
-	import idv.cjcat.stardustextended.sd;
 	import idv.cjcat.stardustextended.twoD.geom.Vec2D;
 	import idv.cjcat.stardustextended.twoD.geom.Vec2DPool;
-    import idv.cjcat.stardustextended.twoD.particles.Particle2D;
-	import idv.cjcat.stardustextended.twoD.particles.PooledParticle2DFactory;
 	
 	/**
 	 * Spawns new particles at the position of existing particles.
@@ -24,38 +23,36 @@
 	 * Newly spawned particles are initialized by initializers added to the spawning process through the <code>addInitializer()</code> method.
 	 * </p>
 	 */
-	public class Spawn extends Action2D implements InitializerCollector {
+	public class Spawn extends Action implements InitializerCollector {
 		
 		public var inheritDirection:Boolean;
 		public var inheritVelocity:Boolean;
 		private var _countRandom:Random;
-		private var _factory:PooledParticle2DFactory;
+		private var _factory:PooledParticleFactory;
 
 		public function Spawn(count:Random = null, inheritDirection:Boolean = true, inheritVelocity:Boolean = false) {
 			this.inheritDirection = inheritDirection;
 			this.inheritVelocity = inheritVelocity;
 			this.countRandom = count;
-			_factory = new PooledParticle2DFactory();
+			_factory = new PooledParticleFactory();
 		}
-		
-		private var p2D:Particle2D;
+
 		private var particles:Vector.<Particle>;
 		private var v:Vec2D;
 		override public function update(emitter:Emitter, particle:Particle, timeDelta:Number, currentTime:Number):void {
-			p2D = Particle2D(particle);
 			particles = _factory.createParticles( StardustMath.randomFloor(_countRandom.random()), currentTime);
-            var p:Particle2D;
+            var p:Particle;
             for (var m : int = 0; m < particles.length; ++m) {
-                p = Particle2D(particles[m]);
-				p.x += p2D.x;
-				p.y += p2D.y;
+                p = particles[m];
+				p.x += particle.x;
+				p.y += particle.y;
 				if (inheritVelocity) {
-					p.vx += p2D.vx;
-					p.vy += p2D.vy;
+					p.vx += particle.vx;
+					p.vy += particle.vy;
 				}
 				if (inheritDirection) {
 					v = Vec2DPool.get(p.vx, p.vy);
-					v.rotateThis(Math.atan2(p2D.vx, -p2D.vy), true);
+					v.rotateThis(Math.atan2(particle.vx, -particle.vy), true);
 					p.vx = v.x;
 					p.vy = v.y;
 					Vec2DPool.recycle(v);
@@ -101,7 +98,7 @@
 		//------------------------------------------------------------------------------------------------
 		
 		override public function getRelatedObjects():Array {
-			return [_countRandom].concat(_factory.sd::initializerCollection.sd::initializers);
+			return [_countRandom].concat(_factory.initializerCollection.initializers);
 		}
 		
 		override public function getXMLTagName():String {
@@ -115,10 +112,10 @@
 			xml.@inheritVelocity = inheritVelocity;
 			xml.@countRandom = _countRandom.name;
 			
-			if (_factory.sd::initializerCollection.sd::initializers.length > 0) {
+			if (_factory.initializerCollection.initializers.length > 0) {
 				xml.appendChild(<initializers/>);
 				var initializer:Initializer;
-				for each (initializer in _factory.sd::initializerCollection.sd::initializers) {
+				for each (initializer in _factory.initializerCollection.initializers) {
 					xml.initializers.appendChild(initializer.getXMLTag());
 				}
 			}

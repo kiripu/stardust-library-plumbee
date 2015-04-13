@@ -1,8 +1,8 @@
 ﻿package idv.cjcat.stardustextended.twoD.deflectors {
-	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
+import idv.cjcat.stardustextended.common.particles.Particle;
+import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 	import idv.cjcat.stardustextended.twoD.geom.MotionData4D;
 	import idv.cjcat.stardustextended.twoD.geom.MotionData4DPool;
-	import idv.cjcat.stardustextended.twoD.particles.Particle2D;
 	
 	/**
 	 * Causes particles to be bounded within a rectangular region.
@@ -49,7 +49,7 @@
 		private var finalVX:Number;
 		private var finalVY:Number;
 		private var deflected:Boolean;
-		override protected function calculateMotionData4D(particle:Particle2D):MotionData4D {
+		override protected function calculateMotionData4D(particle:Particle):MotionData4D {
 			radius = particle.collisionRadius * particle.scale;
 			left = x + radius;
 			right = x + width - radius;

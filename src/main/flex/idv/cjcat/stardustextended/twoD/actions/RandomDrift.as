@@ -1,10 +1,10 @@
 ﻿package idv.cjcat.stardustextended.twoD.actions {
-	import idv.cjcat.stardustextended.common.emitters.Emitter;
+import idv.cjcat.stardustextended.common.actions.Action;
+import idv.cjcat.stardustextended.common.emitters.Emitter;
 	import idv.cjcat.stardustextended.common.math.Random;
 	import idv.cjcat.stardustextended.common.math.UniformRandom;
 	import idv.cjcat.stardustextended.common.particles.Particle;
 	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
-	import idv.cjcat.stardustextended.twoD.particles.Particle2D;
 	
 	/**
 	 * Applies random acceleration to particles.
@@ -13,7 +13,7 @@
 	 * Default priority = -3
 	 * </p>
 	 */
-	public class RandomDrift extends Action2D {
+	public class RandomDrift extends Action {
 		
 		/**
 		 * Whether the particles acceleration is divided by their masses before applied to them, true by default. 
@@ -81,19 +81,18 @@
 		}
 		
 		override public function update(emitter:Emitter, particle:Particle, timeDelta:Number, currentTime:Number):void {
-			var p2D:Particle2D = Particle2D(particle);
 			
 			var rx:Number = _randomX.random();
 			var ry:Number = _randomY.random();
 			
 			if (!massless) {
-				var factor:Number = 1 / p2D.mask;
+				var factor:Number = 1 / particle.mask;
 				rx *= factor;
 				ry *= factor;
 			}
-			
-			p2D.vx += rx * timeDelta;
-			p2D.vy += ry * timeDelta;
+
+			particle.vx += rx * timeDelta;
+			particle.vy += ry * timeDelta;
 		}
 		
 		//XML

@@ -113,7 +113,14 @@
          * The current frame to display if the particle is animated. Use the AnimateSpriteSheet action to set it.
          */
 		public var currentAnimationFrame : int = 0;
-		
+
+		public var x:Number;
+		public var y:Number;
+		public var vx:Number;
+		public var vy:Number;
+		public var rotation:Number;
+		public var omega:Number;
+
 		public function Particle() {
 			dictionary = new Dictionary();
 			recyclers = new Dictionary();
@@ -142,6 +149,13 @@
             endColorR = 0;
             endColorB = 0;
             endColorG = 0;
+
+			x = 0;
+			y = 0;
+			vx = 0;
+			vy = 0;
+			rotation = 0;
+			omega = 0;
 		}
 		
 		public function destroy():void {

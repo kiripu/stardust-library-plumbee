@@ -51,39 +51,18 @@
 		
 		//------------------------------------------------------------------------------------------------
 		//end of signals
-		
-		
+
 		/**
 		 * Denotes if the initializer is active, true by default.
 		 */
 		public var active:Boolean;
-		
-		//private var _mask:int;
+
 		private var _priority:int;
 		
-		/** @private */
-		protected var _supports2D:Boolean;
-		/** @private */
-		protected var _supports3D:Boolean;
-		
 		public function Initializer() {
-			_supports2D = _supports3D = true;
-			
-			//priority = CommonInitializerPriority.getInstance().getPriority(Object(this).constructor as Class);
 			priority = 0;
-			
 			active = true;
-			//_mask = 1;
 		}
-		
-		/**
-		 * Whether this initializer supports 2D.
-		 */
-		public function get supports2D():Boolean { return _supports2D; }
-		/**
-		 * Whether this initializer supports 3D.
-		 */
-		public function get supports3D():Boolean { return _supports3D; }
 		
 		/** @private */
 		public function doInitialize(particles:Vector.<Particle>, currentTime : Number):void {
@@ -153,19 +132,13 @@
 		
 		override public function toXML():XML {
 			var xml:XML = super.toXML();
-			
-			
 			xml.@active = active;
-			//xml.@mask = mask;
-			
 			return xml;
 		}
 		
 		override public function parseXML(xml:XML, builder:XMLBuilder = null):void {
 			super.parseXML(xml, builder);
-			
 			if (xml.@active.length()) active = (xml.@active == "true");
-			//mask = parseInt(xml.@mask);
 		}
 		
 		//------------------------------------------------------------------------------------------------

@@ -1,4 +1,5 @@
 ﻿package idv.cjcat.stardustextended.twoD {
+
 	import idv.cjcat.stardustextended.common.xml.ClassPackage;
 	import idv.cjcat.stardustextended.twoD.actions.Accelerate;
 	import idv.cjcat.stardustextended.twoD.actions.AccelerationZone;
@@ -26,20 +27,13 @@
 	import idv.cjcat.stardustextended.twoD.deflectors.CircleDeflector;
 	import idv.cjcat.stardustextended.twoD.deflectors.LineDeflector;
 	import idv.cjcat.stardustextended.twoD.deflectors.WrappingBox;
-	import idv.cjcat.stardustextended.twoD.emitters.Emitter2D;
 	import idv.cjcat.stardustextended.twoD.fields.BitmapField;
 	import idv.cjcat.stardustextended.twoD.fields.RadialField;
 	import idv.cjcat.stardustextended.twoD.fields.UniformField;
-	import idv.cjcat.stardustextended.twoD.handlers.BitmapHandler;
-	import idv.cjcat.stardustextended.twoD.handlers.DisplayObjectHandler;
-	import idv.cjcat.stardustextended.twoD.handlers.DisplayObjectSpriteSheetHandler;
 	import idv.cjcat.stardustextended.twoD.handlers.PixelHandler;
-	import idv.cjcat.stardustextended.twoD.handlers.SingularBitmapHandler;
     import idv.cjcat.stardustextended.twoD.initializers.DisplayObjectClass;
-	import idv.cjcat.stardustextended.twoD.initializers.DisplayObjectParent;
 	import idv.cjcat.stardustextended.twoD.initializers.LazyInitializer;
 	import idv.cjcat.stardustextended.twoD.initializers.Omega;
-	import idv.cjcat.stardustextended.twoD.initializers.PooledDisplayObjectClass;
 	import idv.cjcat.stardustextended.twoD.initializers.Position;
     import idv.cjcat.stardustextended.twoD.initializers.PositionAnimated;
     import idv.cjcat.stardustextended.twoD.initializers.Rotation;
@@ -98,9 +92,6 @@
 			classes.push(LineDeflector);
 			classes.push(WrappingBox);
 			
-			//2D emitters
-			classes.push(Emitter2D);
-			
 			//2D fields
 			classes.push(BitmapField);
 			classes.push(RadialField);
@@ -108,21 +99,15 @@
 			
 			//2D initializers
 			classes.push(DisplayObjectClass);
-			classes.push(DisplayObjectParent);
 			classes.push(LazyInitializer);
 			classes.push(Omega);
-			classes.push(PooledDisplayObjectClass);
 			classes.push(Position);
 			classes.push(Rotation);
 			classes.push(Velocity);
 			classes.push(PositionAnimated);
 
 			//2D particle handlers
-			classes.push(BitmapHandler);
-			classes.push(DisplayObjectHandler);
-			classes.push(SingularBitmapHandler);
 			classes.push(PixelHandler);
-			classes.push(DisplayObjectSpriteSheetHandler);
 
 			//2D zones
 			classes.push(BitmapZone);

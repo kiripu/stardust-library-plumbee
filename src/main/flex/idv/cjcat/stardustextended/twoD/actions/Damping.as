@@ -1,8 +1,8 @@
 ﻿package idv.cjcat.stardustextended.twoD.actions {
-	import idv.cjcat.stardustextended.common.emitters.Emitter;
+import idv.cjcat.stardustextended.common.actions.Action;
+import idv.cjcat.stardustextended.common.emitters.Emitter;
 	import idv.cjcat.stardustextended.common.particles.Particle;
 	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
-	import idv.cjcat.stardustextended.twoD.particles.Particle2D;
 	
 	/**
 	 * Causes particles to decelerate.
@@ -11,7 +11,7 @@
 	 * Default priority = -1;
 	 * </p>
 	 */
-	public class Damping extends Action2D {
+	public class Damping extends Action {
 		
 		/**
 		 * In each emitter step, each particle's velocity is multiplied by this value.
@@ -36,9 +36,8 @@
 		
 		private var damp:Number;
 		override public function update(emitter:Emitter, particle:Particle, timeDelta:Number, currentTime:Number):void {
-			var p2D:Particle2D = Particle2D(particle);
-			p2D.vx *= damp;
-			p2D.vy *= damp;
+			particle.vx *= damp;
+			particle.vy *= damp;
 		}
 		
 		

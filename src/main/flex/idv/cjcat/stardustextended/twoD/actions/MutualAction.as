@@ -1,9 +1,9 @@
 ﻿package idv.cjcat.stardustextended.twoD.actions {
 
-	import idv.cjcat.stardustextended.common.emitters.Emitter;
+import idv.cjcat.stardustextended.common.actions.Action;
+import idv.cjcat.stardustextended.common.emitters.Emitter;
 	import idv.cjcat.stardustextended.common.particles.Particle;
 	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
-	import idv.cjcat.stardustextended.twoD.particles.Particle2D;
 	
 	/**
 	 * TODO: get it working
@@ -14,7 +14,7 @@
 	 * Only particles whose masks' bitwise AND value is non-zero will interact.
 	 * </p>
 	 */
-	public class MutualAction extends Action2D {
+	public class MutualAction extends Action {
 		
 		/**
 		 * Only when the distance between two particles is less than this value will these particles be processed.
@@ -48,7 +48,7 @@
             }  */
         }
 		
-		protected function doMutualAction(p1:Particle2D, p2:Particle2D, time:Number):void {
+		protected function doMutualAction(p1:Particle, p2:Particle, time:Number):void {
 			
 		}
 		

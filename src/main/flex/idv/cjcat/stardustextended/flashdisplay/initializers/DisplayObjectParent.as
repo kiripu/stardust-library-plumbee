@@ -1,8 +1,9 @@
-﻿package idv.cjcat.stardustextended.twoD.initializers {
-	import flash.display.DisplayObject;
-	import flash.display.DisplayObjectContainer;
-	import idv.cjcat.stardustextended.common.particles.Particle;
-	import idv.cjcat.stardustextended.twoD.particles.Particle2D;
+﻿package idv.cjcat.stardustextended.flashdisplay.initializers {
+
+import flash.display.DisplayObject;
+import flash.display.DisplayObjectContainer;
+import idv.cjcat.stardustextended.common.initializers.Initializer;
+import idv.cjcat.stardustextended.common.particles.Particle;
 	
 	/**
 	 * Specifies a specific display object container to be the parent of a particle 
@@ -12,7 +13,7 @@
 	 * Default priority = -100;
 	 * </p>
 	 */
-	public class DisplayObjectParent extends Initializer2D {
+	public class DisplayObjectParent extends Initializer {
 		
 		public var container:DisplayObjectContainer;
 		public function DisplayObjectParent(container:DisplayObjectContainer = null) {
@@ -22,8 +23,7 @@
 		
 		override public function initialize(particle:Particle):void {
 			if (!container) return;
-			var p2D:Particle2D = Particle2D(particle);
-			var displayObj:DisplayObject = p2D.target as DisplayObject;
+			var displayObj:DisplayObject = particle.target as DisplayObject;
 			if (!displayObj) return;
 			container.addChild(displayObj);
 		}

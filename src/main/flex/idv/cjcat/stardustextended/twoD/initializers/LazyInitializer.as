@@ -11,7 +11,6 @@
 	import idv.cjcat.stardustextended.common.initializers.Scale;
 	import idv.cjcat.stardustextended.common.math.UniformRandom;
 	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
-	import idv.cjcat.stardustextended.sd;
     import idv.cjcat.stardustextended.twoD.zones.SinglePoint;
 	import idv.cjcat.stardustextended.twoD.zones.Zone;
 	
@@ -45,7 +44,6 @@
 		private var _rotationInitRand:UniformRandom;
 		
 		private var _displayObjectClassInit:DisplayObjectClass;
-		private var _displayObjectClassParams:Array;
 		
 		private var _lifeInit:Life;
 		private var _lifeInitRand:UniformRandom;
@@ -272,7 +270,7 @@
 		//------------------------------------------------------------------------------------------------
 		
 		override public function getRelatedObjects():Array {
-			return [position].concat(additionalInitializers.sd::initializers);
+			return [position].concat(additionalInitializers.initializers);
 		}
 		
 		override public function getXMLTagName():String {
@@ -299,10 +297,10 @@
 			xml.@alpha = alpha;
 			xml.@alphaVar = alphaVar;
 			
-			if (additionalInitializers.sd::initializers.length > 0) {
+			if (additionalInitializers.initializers.length > 0) {
 				xml.appendChild(<initializers/>);
 				var initializer:Initializer;
-				for each (initializer in additionalInitializers.sd::initializers) {
+				for each (initializer in additionalInitializers.initializers) {
 					xml.initializers.appendChild(initializer.getXMLTag());
 				}
 			}

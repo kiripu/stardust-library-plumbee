@@ -1,10 +1,10 @@
 ﻿package idv.cjcat.stardustextended.twoD.deflectors {
-	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
+import idv.cjcat.stardustextended.common.particles.Particle;
+import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 	import idv.cjcat.stardustextended.twoD.geom.MotionData4D;
 	import idv.cjcat.stardustextended.twoD.geom.MotionData4DPool;
 	import idv.cjcat.stardustextended.twoD.geom.Vec2D;
 	import idv.cjcat.stardustextended.twoD.geom.Vec2DPool;
-	import idv.cjcat.stardustextended.twoD.particles.Particle2D;
 	
 	/**
 	 * Infinitely long line-shaped obstacle. 
@@ -45,7 +45,7 @@
 		private var dist:Number;
 		private var v:Vec2D;
 		private var factor:Number;
-		override protected function calculateMotionData4D(particle:Particle2D):MotionData4D {
+		override protected function calculateMotionData4D(particle:Particle):MotionData4D {
 			//normal displacement
 			r = Vec2DPool.get(particle.x - x, particle.y - y);
 			r = r.project(_normal);

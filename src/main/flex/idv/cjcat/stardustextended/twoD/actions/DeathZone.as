@@ -1,10 +1,10 @@
 ﻿package idv.cjcat.stardustextended.twoD.actions {
-	import idv.cjcat.stardustextended.common.emitters.Emitter;
+import idv.cjcat.stardustextended.common.actions.Action;
+import idv.cjcat.stardustextended.common.emitters.Emitter;
 	import idv.cjcat.stardustextended.common.particles.Particle;
 	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
-	import idv.cjcat.stardustextended.twoD.particles.Particle2D;
-import idv.cjcat.stardustextended.twoD.zones.RectZone;
-import idv.cjcat.stardustextended.twoD.zones.Zone;
+	import idv.cjcat.stardustextended.twoD.zones.RectZone;
+	import idv.cjcat.stardustextended.twoD.zones.Zone;
 	
 	/**
 	 * Causes particles to be marked dead when they are not contained inside a specified zone.
@@ -13,7 +13,7 @@ import idv.cjcat.stardustextended.twoD.zones.Zone;
 	 * Default priority = -6;
 	 * </p>
 	 */
-	public class DeathZone extends Action2D implements IZoneContainer {
+	public class DeathZone extends Action implements IZoneContainer {
 		
 		/**
 		 * If a particle leave this zone (<code>Zone.contains()</code> returns false), it will be marked dead.
@@ -37,8 +37,7 @@ import idv.cjcat.stardustextended.twoD.zones.Zone;
 		}
 		
 		override public function update(emitter:Emitter, particle:Particle, timeDelta:Number, currentTime:Number):void {
-			var p2D:Particle2D = Particle2D(particle);
-			var dead:Boolean = _zone.contains(p2D.x, p2D.y);
+			var dead:Boolean = _zone.contains(particle.x, particle.y);
 			if (inverted) dead = !dead;
 			if (dead) particle.isDead = true;
 		}

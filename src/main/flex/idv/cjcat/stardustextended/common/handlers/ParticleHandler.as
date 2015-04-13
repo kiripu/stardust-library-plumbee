@@ -2,8 +2,8 @@ package idv.cjcat.stardustextended.common.handlers {
 	import idv.cjcat.stardustextended.common.emitters.Emitter;
 	import idv.cjcat.stardustextended.common.particles.Particle;
 	import idv.cjcat.stardustextended.common.StardustElement;
-	
-	/**
+
+/**
 	 * A particle handler is assigned to a particle by using the <code>Handler</code> initializer. 
 	 * A handler monitors the beginning of an emitter step, the end of an emitter step, 
 	 * the adding of a new particle, and the removal of a dead particle. 

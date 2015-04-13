@@ -1,11 +1,12 @@
-package idv.cjcat.stardustextended.twoD.handlers {
+package idv.cjcat.stardustextended.flashdisplay.handlers {
+import idv.cjcat.stardustextended.flashdisplay.*;
+
 import flash.display.DisplayObject;
 import flash.display.DisplayObjectContainer;
 import idv.cjcat.stardustextended.common.handlers.ParticleHandler;
 import idv.cjcat.stardustextended.common.particles.Particle;
 import idv.cjcat.stardustextended.common.xml.XMLBuilder;
-import idv.cjcat.stardustextended.twoD.display.AddChildMode;
-import idv.cjcat.stardustextended.twoD.particles.Particle2D;
+import idv.cjcat.stardustextended.flashdisplay.handlers.AddChildMode;
 
 /**
  * This handler adds display object particles to the target container's display list,
@@ -28,7 +29,6 @@ public class DisplayObjectHandler extends ParticleHandler {
      */
     private var _blendMode:String;
 
-    private var p2D:Particle2D;
     private var displayObj:DisplayObject;
 
     public function DisplayObjectHandler(container:DisplayObjectContainer = null, blendMode:String = "normal", addChildMode:int = 0) {
@@ -66,14 +66,13 @@ public class DisplayObjectHandler extends ParticleHandler {
     }
 
     override public function readParticle(particle:Particle):void {
-        p2D = Particle2D(particle);
         displayObj = DisplayObject(particle.target);
 
-        displayObj.x = p2D.x;
-        displayObj.y = p2D.y;
-        displayObj.rotation = p2D.rotation;
-        displayObj.scaleX = displayObj.scaleY = p2D.scale;
-        displayObj.alpha = p2D.alpha;
+        displayObj.x = particle.x;
+        displayObj.y = particle.y;
+        displayObj.rotation = particle.rotation;
+        displayObj.scaleX = displayObj.scaleY = particle.scale;
+        displayObj.alpha = particle.alpha;
     }
 
     public function set blendMode(val : String) : void {

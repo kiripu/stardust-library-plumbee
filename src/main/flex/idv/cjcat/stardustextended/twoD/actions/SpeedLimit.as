@@ -1,13 +1,13 @@
 ﻿package idv.cjcat.stardustextended.twoD.actions {
-	import idv.cjcat.stardustextended.common.emitters.Emitter;
+import idv.cjcat.stardustextended.common.actions.Action;
+import idv.cjcat.stardustextended.common.emitters.Emitter;
 	import idv.cjcat.stardustextended.common.particles.Particle;
 	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
-	import idv.cjcat.stardustextended.twoD.particles.Particle2D;
 	
 	/**
 	 * Limits a particle's maximum traveling speed.
 	 */
-	public class SpeedLimit extends Action2D {
+	public class SpeedLimit extends Action {
 		
 		/**
 		 * The speed limit.
@@ -20,18 +20,16 @@
 		override public function preUpdate(emitter:Emitter, time:Number):void {
 			limitSQ = limit * limit;
 		}
-		
-		private var p2D:Particle2D;
+
 		private var speedSQ:Number;
 		private var limitSQ:Number;
 		private var factor:Number;
 		override public function update(emitter:Emitter, particle:Particle, timeDelta:Number, currentTime:Number):void {
-			p2D = Particle2D(particle);
-			speedSQ = p2D.vx * p2D.vx + p2D.vy * p2D.vy;
+			speedSQ = particle.vx * particle.vx + particle.vy * particle.vy;
 			if (speedSQ > limitSQ) {
 				factor = limit / Math.sqrt(speedSQ);
-				p2D.vx *= factor;
-				p2D.vy *= factor;
+				particle.vx *= factor;
+				particle.vy *= factor;
 			}
 		}
 		

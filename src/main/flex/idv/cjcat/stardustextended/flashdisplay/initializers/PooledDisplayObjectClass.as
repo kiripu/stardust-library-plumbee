@@ -1,12 +1,14 @@
-﻿package idv.cjcat.stardustextended.twoD.initializers {
+﻿package idv.cjcat.stardustextended.flashdisplay.initializers {
 
 import flash.display.DisplayObject;
 import flash.utils.getDefinitionByName;
 import flash.utils.getQualifiedClassName;
 
+import idv.cjcat.stardustextended.common.initializers.Initializer;
+
 import idv.cjcat.stardustextended.common.particles.Particle;
 import idv.cjcat.stardustextended.common.xml.XMLBuilder;
-	import idv.cjcat.stardustextended.twoD.utils.DisplayObjectPool;
+import idv.cjcat.stardustextended.flashdisplay.utils.DisplayObjectPool;
 
 	/**
 	 * This is a pooled version of the <code>DisplayObjectClass</code> initializer, 
@@ -19,7 +21,7 @@ import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 	 * 
 	 * @see idv.cjcat.stardustextended.twoD.initializers.DisplayObjectClass
 	 */
-	public class PooledDisplayObjectClass extends Initializer2D {
+	public class PooledDisplayObjectClass extends Initializer {
 		
 		private var _constructorParams:Array;
 		

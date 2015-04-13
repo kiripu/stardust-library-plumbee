@@ -1,4 +1,5 @@
 ﻿package idv.cjcat.stardustextended.twoD.initializers {
+	import idv.cjcat.stardustextended.common.initializers.Initializer;
 	import idv.cjcat.stardustextended.common.particles.Particle;
 	import idv.cjcat.stardustextended.common.utils.construct;
 	
@@ -9,11 +10,9 @@
 	 * <p>
 	 * Default priority = 1;
 	 * </p>
-	 * 
-	 * @see idv.cjcat.stardustextended.twoD.renderers.DisplayObjectRenderer
-	 * @see idv.cjcat.stardustextended.twoD.renderers.BitmapRenderer
+	 *
 	 */
-	public class DisplayObjectClass extends Initializer2D {
+	public class DisplayObjectClass extends Initializer {
 		
 		public var displayObjectClass:Class;
 		public var constructorParams:Array;

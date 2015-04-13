@@ -1,20 +1,19 @@
 ﻿package idv.cjcat.stardustextended.twoD.actions {
-	import idv.cjcat.stardustextended.common.emitters.Emitter;
+import idv.cjcat.stardustextended.common.actions.Action;
+import idv.cjcat.stardustextended.common.emitters.Emitter;
 	import idv.cjcat.stardustextended.common.particles.Particle;
 	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
-	import idv.cjcat.stardustextended.twoD.actions.Action2D;
 	import idv.cjcat.stardustextended.twoD.fields.Field;
 	import idv.cjcat.stardustextended.twoD.fields.UniformField;
 	import idv.cjcat.stardustextended.twoD.geom.MotionData2D;
 	import idv.cjcat.stardustextended.twoD.geom.MotionData2DPool;
-	import idv.cjcat.stardustextended.twoD.particles.Particle2D;
 	
 	/**
 	 * Applies an instant acceleration to particles based on the <code>field</code> property.
 	 * 
 	 * @see idv.cjcat.stardustextended.twoD.fields.Field
 	 */
-	public class Impulse extends Action2D {
+	public class Impulse extends Action {
 		
 		private var _field:Field;
 		
@@ -30,9 +29,9 @@
 		}
 		
 		private var _discharged:Boolean;
+
 		/**
 		 * Applies an instant acceleration to particles based on the <code>field</code> property.
-		 * @param	e
 		 */
 		public function impulse():void {
 			_discharged = false;
@@ -40,11 +39,9 @@
 		
 		override public function update(emitter:Emitter, particle:Particle, timeDelta:Number, currentTime:Number):void {
 			if (_discharged) return;
-			
-			var p2D:Particle2D = Particle2D(particle);
-			var md2D:MotionData2D = field.getMotionData2D(p2D);
-			p2D.vx += md2D.x * timeDelta;
-			p2D.vy += md2D.y * timeDelta;
+			var md2D:MotionData2D = field.getMotionData2D(particle);
+			particle.vx += md2D.x * timeDelta;
+			particle.vy += md2D.y * timeDelta;
 			MotionData2DPool.recycle(md2D);
 		}
 		

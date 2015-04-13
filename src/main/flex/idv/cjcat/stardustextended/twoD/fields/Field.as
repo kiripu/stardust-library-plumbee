@@ -1,9 +1,9 @@
 ﻿package idv.cjcat.stardustextended.twoD.fields {
 	import idv.cjcat.stardustextended.common.StardustElement;
+	import idv.cjcat.stardustextended.common.particles.Particle;
 	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 	import idv.cjcat.stardustextended.twoD.geom.MotionData2D;
 	import idv.cjcat.stardustextended.twoD.geom.MotionData2DPool;
-	import idv.cjcat.stardustextended.twoD.particles.Particle2D;
 	
 	/**
 	 * 2D vector field.
@@ -20,7 +20,7 @@
 		
 		private var md2D:MotionData2D;
 		private var mass_inv:Number;
-		public final function getMotionData2D(particle:Particle2D):MotionData2D {
+		public final function getMotionData2D(particle:Particle):MotionData2D {
 			if (!active) return MotionData2DPool.get(0, 0);
 			
 			md2D = calculateMotionData2D(particle);
@@ -32,7 +32,7 @@
 			return md2D;
 		}
 		
-		protected function calculateMotionData2D(particle:Particle2D):MotionData2D {
+		protected function calculateMotionData2D(particle:Particle):MotionData2D {
 			return null;
 		}
 		

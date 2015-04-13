@@ -7,7 +7,6 @@
 	import idv.cjcat.stardustextended.twoD.actions.triggers.DeflectorTrigger;
 	import idv.cjcat.stardustextended.twoD.deflectors.Deflector;
 	import idv.cjcat.stardustextended.twoD.geom.MotionData4D;
-	import idv.cjcat.stardustextended.twoD.particles.Particle2D;
 	
 
 	/**
@@ -29,7 +28,7 @@
 	 * 
 	 * @see idv.cjcat.stardustextended.twoD.deflectors.Deflector
 	 */
-	public class Deflect extends Action2D {
+	public class Deflect extends Action {
 		
 		protected var _deflectors:Array;
 		protected var hasTrigger:Boolean;
@@ -68,17 +67,16 @@
 		}
 
 		override public function update(emitter:Emitter, particle:Particle, timeDelta:Number, currentTime:Number):void {
-			var p2D : Particle2D = Particle2D(particle);
 			for each (var deflector : Deflector in _deflectors) {
-				var md4D : MotionData4D = deflector.getMotionData4D(p2D);
+				var md4D : MotionData4D = deflector.getMotionData4D(particle);
 				if (md4D) {
-					if (hasTrigger)	p2D.dictionary[deflector] = true;
-					p2D.x = md4D.x;
-					p2D.y = md4D.y;
-					p2D.vx = md4D.vx;
-					p2D.vy = md4D.vy;
+					if (hasTrigger)	particle.dictionary[deflector] = true;
+					particle.x = md4D.x;
+					particle.y = md4D.y;
+					particle.vx = md4D.vx;
+					particle.vy = md4D.vy;
 				} else if (hasTrigger) {
-					p2D.dictionary[deflector] = false;
+					particle.dictionary[deflector] = false;
 				}
 			}
 		}

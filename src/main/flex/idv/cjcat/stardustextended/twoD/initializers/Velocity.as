@@ -1,10 +1,11 @@
 ﻿package idv.cjcat.stardustextended.twoD.initializers {
+
+	import idv.cjcat.stardustextended.common.initializers.Initializer;
 	import idv.cjcat.stardustextended.common.particles.Particle;
 	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
-import idv.cjcat.stardustextended.twoD.actions.IZoneContainer;
-import idv.cjcat.stardustextended.twoD.geom.MotionData2D;
+	import idv.cjcat.stardustextended.twoD.actions.IZoneContainer;
+	import idv.cjcat.stardustextended.twoD.geom.MotionData2D;
 	import idv.cjcat.stardustextended.twoD.geom.MotionData2DPool;
-	import idv.cjcat.stardustextended.twoD.particles.Particle2D;
 	import idv.cjcat.stardustextended.twoD.zones.SinglePoint;
 	import idv.cjcat.stardustextended.twoD.zones.Zone;
 	
@@ -16,7 +17,7 @@ import idv.cjcat.stardustextended.twoD.geom.MotionData2D;
 	 * (The vector pointing from the origin to the random point).
 	 * </p>
 	 */
-	public class Velocity extends Initializer2D implements IZoneContainer{
+	public class Velocity extends Initializer implements IZoneContainer{
 		
 		private var _zone:Zone;
 		public function Velocity(zone:Zone = null) {
@@ -24,10 +25,9 @@ import idv.cjcat.stardustextended.twoD.geom.MotionData2D;
 		}
 		
 		override public function initialize(particle:Particle):void {
-			var p2D:Particle2D = Particle2D(particle);
 			var md2D:MotionData2D = zone.getPoint();
-			p2D.vx += md2D.x;
-			p2D.vy += md2D.y;
+			particle.vx += md2D.x;
+			particle.vy += md2D.y;
 			MotionData2DPool.recycle(md2D);
 		}
 		

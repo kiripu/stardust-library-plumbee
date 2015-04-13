@@ -1,46 +1,47 @@
-package idv.cjcat.stardustextended.twoD.handlers {
-	import flash.display.BitmapData;
+package idv.cjcat.stardustextended.flashdisplay.handlers {
 	import flash.display.DisplayObject;
 	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
-	import idv.cjcat.stardustextended.common.handlers.ParticleHandler;
 	import idv.cjcat.stardustextended.common.math.StardustMath;
+	import flash.display.BitmapData;
+	import idv.cjcat.stardustextended.common.handlers.ParticleHandler;
 	import idv.cjcat.stardustextended.common.particles.Particle;
 	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
-	import idv.cjcat.stardustextended.twoD.particles.Particle2D;
 	
 	/**
-	 * Similar to the <code>BitmapHandler</code>, but uses only one display object for drawing the target bitmap.
-	 * 
-	 * @see idv.cjcat.stardustextended.twoD.handlers.BitmapHandler
+	 * This handler draws display object particles into a bitmap.
 	 */
-	public class SingularBitmapHandler extends ParticleHandler {
+	public class BitmapHandler extends ParticleHandler {
 		
-		public var displayObject:DisplayObject;
+		/**
+		 * The target bitmap to draw display object into.
+		 */
 		public var targetBitmapData:BitmapData;
+		/**
+		 * The blend mode for drawing.
+		 */
 		public var blendMode:String;
 		
-		public function SingularBitmapHandler(displayObject:DisplayObject = null, targetBitmapData:BitmapData = null, blendMode:String = "normal") {
-			this.displayObject = displayObject;
+		public function BitmapHandler(targetBitmapData:BitmapData = null, blendMode:String = "normal") {
 			this.targetBitmapData = targetBitmapData;
 			this.blendMode = blendMode;
 		}
-		
-		private var p2D:Particle2D;
+
+		private var displayObj:DisplayObject;
 		private var mat:Matrix = new Matrix();
 		private var colorTransform:ColorTransform = new ColorTransform(1, 1, 1);
-		
 		override public function readParticle(particle:Particle):void {
-			p2D = Particle2D(particle);
-			
+
+			displayObj = DisplayObject(particle.target);
+				
 			mat.identity();
 			mat.scale(particle.scale, particle.scale);
-			mat.rotate(p2D.rotation * StardustMath.DEGREE_TO_RADIAN);
-			mat.translate(p2D.x, p2D.y);
+			mat.rotate(particle.rotation * StardustMath.DEGREE_TO_RADIAN);
+			mat.translate(particle.x, particle.y);
 			
 			colorTransform.alphaMultiplier = particle.alpha;
 			
-			targetBitmapData.draw(displayObject, mat, colorTransform, blendMode);
+			targetBitmapData.draw(displayObj, mat, colorTransform, blendMode);
 		}
 		
 		
@@ -48,7 +49,7 @@ package idv.cjcat.stardustextended.twoD.handlers {
 		//------------------------------------------------------------------------------------------------
 		
 		override public function getXMLTagName():String {
-			return "SingularBitmapHandler";
+			return "BitmapHandler";
 		}
 		
 		override public function toXML():XML {

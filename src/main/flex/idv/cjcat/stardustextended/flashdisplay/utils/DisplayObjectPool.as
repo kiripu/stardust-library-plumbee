@@ -1,4 +1,4 @@
-﻿package idv.cjcat.stardustextended.twoD.utils {
+﻿package idv.cjcat.stardustextended.flashdisplay.utils {
 
 	import flash.display.DisplayObject;
 	import idv.cjcat.stardustextended.common.utils.construct;

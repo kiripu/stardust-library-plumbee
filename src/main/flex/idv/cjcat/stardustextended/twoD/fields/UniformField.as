@@ -1,8 +1,8 @@
 ﻿package idv.cjcat.stardustextended.twoD.fields {
-	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
+import idv.cjcat.stardustextended.common.particles.Particle;
+import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 	import idv.cjcat.stardustextended.twoD.geom.MotionData2D;
 	import idv.cjcat.stardustextended.twoD.geom.MotionData2DPool;
-	import idv.cjcat.stardustextended.twoD.particles.Particle2D;
 	
 	/**
 	 * Uniform vector field. It yields a <code>MotionData2D</code> object of same X and Y components no matter what.
@@ -27,7 +27,7 @@
 			this.y = y;
 		}
 		
-		override protected function calculateMotionData2D(particle:Particle2D):MotionData2D {
+		override protected function calculateMotionData2D(particle:Particle):MotionData2D {
 			return MotionData2DPool.get(x, y);
 		}
 		

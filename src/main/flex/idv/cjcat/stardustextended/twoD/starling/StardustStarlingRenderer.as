@@ -10,8 +10,6 @@ import flash.geom.Rectangle;
 
 import idv.cjcat.stardustextended.common.particles.Particle;
 
-import idv.cjcat.stardustextended.twoD.particles.Particle2D;
-
 import starling.core.RenderSupport;
 import starling.core.Starling;
 import starling.display.BlendMode;
@@ -109,7 +107,7 @@ public class StardustStarlingRenderer extends DisplayObject
         vertexes.fixed = false;
         vertexes.length = mNumParticles * 32;
         vertexes.fixed = true;
-        var particle:Particle2D;
+        var particle:Particle;
         var vertexID:int = 0;
 
         var red:Number;
@@ -138,7 +136,7 @@ public class StardustStarlingRenderer extends DisplayObject
         for (var i:int = 0; i < mNumParticles; ++i)
         {
             vertexID = i << 2;
-            particle = Particle2D(mParticles[i]);
+            particle = mParticles[i];
             // color & alpha
             particleAlpha = particle.alpha;
             if (premultiplyAlpha)

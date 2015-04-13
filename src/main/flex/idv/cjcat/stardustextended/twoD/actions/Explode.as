@@ -1,15 +1,15 @@
 ﻿package idv.cjcat.stardustextended.twoD.actions {
-	import idv.cjcat.stardustextended.common.emitters.Emitter;
+import idv.cjcat.stardustextended.common.actions.Action;
+import idv.cjcat.stardustextended.common.emitters.Emitter;
 	import idv.cjcat.stardustextended.common.particles.Particle;
 	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 	import idv.cjcat.stardustextended.twoD.geom.Vec2D;
 	import idv.cjcat.stardustextended.twoD.geom.Vec2DPool;
-	import idv.cjcat.stardustextended.twoD.particles.Particle2D;
 	
 	/**
 	 * Creates a shock wave that spreads out from a single point, applying acceleration to particles along the way of propagation.
 	 */
-	public class Explode extends Action2D {
+	public class Explode extends Action {
 		
 		/**
 		 * The X coordinate of the center.
@@ -62,7 +62,6 @@
 		
 		/**
 		 * Causes a shockwave to spread out from the center.
-		 * @param	e
 		 */
 		public function explode():void {
 			discharged = false;
@@ -72,15 +71,14 @@
 		
 		override public function update(emitter:Emitter, particle:Particle, timeDelta:Number, currentTime:Number):void {
 			if (discharged) return;
-			
-			var p2D:Particle2D = Particle2D(particle);
-			var r:Vec2D = Vec2DPool.get(p2D.x - x, p2D.y - y);
+
+			var r:Vec2D = Vec2DPool.get(particle.x - x, particle.y - y);
 			var len:Number = r.length;
 			if (len < epsilon) len = epsilon;
 			if ((len >= _currentInnerRadius) && (len < _currentOuterRadius)) {
 				r.length = strength * Math.pow(len, -attenuationPower);
-				p2D.vx += r.x * timeDelta;
-				p2D.vy += r.y * timeDelta;
+				particle.vx += r.x * timeDelta;
+				particle.vy += r.y * timeDelta;
 			}
 			
 			Vec2DPool.recycle(r);

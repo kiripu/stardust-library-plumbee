@@ -1,8 +1,8 @@
 ﻿package idv.cjcat.stardustextended.twoD.deflectors {
 	import idv.cjcat.stardustextended.common.StardustElement;
+	import idv.cjcat.stardustextended.common.particles.Particle;
 	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 	import idv.cjcat.stardustextended.twoD.geom.MotionData4D;
-	import idv.cjcat.stardustextended.twoD.particles.Particle2D;
 	
 	/**
 	 * Used along with the <code>Deflect</code> action.
@@ -25,7 +25,7 @@
 			slipperiness = 1;
 		}
 		
-		public final function getMotionData4D(particle:Particle2D):MotionData4D {
+		public final function getMotionData4D(particle:Particle):MotionData4D {
 			if (active) {
 				return calculateMotionData4D(particle);
 			}
@@ -39,7 +39,7 @@
 		 * @return
 		 * @see idv.cjcat.stardustextended.twoD.actions.triggers.DeflectorTrigger
 		 */
-		protected function calculateMotionData4D(particle:Particle2D):MotionData4D {
+		protected function calculateMotionData4D(particle:Particle):MotionData4D {
 			//abstract method
 			return null;
 		}

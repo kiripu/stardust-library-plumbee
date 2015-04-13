@@ -10,7 +10,7 @@
 	 * 
 	 * <p>
 	 * Every <code>StardustElement</code> objects can generate its XML representation through the <code>StardustElement.toXML()</code> method. 
-	 * And they can reconstrcut configurations from existing XML data through the <code>StardustElement.parseXML()</code> method.
+	 * And they can reconstruct configurations from existing XML data through the <code>StardustElement.parseXML()</code> method.
 	 * </p>
 	 */
 	public class XMLBuilder {

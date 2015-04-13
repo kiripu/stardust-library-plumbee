@@ -1,6 +1,6 @@
 ﻿package idv.cjcat.stardustextended.common.clocks {
+
 	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
-	import idv.cjcat.stardustextended.sd;
 	
 	/**
 	 * This clock is a group of clocks. 
@@ -20,7 +20,7 @@
 		 */
 		override public final function getTicks(time:Number):int {
 			var sum:int = 0;
-			for each (var clock:Clock in clockCollection.sd::clocks) {
+			for each (var clock:Clock in clockCollection.clocks) {
 				sum += clock.getTicks(time);
 			}
 			return sum;
@@ -54,7 +54,7 @@
 		//------------------------------------------------------------------------------------------------
 		
 		override public function getRelatedObjects():Array {
-			return clockCollection.sd::clocks.concat();
+			return clockCollection.clocks.concat();
 		}
 		
 		override public function getXMLTagName():String {
@@ -64,10 +64,10 @@
 		override public function toXML():XML {
 			var xml:XML = super.toXML();
 			
-			if (clockCollection.sd::clocks.length > 0) {
+			if (clockCollection.clocks.length > 0) {
 				xml.appendChild(<clocks/>);
 				var clock:Clock;
-				for each (clock in clockCollection.sd::clocks) {
+				for each (clock in clockCollection.clocks) {
 					xml.clocks.appendChild(clock.getXMLTag());
 				}
 			}

@@ -1,6 +1,6 @@
 ﻿package idv.cjcat.stardustextended.common.particles {
-	
-	/** @private */
+
+/** @private */
 	public class PooledParticleFactory extends ParticleFactory {
 		
 		protected var particlePool:ParticlePool;

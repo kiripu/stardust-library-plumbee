@@ -15,9 +15,6 @@
     import idv.cjcat.stardustextended.common.particles.PooledParticleFactory;
     import idv.cjcat.stardustextended.common.StardustElement;
     import idv.cjcat.stardustextended.common.xml.XMLBuilder;
-    import idv.cjcat.stardustextended.sd;
-
-	use namespace sd;
 	
 	/**
 	 * This class takes charge of the actual particle simulation of the Stardust particle system.
@@ -58,9 +55,8 @@
 		
 		//particle collections
 		//------------------------------------------------------------------------------------------------
-		
-		/** @private */
-		sd var _particles:Vector.<Particle> = new Vector.<Particle>();
+
+		private var _particles:Vector.<Particle> = new Vector.<Particle>();
 		/**
 		 * Returns an array of particles for custom parameter manipulation. 
 		 * Note that the returned array is merely a copy of the internal particle array, 
@@ -87,7 +83,7 @@
 		public var needsSort:Boolean;
 		
 		/** @private */
-		protected var factory:PooledParticleFactory;
+		protected var factory:PooledParticleFactory = new PooledParticleFactory();
 		
 		protected const _actionCollection:ActionCollection = new ActionCollection();
 		protected const activeActions : Vector.<Action> = new Vector.<Action>();
@@ -131,8 +127,8 @@
 		 * @param	time The time interval of a single step of simulation. For instance, doubling this parameter causes the simulation to go twice as fast.
 		 */
 		public final function step(time:Number = 1):void {
-			onStepBegin.dispatch(this, particles, time);
-			_particleHandler.stepBegin(this, particles, time);
+			_onStepBegin.dispatch(this, _particles, time);
+			_particleHandler.stepBegin(this, _particles, time);
 			
 			var i:int;
             var len:int;
@@ -143,7 +139,7 @@
 			
 			//query clock ticks
 			if (active) {
-				var pCount:int = clock.getTicks(time);
+				var pCount:int = _clock.getTicks(time);
 				var newParticles:Vector.<Particle> = factory.createParticles(pCount, currentTime);
 				addParticles(newParticles);
 			}
@@ -206,9 +202,9 @@
                 activeActions[i].postUpdate(this, time);
 			}
 			
-			onStepEnd.dispatch(this, particles, time);
-			_particleHandler.stepEnd(this, particles, time);
-			if (!numParticles) onEmpty.dispatch(this);
+			_onStepEnd.dispatch(this, _particles, time);
+			_particleHandler.stepEnd(this, _particles, time);
+			if (_particles.length == 0) _onEmpty.dispatch(this);
 
             currentTime = currentTime + time;
 		}
@@ -253,7 +249,7 @@
 		}
 		
 		/** @private */
-		public final function get initializers():Array { return factory.sd::initializerCollection.sd::initializers; }
+		public final function get initializers():Array { return factory.initializerCollection.initializers; }
 		
 		/**
 		 * Adds an initializer to the emitter.
@@ -300,7 +296,7 @@
             for (i = 0; i < actions.length; ++i) {
                 Action(actions[i]).reset();
             }
-            clock.reset();
+			_clock.reset();
         }
 		
 		//particles
@@ -360,7 +356,7 @@
 		}
 		
 		override public function getXMLTagName():String {
-			return "Emitter";
+			return "Emitter2D";
 		}
 		
 		override public function getElementTypeXMLTag():XML {

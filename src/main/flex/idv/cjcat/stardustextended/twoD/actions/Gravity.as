@@ -1,11 +1,11 @@
 ﻿package idv.cjcat.stardustextended.twoD.actions {
-	import idv.cjcat.stardustextended.common.emitters.Emitter;
+import idv.cjcat.stardustextended.common.actions.Action;
+import idv.cjcat.stardustextended.common.emitters.Emitter;
 	import idv.cjcat.stardustextended.common.particles.Particle;
 	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 	import idv.cjcat.stardustextended.twoD.fields.Field;
 	import idv.cjcat.stardustextended.twoD.geom.MotionData2D;
 	import idv.cjcat.stardustextended.twoD.geom.MotionData2DPool;
-	import idv.cjcat.stardustextended.twoD.particles.Particle2D;
 	
 	/**
 	 * Applies accelerations to particles according to the associated gravity fields, in pixels.
@@ -16,7 +16,7 @@
 	 * 
 	 * @see idv.cjcat.stardustextended.twoD.fields.Field
 	 */
-	public class Gravity extends Action2D {
+	public class Gravity extends Action {
 
 		public var fields : Vector.<Field>;
 		
@@ -50,13 +50,12 @@
 		}
 
 		override public function update(emitter:Emitter, particle:Particle, timeDelta:Number, currentTime:Number):void {
-			const p2D : Particle2D = Particle2D(particle);
             var md2D : MotionData2D;
 			for (var i : int = 0; i < fields.length; i++) {
-				md2D = fields[i].getMotionData2D(p2D);
+				md2D = fields[i].getMotionData2D(particle);
 				if (md2D) {
-					p2D.vx += md2D.x * timeDelta;
-					p2D.vy += md2D.y * timeDelta;
+					particle.vx += md2D.x * timeDelta;
+					particle.vy += md2D.y * timeDelta;
 					MotionData2DPool.recycle(md2D);
 				}
 			}

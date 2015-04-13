@@ -1,11 +1,12 @@
-﻿package idv.cjcat.stardustextended.twoD.bursters {
+﻿package idv.cjcat.stardustextended.flashdisplay.bursters {
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
 	import flash.geom.Matrix;
 
-    import idv.cjcat.stardustextended.common.particles.Particle;
-	import idv.cjcat.stardustextended.twoD.particles.Particle2D;
+	import idv.cjcat.stardustextended.common.bursters.Burster;
+
+	import idv.cjcat.stardustextended.common.particles.Particle;
 	
 	/**
 	 * Bursts out particles with <code>target</code> properties being references to small rectangular fractions (cells) of a bitmap.
@@ -17,11 +18,11 @@
 	 * </p>
 	 * 
 	 * <p>
-	 * Adding any iniitalizers that set the <code>target</code> property essentially does nothing, 
+	 * Adding any initalizers that set the <code>target</code> property essentially does nothing,
 	 * since this burster internally sets particles' targets to <code>Bitmap</code> objects.
 	 * </p>
 	 */
-	public class BitmapBurster extends Burster2D {
+	public class BitmapBurster extends Burster {
 		
 		/**
 		 * The width of a cell.
@@ -60,7 +61,7 @@
 			var matrix:Matrix = new Matrix();
 			var halfCellWidth:Number = 0.5 * cellWidth;
 			var halfCellHeight:Number = 0.5 * cellHeight;
-			var p:Particle2D;
+			var p:Particle;
 
 			for (var j:int = 0; j < rows; j++) {
 				for (var i:int = 0; i < columns; i++) {
@@ -74,7 +75,7 @@
 					var sprite:Sprite = new Sprite();
 					sprite.addChild(cell);
 					
-					p = Particle2D(particles[index]);
+					p = particles[index];
 					p.target = sprite;
 					p.x = sprite.x = halfCellWidth + cellWidth * i + offsetX;
 					p.y = sprite.y = halfCellHeight + cellHeight * j + offsetY;

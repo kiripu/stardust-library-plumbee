@@ -1,4 +1,4 @@
-﻿package idv.cjcat.stardustextended.twoD.display {
+﻿package idv.cjcat.stardustextended.flashdisplay.handlers {
 	
 	public class AddChildMode {
 		

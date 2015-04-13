@@ -3,7 +3,6 @@
 	import idv.cjcat.stardustextended.common.emitters.Emitter;
 	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 import idv.cjcat.stardustextended.twoD.actions.IZoneContainer;
-import idv.cjcat.stardustextended.twoD.particles.Particle2D;
 	import idv.cjcat.stardustextended.twoD.zones.SinglePoint;
 	import idv.cjcat.stardustextended.twoD.zones.Zone;
 	
@@ -30,8 +29,7 @@ import idv.cjcat.stardustextended.twoD.particles.Particle2D;
 		}
 		
 		override public function testTrigger(emitter:Emitter, particle:Particle, time:Number):Boolean {
-			var p2D:Particle2D = Particle2D(particle);
-			return _zone.contains(p2D.x, p2D.y);
+			return _zone.contains(particle.x, particle.y);
 		}
 		
 		//XML

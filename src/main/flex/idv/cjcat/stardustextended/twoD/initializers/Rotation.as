@@ -1,14 +1,14 @@
 ﻿package idv.cjcat.stardustextended.twoD.initializers {
-	import idv.cjcat.stardustextended.common.math.Random;
+import idv.cjcat.stardustextended.common.initializers.Initializer;
+import idv.cjcat.stardustextended.common.math.Random;
 	import idv.cjcat.stardustextended.common.math.UniformRandom;
 	import idv.cjcat.stardustextended.common.particles.Particle;
 	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
-	import idv.cjcat.stardustextended.twoD.particles.Particle2D;
 	
 	/**
 	 * Sets a particle's rotation value, in degrees, based on the <code>random</code> property.
 	 */
-	public class Rotation extends Initializer2D {
+	public class Rotation extends Initializer {
 		
 		private var _random:Random;
 		public function Rotation(random:Random = null) {
@@ -16,8 +16,7 @@
 		}
 		
 		override public function initialize(particle:Particle):void {
-			var p2D:Particle2D = Particle2D(particle);
-			p2D.rotation = random.random();
+			particle.rotation = random.random();
 		}
 		
 		public function get random():Random { return _random; }

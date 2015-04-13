@@ -1,18 +1,18 @@
 ﻿package idv.cjcat.stardustextended.twoD.actions {
-	import idv.cjcat.stardustextended.common.emitters.Emitter;
+import idv.cjcat.stardustextended.common.actions.Action;
+import idv.cjcat.stardustextended.common.emitters.Emitter;
 	import idv.cjcat.stardustextended.common.particles.Particle;
 	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 	import idv.cjcat.stardustextended.twoD.actions.waypoints.Waypoint;
 	import idv.cjcat.stardustextended.twoD.geom.Vec2D;
 	import idv.cjcat.stardustextended.twoD.geom.Vec2DPool;
-	import idv.cjcat.stardustextended.twoD.particles.Particle2D;
 	
 	/**
 	 * Causes particles to go through a series of waypoints.
 	 * 
 	 * @see idv.cjcat.stardustextended.twoD.actions.waypoints.Waypoint
 	 */
-	public class FollowWaypoints extends Action2D {
+	public class FollowWaypoints extends Action {
 		
 		/**
 		 * Whether the particles head for the first waypoint after passing through the last waypoint.
@@ -57,36 +57,35 @@
 		
 		override public function update(emitter:Emitter, particle:Particle, timeDelta:Number, currentTime:Number):void {
 			if (!_waypoints.length) return;
+
+			if (!particle.dictionary[FollowWaypoints]) particle.dictionary[FollowWaypoints] = 0;
 			
-			var p2D:Particle2D = Particle2D(particle);
-			if (!p2D.dictionary[FollowWaypoints]) p2D.dictionary[FollowWaypoints] = 0;
-			
-			var index:int = p2D.dictionary[FollowWaypoints];
+			var index:int = particle.dictionary[FollowWaypoints];
 			
 			var waypoint:Waypoint = _waypoints[index] as Waypoint;
-			var dx:Number = p2D.x - waypoint.x;
-			var dy:Number = p2D.y - waypoint.y;
+			var dx:Number = particle.x - waypoint.x;
+			var dy:Number = particle.y - waypoint.y;
 			if (dx * dx + dy * dy <= waypoint.radius * waypoint.radius) {
 				if (index < _waypoints.length - 1) {
-					p2D.dictionary[FollowWaypoints]++;
+					particle.dictionary[FollowWaypoints]++;
 					waypoint = _waypoints[index + 1];
 				} else {
 					if (loop) waypoint = _waypoints[0];
 					else return;
 				}
-				dx = p2D.x - waypoint.x;
-				dy = p2D.y - waypoint.y;
+				dx = particle.x - waypoint.x;
+				dy = particle.y - waypoint.y;
 			}
 			
 			var r:Vec2D = Vec2DPool.get(dx, dy);
 			var len:Number = r.length;
 			if (len < waypoint.epsilon) len = waypoint.epsilon;
 			r.length = -waypoint.strength * Math.pow(len, -0.5 * waypoint.attenuationPower);
-			if (!massless) r.length /= p2D.mass;
+			if (!massless) r.length /= particle.mass;
 			Vec2DPool.recycle(r);
-			
-			p2D.vx += r.x;
-			p2D.vy += r.y;
+
+			particle.vx += r.x;
+			particle.vy += r.y;
 		}
 		
 		

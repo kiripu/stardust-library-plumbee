@@ -1,11 +1,11 @@
 ﻿package idv.cjcat.stardustextended.twoD.actions {
-	import idv.cjcat.stardustextended.common.emitters.Emitter;
+import idv.cjcat.stardustextended.common.actions.Action;
+import idv.cjcat.stardustextended.common.emitters.Emitter;
 	import idv.cjcat.stardustextended.common.particles.Particle;
 	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 	import idv.cjcat.stardustextended.twoD.fields.Field;
 	import idv.cjcat.stardustextended.twoD.geom.MotionData2D;
 	import idv.cjcat.stardustextended.twoD.geom.MotionData2DPool;
-	import idv.cjcat.stardustextended.twoD.particles.Particle2D;
 	
 	/**
 	 * Alters a particle's velocity based on a vector field.
@@ -19,7 +19,7 @@
 	 * Default priority = -2;
 	 * </p>
 	 */
-	public class VelocityField extends Action2D {
+	public class VelocityField extends Action {
 		
 		public var field:Field;
 		public function VelocityField(field:Field = null) {
@@ -30,11 +30,9 @@
 		
 		override public function update(emitter:Emitter, particle:Particle, timeDelta:Number, currentTime:Number):void {
 			if (!field) return;
-			
-			var p2D:Particle2D = Particle2D(particle);
-			var md2D:MotionData2D = field.getMotionData2D(p2D);
-			p2D.vx = md2D.x;
-			p2D.vy = md2D.y;
+			var md2D:MotionData2D = field.getMotionData2D(particle);
+			particle.vx = md2D.x;
+			particle.vy = md2D.y;
 			MotionData2DPool.recycle(md2D);
 		}
 		

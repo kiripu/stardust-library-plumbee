@@ -1,11 +1,12 @@
 ﻿package idv.cjcat.stardustextended.twoD.bursters {
 	import flash.display.BitmapData;
 
-    import idv.cjcat.stardustextended.common.particles.Particle;
-import idv.cjcat.stardustextended.common.utils.ColorUtil;
-import idv.cjcat.stardustextended.twoD.particles.Particle2D;
+	import idv.cjcat.stardustextended.common.bursters.Burster;
+
+	import idv.cjcat.stardustextended.common.particles.Particle;
+	import idv.cjcat.stardustextended.common.utils.ColorUtil;
 	
-	public class PixelBurster extends Burster2D {
+	public class PixelBurster extends Burster {
 		
 		/**
 		 * The X coordinate of the top-left corner of the top-left cell.
@@ -31,11 +32,11 @@ import idv.cjcat.stardustextended.twoD.particles.Particle2D;
 			var particles:Vector.<Particle> = factory.createParticles(rows * columns, currentTime);
 			
 			var index:int = 0;
-			var p:Particle2D;
+			var p:Particle;
 			var inv255:Number = 1 / 255;
 			for (var j:int = 0; j < rows; j++) {
 				for (var i:int = 0; i < columns; i++) {
-					p = Particle2D(particles[index]);
+					p = particles[index];
 					var color:uint = bitmapData.getPixel32(i, j);
 					p.alpha = Number(uint(color & 0xFF000000) >> 24) * inv255;
 					if (!p.alpha) continue;

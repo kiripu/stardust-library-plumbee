@@ -37,7 +37,7 @@
 		
 		private var _onAdd:ISignal = new Signal(Emitter, Action);
 		/**
-		 * Dispatched when the added to an emitter.
+		 * Dispatched when the action is added to an emitter.
 		 * <p/>
 		 * Signature: (emitter:Emitter, action:Action)
 		 */
@@ -69,29 +69,12 @@
 
 		private var _priority:int;
 		
-		/** @private */
-		protected var _supports2D:Boolean;
-		/** @private */
-		protected var _supports3D:Boolean;
-		
 		public function Action() {
-			_supports2D = _supports3D = true;
-			
-			//priority = CommonActionPriority.getInstance().getPriority(Class(Object(this).constructor));
 			priority = 0;
 			
 			active = true;
 			mask = 1;
 		}
-		
-		/**
-		 * Whether this action supports 2D.
-		 */
-		public function get supports2D():Boolean { return _supports2D; }
-		/**
-		 * Whether this action supports 3D.
-		 */
-		public function get supports3D():Boolean { return _supports3D; }
 		
 		/** @private */
 		public final function doUpdate(emitter:Emitter, particles:Vector.<Particle>, timeDelta:Number, currentTime:Number):void {
@@ -195,7 +178,7 @@
 		//------------------------------------------------------------------------------------------------
 		
 		override public function getXMLTagName():String {
-			return "Action";
+			throw new Error("This is an abstract method");
 		}
 		
 		override public function getElementTypeXMLTag():XML {
@@ -204,10 +187,8 @@
 		
 		override public function toXML():XML {
 			var xml:XML = super.toXML();
-			
 			xml.@active = active;
 			xml.@mask = mask;
-			
 			return xml;
 		}
 		

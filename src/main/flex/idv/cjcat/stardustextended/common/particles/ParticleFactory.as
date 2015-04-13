@@ -1,10 +1,8 @@
 ﻿package idv.cjcat.stardustextended.common.particles {
+
 	import idv.cjcat.stardustextended.common.initializers.Initializer;
 	import idv.cjcat.stardustextended.common.initializers.InitializerCollection;
 	import idv.cjcat.stardustextended.common.initializers.InitializerCollector;
-	import idv.cjcat.stardustextended.sd;
-	
-	use namespace sd;
 	
 	/**
 	 * Each emitter has a particle factory for creating new particles. 
@@ -13,11 +11,11 @@
 	 * @see idv.cjcat.stardustextended.common.emitters.Emitter
 	 */
 	public class ParticleFactory implements InitializerCollector {
-		
-		/** @private */
-		sd var initializerCollection:InitializerCollection;
+
+		private var _initializerCollection:InitializerCollection;
+
 		public function ParticleFactory() {
-			initializerCollection = new InitializerCollection();
+			_initializerCollection = new InitializerCollection();
 		}
 		
 		/**
@@ -34,7 +32,7 @@
 				particles.push(particle);
 			}
 			
-			var initializers:Array = initializerCollection.initializers;
+			var initializers:Array = _initializerCollection.initializers;
 			for (i = 0, len = initializers.length; i < len; ++i) {
 				Initializer(initializers[i]).doInitialize(particles, currentTime);
 			}
@@ -52,7 +50,7 @@
 		 * @param	initializer
 		 */
 		public function addInitializer(initializer:Initializer):void {
-			initializerCollection.addInitializer(initializer);
+			_initializerCollection.addInitializer(initializer);
 		}
 		
 		/**
@@ -60,14 +58,18 @@
 		 * @param	initializer
 		 */
 		public final function removeInitializer(initializer:Initializer):void {
-			initializerCollection.removeInitializer(initializer);
+			_initializerCollection.removeInitializer(initializer);
 		}
 		
 		/**
 		 * Removes all initializers from the factory.
 		 */
 		public final function clearInitializers():void {
-			initializerCollection.clearInitializers();
+			_initializerCollection.clearInitializers();
+		}
+
+		public function get initializerCollection():InitializerCollection {
+			return _initializerCollection;
 		}
 	}
 }

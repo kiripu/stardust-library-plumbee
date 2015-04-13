@@ -1,17 +1,18 @@
 ﻿package idv.cjcat.stardustextended.twoD.bursters {
+
+	import idv.cjcat.stardustextended.common.bursters.Burster;
 	import idv.cjcat.stardustextended.common.math.StardustMath;
-import idv.cjcat.stardustextended.common.particles.Particle;
-	import idv.cjcat.stardustextended.twoD.particles.Particle2D;
+	import idv.cjcat.stardustextended.common.particles.Particle;
 	
 	/**
 	 * Bursts out particles from a single point, spreading out at uniformly distributed angles.
 	 * 
 	 * <p>
-	 * Adding any iniitalizers that alters the particles' velocities essentially does nothing, 
-	 * since this burster internally sets particles' velocites.
+	 * Adding any initializers that alters the particles' velocities essentially does nothing,
+	 * since this burster internally sets particles' velocities.
 	 * </p>
 	 */
-	public class PointUniburster extends Burster2D {
+	public class PointUniburster extends Burster {
 		
 		/**
 		 * The number of particles (i.e. directions) in a single burst.
@@ -59,10 +60,10 @@ import idv.cjcat.stardustextended.common.particles.Particle;
 			var len:int = particles.length;
 			var len_inv:Number = 1 / len;
 			var angleOffset_rad:Number = angleOffset * StardustMath.DEGREE_TO_RADIAN;
-			var p:Particle2D;
+			var p:Particle;
             var index : int;
 			for (var i:int = 0; i < len; i++) {
-				p = Particle2D(particles[index]);
+				p = particles[index];
 				p.x = x;
 				p.y = y;
 				p.vx = speed * Math.sin(StardustMath.TWO_PI * len_inv * i + angleOffset_rad);

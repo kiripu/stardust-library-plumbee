@@ -28,7 +28,7 @@
 	import idv.cjcat.stardustextended.common.xml.ClassPackage;
 	
 	/**
-	 * Packs together common classes for both 2D and 3D.
+	 * Packs together common classes.
 	 */
 	public class CommonClassPackage extends ClassPackage {
 		

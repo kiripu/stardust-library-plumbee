@@ -1,8 +1,8 @@
 ﻿package idv.cjcat.stardustextended.twoD.actions {
-	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
+import idv.cjcat.stardustextended.common.particles.Particle;
+import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 	import idv.cjcat.stardustextended.twoD.geom.Vec2D;
 	import idv.cjcat.stardustextended.twoD.geom.Vec2DPool;
-	import idv.cjcat.stardustextended.twoD.particles.Particle2D;
 	
 	/**
 	 * Causes particles to attract each other.
@@ -46,7 +46,7 @@
 			this.massless = true;
 		}
 		
-		override protected function doMutualAction(p1:Particle2D, p2:Particle2D, time:Number):void {
+		override protected function doMutualAction(p1:Particle, p2:Particle, time:Number):void {
 			var dx:Number = p1.x - p2.x;
 			var dy:Number = p1.y - p2.y;
 			var dist:Number = Math.sqrt(dx * dx + dy * dy);

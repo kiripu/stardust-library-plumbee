@@ -4,7 +4,6 @@
 	import idv.cjcat.stardustextended.common.particles.Particle;
 	import idv.cjcat.stardustextended.twoD.geom.Vec2D;
 	import idv.cjcat.stardustextended.twoD.geom.Vec2DPool;
-	import idv.cjcat.stardustextended.twoD.particles.Particle2D;
 	
 	/**
 	 * Causes particles to collide against each other.
@@ -53,7 +52,7 @@
 			maxDistance = max1 + max2;
 		}
 		
-		override protected function doMutualAction(p1:Particle2D, p2:Particle2D, time:Number):void {
+		override protected function doMutualAction(p1:Particle, p2:Particle, time:Number):void {
 			var dx:Number = p1.x - p2.x;
 			var dy:Number = p1.y - p2.y;
 			var r1:Number = p1.collisionRadius * p1.scale;

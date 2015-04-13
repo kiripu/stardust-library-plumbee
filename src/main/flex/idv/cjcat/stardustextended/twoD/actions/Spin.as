@@ -1,8 +1,8 @@
 ﻿package idv.cjcat.stardustextended.twoD.actions {
-	import idv.cjcat.stardustextended.common.emitters.Emitter;
+import idv.cjcat.stardustextended.common.actions.Action;
+import idv.cjcat.stardustextended.common.emitters.Emitter;
 	import idv.cjcat.stardustextended.common.particles.Particle;
 	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
-	import idv.cjcat.stardustextended.twoD.particles.Particle2D;
 	
 	/**
 	 * Causes a particle's rotation to change according to it's omega value (angular velocity).
@@ -11,7 +11,7 @@
 	 * Default priority = -4;
 	 * </p>
 	 */
-	public class Spin extends Action2D {
+	public class Spin extends Action {
 		
 		/**
 		 * The multiplier of spinning, 1 by default.
@@ -31,12 +31,10 @@
 		override public function preUpdate(emitter:Emitter, time:Number):void {
 			factor = time * multiplier;
 		}
-		
-		private var p2D:Particle2D;
+
 		private var factor:Number;
 		override public function update(emitter:Emitter, particle:Particle, timeDelta:Number, currentTime:Number):void {
-			p2D = Particle2D(particle);
-			p2D.rotation += p2D.omega * factor;
+			particle.rotation += particle.omega * factor;
 		}
 		
 		//XML

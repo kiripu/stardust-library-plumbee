@@ -1,13 +1,13 @@
 ﻿package idv.cjcat.stardustextended.twoD.fields {
 	import flash.display.BitmapData;
 	import idv.cjcat.stardustextended.common.math.StardustMath;
+	import idv.cjcat.stardustextended.common.particles.Particle;
 	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 	import idv.cjcat.stardustextended.twoD.geom.MotionData2D;
 	import idv.cjcat.stardustextended.twoD.geom.MotionData2DPool;
-	import idv.cjcat.stardustextended.twoD.particles.Particle2D;
 	
 	/**
-	 * Vector field based on a bitmap.
+	 * Vector field based on a BitmapData.
 	 * 
 	 * <p>
 	 * For instance, if a pixel at (10, 12) has a color of "R = 100, G = 50, B = 0", 
@@ -17,7 +17,7 @@
 	 * </p>
 	 * 
 	 * <p>
-	 * This field can be combined with perlin noise bitmaps to create turbulence vector fields.
+	 * This field can be combined with Perlin noise bitmaps to create turbulence vector fields.
 	 * </p>
 	 */
 	public class BitmapField extends Field {
@@ -55,7 +55,7 @@
 		 */
 		public var tile:Boolean;
 		
-		private var _bmpd:BitmapData;
+		private var _bitmapData:BitmapData;
 		
 		public function BitmapField(x:Number = 0, y:Number = 0, max:Number = 1, channelX:uint = 1, channelY:uint = 2) {
 			this.x = x;
@@ -72,28 +72,24 @@
 		
 		public function update(bitmapData:BitmapData = null):void {
 			if (!bitmapData) bitmapData = new BitmapData(1, 1, false, 0x808080);
-			_bmpd = bitmapData;
+			_bitmapData = bitmapData;
 		}
-		
-		private var px:Number;
-		private var py:Number;
-		private var color:int;
-		private var finalX:Number;
-		private var finalY:Number;
-		override protected function calculateMotionData2D(particle:Particle2D):MotionData2D {
-			px = particle.x / scaleX;
-			py = particle.y / scaleY;
+
+		override protected function calculateMotionData2D(particle:Particle):MotionData2D {
+			var px : Number = particle.x / scaleX;
+			var py : Number = particle.y / scaleY;
 			
 			if (tile) {
-				px = StardustMath.mod(px, _bmpd.width);
-				py = StardustMath.mod(py, _bmpd.height);
+				px = StardustMath.mod(px, _bitmapData.width);
+				py = StardustMath.mod(py, _bitmapData.height);
 			} else {
-				if ((px < 0) || (px >= _bmpd.width) || (py < 0) || (py >= _bmpd.height)) {
+				if ((px < 0) || (px >= _bitmapData.width) || (py < 0) || (py >= _bitmapData.height)) {
 					return null;
 				}
 			}
-			
-			color = _bmpd.getPixel(int(px), int(py));
+			var finalX : Number;
+			var finalY : Number;
+			var color : uint= _bitmapData.getPixel(int(px), int(py));
 			switch (channelX) {
 				case 1:
 					finalX = 2 * ((((color & 0xFF0000) >> 16) / 255) - 0.5) * max;

@@ -5,13 +5,14 @@ import flash.geom.Point;
 import flash.net.registerClassAlias;
 import flash.utils.ByteArray;
 
+import idv.cjcat.stardustextended.common.initializers.Initializer;
+
 import idv.cjcat.stardustextended.common.particles.Particle;
 import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 import idv.cjcat.stardustextended.twoD.actions.IZoneContainer;
 import idv.cjcat.stardustextended.twoD.geom.MotionData2D;
 import idv.cjcat.stardustextended.twoD.geom.MotionData2DPool;
-import idv.cjcat.stardustextended.twoD.particles.Particle2D;
-import idv.cjcat.stardustextended.twoD.utils.Base64;
+import idv.cjcat.stardustextended.common.utils.Base64;
 import idv.cjcat.stardustextended.twoD.zones.SinglePoint;
 import idv.cjcat.stardustextended.twoD.zones.Zone;
 
@@ -19,7 +20,7 @@ import idv.cjcat.stardustextended.twoD.zones.Zone;
  * Sets a particle's initial position based on the zone plus on a value in the positions array.
  * The current position is: positions[currentFrame] + random point in the zone.
  */
-public class PositionAnimated extends Initializer2D implements IZoneContainer
+public class PositionAnimated extends Initializer implements IZoneContainer
 {
 
     private var _zone : Zone;
@@ -45,23 +46,22 @@ public class PositionAnimated extends Initializer2D implements IZoneContainer
 
     override public function initialize( particle : Particle ) : void
     {
-        var p2D : Particle2D = Particle2D( particle );
         var md2D : MotionData2D = _zone.getPoint();
         if ( _positions )
         {
-            p2D.x = md2D.x + _positions[currentPos].x;
-            p2D.y = md2D.y + _positions[currentPos].y;
+            particle.x = md2D.x + _positions[currentPos].x;
+            particle.y = md2D.y + _positions[currentPos].y;
 
             if ( inheritVelocity )
             {
-                p2D.vx += _positions[currentPos].x - _positions[prevPos].x;
-                p2D.vy += _positions[currentPos].y - _positions[prevPos].y;
+                particle.vx += _positions[currentPos].x - _positions[prevPos].x;
+                particle.vy += _positions[currentPos].y - _positions[prevPos].y;
             }
         }
         else
         {
-            p2D.x = md2D.x;
-            p2D.y = md2D.y;
+            particle.x = md2D.x;
+            particle.y = md2D.y;
         }
         MotionData2DPool.recycle( md2D );
     }

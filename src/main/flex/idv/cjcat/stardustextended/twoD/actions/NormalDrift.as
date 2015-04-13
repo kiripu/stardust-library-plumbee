@@ -1,17 +1,17 @@
 ﻿package idv.cjcat.stardustextended.twoD.actions {
-	import idv.cjcat.stardustextended.common.emitters.Emitter;
+import idv.cjcat.stardustextended.common.actions.Action;
+import idv.cjcat.stardustextended.common.emitters.Emitter;
 	import idv.cjcat.stardustextended.common.math.Random;
 	import idv.cjcat.stardustextended.common.math.UniformRandom;
 	import idv.cjcat.stardustextended.common.particles.Particle;
 	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 	import idv.cjcat.stardustextended.twoD.geom.Vec2D;
 	import idv.cjcat.stardustextended.twoD.geom.Vec2DPool;
-	import idv.cjcat.stardustextended.twoD.particles.Particle2D;
 	
 	/**
 	 * Applies acceleration normal to a particle's velocity to the particle.
 	 */
-	public class NormalDrift extends Action2D {
+	public class NormalDrift extends Action {
 		
 		/**
 		 * Whether the particles acceleration is divided by their masses before applied to them, true by default. 
@@ -58,12 +58,11 @@
 		}
 		
 		override public function update(emitter:Emitter, particle:Particle, timeDelta:Number, currentTime:Number):void {
-			var p2D:Particle2D = Particle2D(particle);
-			var v:Vec2D = Vec2DPool.get(p2D.vy, p2D.vx);
+			var v:Vec2D = Vec2DPool.get(particle.vy, particle.vx);
 			v.length = _random.random();
-			if (!massless) v.length /= p2D.mass;
-			p2D.vx += v.x * timeDelta;
-			p2D.vy += v.y * timeDelta;
+			if (!massless) v.length /= particle.mass;
+			particle.vx += v.x * timeDelta;
+			particle.vy += v.y * timeDelta;
 			Vec2DPool.recycle(v);
 		}
 		

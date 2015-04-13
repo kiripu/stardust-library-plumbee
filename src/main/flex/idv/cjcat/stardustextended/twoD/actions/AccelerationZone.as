@@ -1,11 +1,11 @@
 ﻿package idv.cjcat.stardustextended.twoD.actions {
 
+import idv.cjcat.stardustextended.common.actions.Action;
 import idv.cjcat.stardustextended.common.emitters.Emitter;
 import idv.cjcat.stardustextended.common.particles.Particle;
 import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 import idv.cjcat.stardustextended.twoD.geom.Vec2D;
 import idv.cjcat.stardustextended.twoD.geom.Vec2DPool;
-import idv.cjcat.stardustextended.twoD.particles.Particle2D;
 import idv.cjcat.stardustextended.twoD.zones.RectZone;
 import idv.cjcat.stardustextended.twoD.zones.Zone;
 	
@@ -16,7 +16,7 @@ import idv.cjcat.stardustextended.twoD.zones.Zone;
 	 * Default priority = -6;
 	 * </p>
 	 */
-	public class AccelerationZone extends Action2D implements IZoneContainer {
+	public class AccelerationZone extends Action implements IZoneContainer {
 
         public function get zone():Zone { return _zone; }
         public function set zone(value:Zone):void {
@@ -62,8 +62,7 @@ import idv.cjcat.stardustextended.twoD.zones.Zone;
 		}
 		
 		override public function update(emitter:Emitter, particle:Particle, timeDelta:Number, currentTime:Number):void {
-			var p2D : Particle2D = Particle2D(particle);
-			var affected : Boolean = _zone.contains(p2D.x, p2D.y);
+			var affected : Boolean = _zone.contains(particle.x, particle.y);
 			if (inverted)
 			{
 				affected = !affected;
@@ -72,7 +71,7 @@ import idv.cjcat.stardustextended.twoD.zones.Zone;
 			{
 				if (useParticleDirection)
 				{
-					var v : Vec2D = Vec2DPool.get(p2D.vx, p2D.vy);
+					var v : Vec2D = Vec2DPool.get(particle.vx, particle.vy);
 					const vecLength : Number = v.length;
 					if (vecLength > 0) {
 						var finalVal : Number = vecLength + acceleration * timeDelta;
@@ -80,17 +79,17 @@ import idv.cjcat.stardustextended.twoD.zones.Zone;
 							finalVal = 0;
 						}
 						v.length = finalVal;
-						p2D.vx = v.x;
-						p2D.vy = v.y;
+						particle.vx = v.x;
+						particle.vy = v.y;
 					}
 					Vec2DPool.recycle(v);
 				}
 				else
 				{
-					var finalX : Number = p2D.vx + acceleration * _direction.x * timeDelta;
-					var finalY : Number = p2D.vy + acceleration * _direction.y * timeDelta;
-					p2D.vx = finalX;
-					p2D.vy = finalY;
+					var finalX : Number = particle.vx + acceleration * _direction.x * timeDelta;
+					var finalY : Number = particle.vy + acceleration * _direction.y * timeDelta;
+					particle.vx = finalX;
+					particle.vy = finalY;
 				}
 			}
 		}

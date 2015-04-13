@@ -1,10 +1,10 @@
 ﻿package idv.cjcat.stardustextended.twoD.fields {
-	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
+import idv.cjcat.stardustextended.common.particles.Particle;
+import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 	import idv.cjcat.stardustextended.twoD.geom.MotionData2D;
 	import idv.cjcat.stardustextended.twoD.geom.MotionData2DPool;
 	import idv.cjcat.stardustextended.twoD.geom.Vec2D;
 	import idv.cjcat.stardustextended.twoD.geom.Vec2DPool;
-	import idv.cjcat.stardustextended.twoD.particles.Particle2D;
 	
 	/**
 	 * Radial field.
@@ -44,7 +44,7 @@
 		
 		private var r:Vec2D;
 		private var len:Number;
-		override protected function calculateMotionData2D(particle:Particle2D):MotionData2D {
+		override protected function calculateMotionData2D(particle:Particle):MotionData2D {
 			r = Vec2DPool.get(particle.x - x, particle.y - y);
 			len = r.length;
 			if (len < epsilon) len = epsilon;

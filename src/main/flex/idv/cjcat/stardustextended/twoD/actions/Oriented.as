@@ -1,9 +1,9 @@
 ﻿package idv.cjcat.stardustextended.twoD.actions {
-	import idv.cjcat.stardustextended.common.emitters.Emitter;
+import idv.cjcat.stardustextended.common.actions.Action;
+import idv.cjcat.stardustextended.common.emitters.Emitter;
 	import idv.cjcat.stardustextended.common.math.StardustMath;
 	import idv.cjcat.stardustextended.common.particles.Particle;
 	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
-	import idv.cjcat.stardustextended.twoD.particles.Particle2D;
 	
 	/**
 	 * Causes particles' rotation to align to their velocities.
@@ -12,7 +12,7 @@
 	 * Default priority = -6;
 	 * </p>
 	 */
-	public class Oriented extends Action2D {
+	public class Oriented extends Action {
 		
 		/**
 		 * How fast the particles align to their velocities, 1 by default.
@@ -41,9 +41,8 @@
 		}
 		
 		override public function update(emitter:Emitter, particle:Particle, timeDelta:Number, currentTime:Number):void {
-			var p2D:Particle2D = Particle2D(particle);
-			var displacement:Number = (Math.atan2(p2D.vy, p2D.vx) * StardustMath.RADIAN_TO_DEGREE + os) - p2D.rotation;
-			p2D.rotation += f * displacement;
+			var displacement:Number = (Math.atan2(particle.vy, particle.vx) * StardustMath.RADIAN_TO_DEGREE + os) - particle.rotation;
+			particle.rotation += f * displacement;
 		}
 		
 		//XML
