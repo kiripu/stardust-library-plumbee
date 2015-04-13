@@ -11,6 +11,7 @@ import idv.cjcat.stardustextended.twoD.handlers.ISpriteSheetHandler;
 import starling.display.BlendMode;
 
 import starling.display.DisplayObjectContainer;
+import starling.textures.SubTexture;
 import starling.textures.Texture;
 import starling.textures.TextureSmoothing;
 
@@ -30,7 +31,7 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
     private var _renderer : StardustStarlingRenderer;
 
     public function set container(container:DisplayObjectContainer) : void {
-        if (_renderer == null)
+        if (_renderer == null) // TODO: move to constructor?
         {
             _renderer = new StardustStarlingRenderer();
             _renderer.blendMode = _blendMode;
@@ -184,11 +185,44 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
         return _texture;
     }
 
-    /** Set the texture directly. Texture atlases are not properly supported since the sprites must begin
-     * at (0,0) in the texture and they must come after each other. */
-    public function set texture(value:Texture):void
+    /** Sets the textures directly. This will batch the simulations resulting multiple simulations using
+     *  just one draw call. To have this working the following must be met:
+     *  - The textures must come from the same sprite sheet. (= they must have the same base texture)
+     *  - The simulations must have the same render target, tinted, smoothing, blendMode:String, blend factors,
+     *  same filter (if any) and the same premultiplyAlpha values.
+     *  Do not call spriteSheetSliceWidth or spriteSheetSliceHeight or parseXML after calling this function.
+     *  since these reset the textures. These are called by the stardust sim loader, so call this function after
+     *  you loaded a simulation.
+     *  */
+    public function setTextures(textures : Vector.<SubTexture>):void
     {
-        _texture = value;
+        // NOT WORKING YET!
+        var frames:Vector.<Frame> = new <Frame>[];
+        for each (var texture:SubTexture in textures)
+        {
+            if (texture.root != textures[0].root)
+            {
+                throw new Error("The texture " + texture + " does not share the same base root with others");
+            }
+            // TODO: support rotated textures, maybe use the transformationMatrix?
+            var frame : Frame = new Frame(
+                    texture.region.x,
+                    texture.region.y,
+                    texture.region.x + texture.region.width,
+                    texture.region.y + texture.region.height,
+                    texture.width * 0.5,
+                    texture.height * 0.5);
+            var numFrames : uint = _spriteSheetAnimationSpeed;
+            if (numFrames == 0)
+            {
+                numFrames = 1; // if animation speed is 0, add each frame once
+            }
+            for (var k:int = 0; k < numFrames; k++)
+            {
+                frames.push(frame);
+            }
+        }
+        _renderer.setTextures(textures[0].root, frames);
     }
 
     public function get renderer():StardustStarlingRenderer
