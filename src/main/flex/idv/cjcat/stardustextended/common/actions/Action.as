@@ -53,19 +53,11 @@
 		
 		//------------------------------------------------------------------------------------------------
 		//end of signals
-		
-		
+
 		/**
 		 * Denotes if the action is active, true by default.
 		 */
 		public var active:Boolean;
-		
-		/**
-		 * Reset to false on each emitter step. 
-		 * If set to true in a <code>update()</code> method call, 
-		 * this action is skipped by the emitter during that emitter step.
-		 */
-		public var skipThisAction:Boolean;
 
 		private var _priority:int;
 		
@@ -75,27 +67,13 @@
 			active = true;
 			mask = 1;
 		}
-		
-		/** @private */
-		public final function doUpdate(emitter:Emitter, particles:Vector.<Particle>, timeDelta:Number, currentTime:Number):void {
-			skipThisAction = false;
-			
-			if (active) {
-				var particle:Particle;
-                for (var m : int = 0; m < particles.length; ++m) {
-                    particle = particles[m];
-					if (mask & particle.mask) update(emitter, particle, timeDelta, currentTime);
-					if (skipThisAction) return;
-				}
-			}
-		}
 
 		/**
 		 * [Template Method] This method is called once upon each <code>Emitter.step()</code> method call, 
 		 * before the <code>update()</code> calls with each particles in the emitter.
 		 * 
 		 * <p>
-		 * All setup operatoins before the <code>update()</code> calls should be done here.
+		 * All setup operations before the <code>update()</code> calls should be done here.
 		 * </p>
 		 * @param	emitter		The associated emitter.
 		 * @param	time		The timespan of each emitter's step.
@@ -124,7 +102,7 @@
 		 * after the <code>update()</code> calls with each particles in the emitter.
 		 * 
 		 * <p>
-		 * All setup operatoins before the <code>update()</code> calls should be done here.
+		 * All setup operations before the <code>update()</code> calls should be done here.
 		 * </p>
 		 * @param	emitter		The associated emitter.
 		 * @param	time		The timespan of each emitter's step.
