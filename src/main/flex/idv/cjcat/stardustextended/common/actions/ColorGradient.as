@@ -1,34 +1,47 @@
 ﻿package idv.cjcat.stardustextended.common.actions
 {
 
-import flash.display.BitmapData;
-import flash.display.GradientType;
-import flash.display.Sprite;
-import flash.geom.Matrix;
+	import flash.display.BitmapData;
+	import flash.display.GradientType;
+	import flash.display.Sprite;
+	import flash.geom.Matrix;
 
 	import idv.cjcat.stardustextended.common.emitters.Emitter;
     import idv.cjcat.stardustextended.common.particles.Particle;
 	import idv.cjcat.stardustextended.common.utils.ColorUtil;
+	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 
 	/**
 	 * Alters a particle's color during its lifetime based on a gradient.
 	 */
-	public class ColorCurveAdvanced extends Action
+	public class ColorGradient extends Action
 	{
+		/**
+		 * Number of gradient steps. Higher values result in more smooth transition, but more memory usage.
+		 */
 		public var numSteps : uint = 500;
 
-		public function ColorCurveAdvanced() : void
+		protected var _colors : Array;
+		protected var _ratios : Array;
+		protected var colorRs : Vector.<Number> = new Vector.<Number>();
+		protected var colorBs : Vector.<Number> = new Vector.<Number>();
+		protected var colorGs : Vector.<Number> = new Vector.<Number>();
+
+		public function get colors() : Array
 		{
-			super();
-			// test values
-			//var colors : Array = [0x0000FF, 0xFF0000, 0x00FF00, 0xff00ff];
-			//var gradients : Array = [0, 87, 102, 255];
-			//setGradient(colors, gradients);
+			return _colors;
 		}
 
-		private var colorRs : Vector.<Number> = new Vector.<Number>();
-		private var colorBs : Vector.<Number> = new Vector.<Number>();
-		private var colorGs : Vector.<Number> = new Vector.<Number>();
+		public function get ratios() : Array
+		{
+			return _ratios;
+		}
+
+		public function ColorGradient() : void
+		{
+			super();
+			setGradient([0x00FF00, 0xFF0000], [0, 255]);
+		}
 		/**
 		 * Sets the gradient values. Both vectors must be the same length, and must have less than 16 values.
 		 * @param colors Array of uint colors HEX RGB colors
@@ -36,13 +49,16 @@ import flash.geom.Matrix;
 		 */
 		public final function setGradient(colors : Array, ratios : Array):void
 		{
+			_colors = colors;
+			_ratios = ratios;
 			colorRs = new Vector.<Number>();
 			colorBs = new Vector.<Number>();
 			colorGs = new Vector.<Number>();
 
 			var mat : Matrix = new Matrix();
 			var alphas : Array = [];
-			for (var k : int = 0; k < colors.length; k++)
+			var len : uint = colors.length;
+			for (var k : int = 0; k < len; k++)
 			{
 				alphas.push(1);
 			}
@@ -61,6 +77,7 @@ import flash.geom.Matrix;
 				colorBs.push(ColorUtil.extractBlue(color));
 				colorGs.push(ColorUtil.extractGreen(color));
 			}
+			bd.dispose();
 		}
 
 		override public final function update(emitter:Emitter, particle:Particle, timeDelta:Number, currentTime:Number):void
@@ -75,7 +92,29 @@ import flash.geom.Matrix;
 		//------------------------------------------------------------------------------------------------
 		override public function getXMLTagName():String
 		{
-			return "ColorCurveAdvanced";
+			return "ColorGradient";
+		}
+
+		override public function toXML():XML {
+			var xml:XML = super.toXML();
+
+			var colorsStr : String = "";
+			var ratiosStr : String = "";
+			for (var i : int = 0; i < _colors.length; i++)
+			{
+				colorsStr = colorsStr + _colors[i] + ",";
+				ratiosStr = ratiosStr + _ratios[i] + ",";
+			}
+			xml.@colors = colorsStr.substr(0, colorsStr.length - 1);
+			xml.@ratios = ratiosStr.substr(0, ratiosStr.length - 1);
+
+			return xml;
+		}
+
+		override public function parseXML(xml:XML, builder:XMLBuilder = null):void {
+			super.parseXML(xml, builder);
+
+			setGradient((xml.@colors).split(","),  (xml.@ratios).split(","));
 		}
 		//------------------------------------------------------------------------------------------------
 		//end of XML

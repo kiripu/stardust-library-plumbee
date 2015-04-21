@@ -1,6 +1,7 @@
 ﻿package idv.cjcat.stardustextended.twoD {
 
-	import idv.cjcat.stardustextended.common.xml.ClassPackage;
+import idv.cjcat.stardustextended.common.actions.ColorGradient;
+import idv.cjcat.stardustextended.common.xml.ClassPackage;
 	import idv.cjcat.stardustextended.twoD.actions.Accelerate;
 	import idv.cjcat.stardustextended.twoD.actions.AccelerationZone;
 	import idv.cjcat.stardustextended.twoD.actions.Collide;
@@ -80,6 +81,7 @@
 			classes.push(Spin);
 			classes.push(VelocityField);
 			classes.push(AccelerationZone);
+			classes.push(ColorGradient);
 
 			//2D action triggers
 			classes.push(DeflectorTrigger);
