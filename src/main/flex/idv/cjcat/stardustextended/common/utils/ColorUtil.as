@@ -26,5 +26,10 @@ public class ColorUtil
     public static function extractBlue(c:uint):Number {
         return ( c & 0xFF ) * inv255;
     }
+
+    [Inline]
+    public static function extractAlpha32(c:uint):Number {
+        return ( ( c >> 24 ) & 0xFF ) * inv255;
+    }
 }
 }

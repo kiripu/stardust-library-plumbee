@@ -17,15 +17,17 @@
 	public class ColorGradient extends Action
 	{
 		/**
-		 * Number of gradient steps. Higher values result in more smooth transition, but more memory usage.
+		 * Number of gradient steps. Higher values result in smoother transition, but more memory usage.
 		 */
 		public var numSteps : uint = 500;
 
 		protected var _colors : Array;
 		protected var _ratios : Array;
-		protected var colorRs : Vector.<Number> = new Vector.<Number>();
-		protected var colorBs : Vector.<Number> = new Vector.<Number>();
-		protected var colorGs : Vector.<Number> = new Vector.<Number>();
+		protected var _alphas : Array;
+		protected var colorRs : Vector.<Number>;
+		protected var colorBs : Vector.<Number>;
+		protected var colorGs : Vector.<Number>;
+		protected var colorAlphas : Vector.<Number>;
 
 		public function get colors() : Array
 		{
@@ -37,45 +39,48 @@
 			return _ratios;
 		}
 
+		public function get alphas() : Array
+		{
+			return _alphas;
+		}
+
 		public function ColorGradient() : void
 		{
 			super();
-			setGradient([0x00FF00, 0xFF0000], [0, 255]);
+			setGradient([0x00FF00, 0xFF0000], [0, 255], [1, 1]);
 		}
 		/**
 		 * Sets the gradient values. Both vectors must be the same length, and must have less than 16 values.
 		 * @param colors Array of uint colors HEX RGB colors
 		 * @param ratios Array of uint ratios ordered, in increasing order. First value should be 0, last 255.
+		 * @param alphas Array of Number alphas in the 0-1 range.
 		 */
-		public final function setGradient(colors : Array, ratios : Array):void
+		public final function setGradient(colors : Array, ratios : Array, alphas : Array) : void
 		{
 			_colors = colors;
 			_ratios = ratios;
+			_alphas = alphas;
 			colorRs = new Vector.<Number>();
 			colorBs = new Vector.<Number>();
 			colorGs = new Vector.<Number>();
+			colorAlphas = new Vector.<Number>();
 
 			var mat : Matrix = new Matrix();
-			var alphas : Array = [];
-			var len : uint = colors.length;
-			for (var k : int = 0; k < len; k++)
-			{
-				alphas.push(1);
-			}
 			mat.createGradientBox(numSteps, 1);
 			var sprite : Sprite = new Sprite();
 			sprite.graphics.lineStyle();
 			sprite.graphics.beginGradientFill(GradientType.LINEAR, colors, alphas, ratios, mat);
 			sprite.graphics.drawRect(0, 0, numSteps, 1);
 			sprite.graphics.endFill();
-			var bd : BitmapData = new BitmapData(numSteps, 1);
+			var bd : BitmapData = new BitmapData(numSteps, 1, true, 0x00000000);
 			bd.draw(sprite);
 			for (var i : int = numSteps -1; i > -1; i--)
 			{
-				var color : uint = bd.getPixel(i, 0);
+				var color : uint = bd.getPixel32(i, 0);
 				colorRs.push(ColorUtil.extractRed(color));
 				colorBs.push(ColorUtil.extractBlue(color));
 				colorGs.push(ColorUtil.extractGreen(color));
+				colorAlphas.push(ColorUtil.extractAlpha32(color));
 			}
 			bd.dispose();
 		}
@@ -86,6 +91,7 @@
             particle.colorR = colorRs[ratio];
 			particle.colorB = colorBs[ratio];
             particle.colorG = colorGs[ratio];
+            particle.alpha = colorAlphas[ratio];
 		}
 
 		//XML
@@ -100,13 +106,16 @@
 
 			var colorsStr : String = "";
 			var ratiosStr : String = "";
+			var alphasStr : String = "";
 			for (var i : int = 0; i < _colors.length; i++)
 			{
 				colorsStr = colorsStr + _colors[i] + ",";
 				ratiosStr = ratiosStr + _ratios[i] + ",";
+				alphasStr = alphasStr + _alphas[i] + ",";
 			}
 			xml.@colors = colorsStr.substr(0, colorsStr.length - 1);
 			xml.@ratios = ratiosStr.substr(0, ratiosStr.length - 1);
+			xml.@alphas = alphasStr.substr(0, alphasStr.length - 1);
 
 			return xml;
 		}
@@ -114,7 +123,7 @@
 		override public function parseXML(xml:XML, builder:XMLBuilder = null):void {
 			super.parseXML(xml, builder);
 
-			setGradient((xml.@colors).split(","),  (xml.@ratios).split(","));
+			setGradient((xml.@colors).split(","), (xml.@ratios).split(","), (xml.@alphas).split(","));
 		}
 		//------------------------------------------------------------------------------------------------
 		//end of XML
