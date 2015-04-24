@@ -276,8 +276,7 @@ public class StardustStarlingRenderer extends DisplayObject
     {
         if (mNumParticles > 0 && !mBatched)
         {
-            // This is not working yet because different emitters always use different textures.
-            var mNumBatchedParticles : int = 0; // batchNeighbours();
+            var mNumBatchedParticles : int = batchNeighbours();
             renderCustom(support, mNumBatchedParticles, parentAlpha);
         }
         //reset filter
@@ -304,15 +303,15 @@ public class StardustStarlingRenderer extends DisplayObject
                     trace("Over " + maxParticles + " particles! Aborting rendering");
                     break;
                 }
-                nextPS.vertexes.fixed = false;
+                vertexes.fixed = false;
                 var targetIndex:int = (mNumParticles + mNumBatchedParticles) * 32; // 4 * 8
                 var sourceIndex:int = 0;
                 var sourceEnd:int = nextPS.mNumParticles * 32; // 4 * 8
                 while (sourceIndex < sourceEnd)
                 {
-                    nextPS.vertexes[int(targetIndex++)] = vertexes[int(sourceIndex++)];
+                    vertexes[int(targetIndex++)] = nextPS.vertexes[int(sourceIndex++)];
                 }
-                nextPS.vertexes.fixed = true;
+                vertexes.fixed = true;
 
                 mNumBatchedParticles += nextPS.mNumParticles;
 

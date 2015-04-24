@@ -204,12 +204,12 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
             {
                 throw new Error("The texture " + texture + " does not share the same base root with others");
             }
-            // TODO: support rotated textures, maybe use the transformationMatrix?
+            // TODO: use the transformationMatrix
             var frame : Frame = new Frame(
-                    texture.region.x,
-                    texture.region.y,
-                    texture.region.x + texture.region.width,
-                    texture.region.y + texture.region.height,
+                    texture.region.x / texture.root.width,
+                    texture.region.y / texture.root.height,
+                    (texture.region.x + texture.region.width) / texture.root.width,
+                    (texture.region.y + texture.region.height)/ texture.root.height,
                     texture.width * 0.5,
                     texture.height * 0.5);
             var numFrames : uint = _spriteSheetAnimationSpeed;
