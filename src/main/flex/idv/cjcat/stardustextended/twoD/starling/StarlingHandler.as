@@ -28,6 +28,7 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
     private var _spriteSheetStartAtRandomFrame : Boolean;
     private var _totalFrames : uint;
     private var _texture : Texture;
+    private var _textures : Vector.<SubTexture>;
     private var _renderer : StardustStarlingRenderer;
 
     public function set container(container:DisplayObjectContainer) : void
@@ -132,6 +133,7 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
 
     public function set spriteSheetAnimationSpeed(spriteSheetAnimationSpeed:uint):void {
         _spriteSheetAnimationSpeed = spriteSheetAnimationSpeed;
+        setTextures(_textures);
     }
 
     public function get spriteSheetAnimationSpeed():uint {
@@ -190,13 +192,14 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
     /** Sets the textures directly. Stardust can batch the simulations resulting multiple simulations using
      *  just one draw call. To have this working the following must be met:
      *  - The textures must come from the same sprite sheet. (= they must have the same base texture)
-     *  - The simulations must have the same render target, tinted, smoothing, blendMode, same filter (if any)
+     *  - The simulations must have the same render target, tinted, smoothing, blendMode, same filter
      *    and the same premultiplyAlpha values.
      **/
     public function setTextures(textures : Vector.<SubTexture>):void
     {
         createRendererIfNeeded();
         _isSpriteSheet = textures.length > 1;
+        _textures = textures;
         var frames:Vector.<Frame> = new <Frame>[];
         for each (var texture:SubTexture in textures)
         {
@@ -222,6 +225,7 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
                 frames.push(frame);
             }
         }
+        _totalFrames = frames.length;
         _renderer.setTextures(textures[0].root, frames);
     }
 
