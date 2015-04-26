@@ -133,7 +133,10 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
 
     public function set spriteSheetAnimationSpeed(spriteSheetAnimationSpeed:uint):void {
         _spriteSheetAnimationSpeed = spriteSheetAnimationSpeed;
-        setTextures(_textures);
+        if (_textures)
+        {
+            setTextures(_textures);
+        }
     }
 
     public function get spriteSheetAnimationSpeed():uint {
