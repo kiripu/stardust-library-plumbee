@@ -30,16 +30,21 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
     private var _texture : Texture;
     private var _renderer : StardustStarlingRenderer;
 
-    public function set container(container:DisplayObjectContainer) : void {
-        if (_renderer == null) // TODO: move to constructor?
+    public function set container(container:DisplayObjectContainer) : void
+    {
+        createRendererIfNeeded();
+        container.addChild(_renderer);
+    }
+
+    private function createRendererIfNeeded() : void
+    {
+        if (_renderer == null)
         {
             _renderer = new StardustStarlingRenderer();
             _renderer.blendMode = _blendMode;
             _renderer.texSmoothing = _smoothing;
             _renderer.premultiplyAlpha = _premultiplyAlpha;
-            calculateTextureCoordinates();
         }
-        container.addChild(_renderer);
     }
 
     override public function stepEnd(emitter:Emitter, particles:Vector.<Particle>, time:Number):void {
@@ -76,6 +81,7 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
         }
     }
 
+    [Deprecated(message="This property will be soon removed, use setTextures() instead")]
     public function set bitmapData(bitmapData:BitmapData):void {
         _bitmapData = bitmapData;
         if (_bitmapData == null)
@@ -91,34 +97,41 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
             _spriteSheetSliceWidth = bitmapData.width;
         }
         _texture = Texture.fromBitmapData(_bitmapData);
-        calculateTextureCoordinates();
     }
 
+    [Deprecated(message="This property will be soon removed, use setTextures() instead")]
+    public function get texture():Texture
+    {
+        return _texture;
+    }
+
+    [Deprecated(message="This property will be soon removed, use setTextures() instead")]
     public function get bitmapData():BitmapData {
         return _bitmapData;
     }
 
+    [Deprecated(message="This property will be soon removed, use setTextures() instead")]
     public function set spriteSheetSliceWidth(value:uint):void {
         _spriteSheetSliceWidth = value;
-        calculateTextureCoordinates();
     }
 
+    [Deprecated(message="This property will be soon removed, use setTextures() instead")]
     public function get spriteSheetSliceWidth() : uint {
         return _spriteSheetSliceWidth;
     }
 
+    [Deprecated(message="This property will be soon removed, use setTextures() instead")]
     public function set spriteSheetSliceHeight(value:uint):void {
         _spriteSheetSliceHeight = value;
-        calculateTextureCoordinates();
     }
 
+    [Deprecated(message="This property will be soon removed, use setTextures() instead")]
     public function get spriteSheetSliceHeight() : uint {
         return _spriteSheetSliceHeight;
     }
 
     public function set spriteSheetAnimationSpeed(spriteSheetAnimationSpeed:uint):void {
         _spriteSheetAnimationSpeed = spriteSheetAnimationSpeed;
-        calculateTextureCoordinates();
     }
 
     public function get spriteSheetAnimationSpeed():uint {
@@ -148,10 +161,8 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
         else {
             _smoothing = TextureSmoothing.NONE;
         }
-        if (_renderer)
-        {
-            _renderer.texSmoothing = _smoothing;
-        }
+        createRendererIfNeeded();
+        _renderer.texSmoothing = _smoothing;
     }
 
     public function get premultiplyAlpha():Boolean {
@@ -160,19 +171,15 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
 
     public function set premultiplyAlpha(value:Boolean):void {
         _premultiplyAlpha = value;
-        if (_renderer)
-        {
-            _renderer.premultiplyAlpha = value;
-        }
+        createRendererIfNeeded();
+        _renderer.premultiplyAlpha = value;
     }
 
     public function set blendMode(blendMode:String):void
     {
         _blendMode = blendMode;
-        if (_renderer)
-        {
-            _renderer.blendMode = blendMode;
-        }
+        createRendererIfNeeded();
+        _renderer.blendMode = blendMode;
     }
 
     public function get blendMode():String
@@ -180,23 +187,16 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
         return _blendMode;
     }
 
-    public function get texture():Texture
-    {
-        return _texture;
-    }
-
-    /** Sets the textures directly. This will batch the simulations resulting multiple simulations using
+    /** Sets the textures directly. Stardust can batch the simulations resulting multiple simulations using
      *  just one draw call. To have this working the following must be met:
      *  - The textures must come from the same sprite sheet. (= they must have the same base texture)
-     *  - The simulations must have the same render target, tinted, smoothing, blendMode:String, blend factors,
-     *  same filter (if any) and the same premultiplyAlpha values.
-     *  Do not call spriteSheetSliceWidth or spriteSheetSliceHeight or parseXML after calling this function.
-     *  since these reset the textures. These are called by the stardust sim loader, so call this function after
-     *  you loaded a simulation.
-     *  */
+     *  - The simulations must have the same render target, tinted, smoothing, blendMode, same filter (if any)
+     *    and the same premultiplyAlpha values.
+     **/
     public function setTextures(textures : Vector.<SubTexture>):void
     {
-        // NOT WORKING YET!
+        createRendererIfNeeded();
+        _isSpriteSheet = textures.length > 1;
         var frames:Vector.<Frame> = new <Frame>[];
         for each (var texture:SubTexture in textures)
         {
@@ -230,56 +230,6 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
         return _renderer;
     }
 
-    private function calculateTextureCoordinates() :void
-    {
-        if (_renderer == null || _texture == null)
-        {
-            return;
-        }
-        _isSpriteSheet = (_spriteSheetSliceWidth > 0 && _spriteSheetSliceHeight > 0) &&
-                         (_texture.width >= _spriteSheetSliceWidth * 2 || _texture.height >= _spriteSheetSliceHeight * 2);
-        if (_isSpriteSheet)
-        {
-            const xIter : int = Math.floor( _texture.width / _spriteSheetSliceWidth );
-            const yIter : int = Math.floor( _texture.height / _spriteSheetSliceHeight );
-            const xInTexCoords : Number = _spriteSheetSliceWidth / _texture.root.width;
-            const yInTexCoords : Number = _spriteSheetSliceHeight / _texture.root.height;
-            var frames:Vector.<Frame> = new <Frame>[];
-            for ( var j : int = 0; j < yIter; j++ )
-            {
-                for ( var i : int = 0; i < xIter; i++ )
-                {
-                    var frame : Frame = new Frame(
-                            xInTexCoords * i,
-                            yInTexCoords * j,
-                            xInTexCoords * (i + 1),
-                            yInTexCoords * (j + 1),
-                            _spriteSheetSliceWidth/2,
-                            _spriteSheetSliceHeight/2);
-                    var numFrames : uint = _spriteSheetAnimationSpeed;
-                    if (numFrames == 0)
-                    {
-                        numFrames = 1; // if animation speed is 0, add each frame once
-                    }
-                    for (var k:int = 0; k < numFrames; k++)
-                    {
-                        frames.push(frame);
-                    }
-                }
-            }
-            _totalFrames = frames.length;
-            _renderer.setTextures(_texture, frames);
-        }
-        else
-        {
-            _totalFrames = 1;
-            _renderer.setTextures(_texture, new <Frame>[
-                new Frame(0, 0,
-                        _texture.width / _texture.root.width, _texture.height / _texture.root.height,
-                        _texture.width / 2, _texture.height / 2)]);
-        }
-    }
-
     //////////////////////////////////////////////////////// XML
     override public function getXMLTagName():String {
         return "StarlingHandler";
@@ -306,7 +256,6 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
         smoothing = (xml.@smoothing == "true");
         blendMode = (xml.@blendMode);
         if (xml.@premultiplyAlpha.length()) premultiplyAlpha = (xml.@premultiplyAlpha == "true");
-        calculateTextureCoordinates();
     }
 
 }

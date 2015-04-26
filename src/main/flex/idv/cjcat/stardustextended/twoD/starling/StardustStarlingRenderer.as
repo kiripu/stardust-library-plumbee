@@ -265,9 +265,8 @@ public class StardustStarlingRenderer extends DisplayObject
             var blendFactors:Array = BlendMode.getBlendFactors(blendMode, true);
             return mTexture.base != texture || mTexture.repeat != textureRepeat ||
                    texSmoothing != smoothing || mTinted != (tinted || parentAlpha != 1.0) ||
-                   this.blendMode != blendMode || blendFactors[0] != blendFactorSource ||
-                   blendFactors[1] != blendFactorDestination || mFilter != filter ||
-                   this.premultiplyAlpha != premultiplyAlpha;
+                   blendFactors[0] != blendFactorSource || blendFactors[1] != blendFactorDestination ||
+                   mFilter != filter || this.premultiplyAlpha != premultiplyAlpha;
         }
         return true;
     }

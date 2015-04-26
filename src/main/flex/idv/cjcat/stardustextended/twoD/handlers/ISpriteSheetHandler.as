@@ -4,16 +4,22 @@ import flash.display.BitmapData;
 
 public interface ISpriteSheetHandler {
 
+    [Deprecated(message="This property will be soon removed, use setTextures() instead")]
     function set bitmapData(bitmapData : BitmapData) :void
 
+    [Deprecated(message="This property will be soon removed, use setTextures() instead")]
     function get bitmapData() : BitmapData
 
+    [Deprecated(message="This property will be soon removed, use setTextures() instead")]
     function set spriteSheetSliceWidth(value:uint):void
 
+    [Deprecated(message="This property will be soon removed, use setTextures() instead")]
     function get spriteSheetSliceWidth() : uint
 
+    [Deprecated(message="This property will be soon removed, use setTextures() instead")]
     function set spriteSheetSliceHeight(value:uint):void
 
+    [Deprecated(message="This property will be soon removed, use setTextures() instead")]
     function get spriteSheetSliceHeight() : uint
 
     function set spriteSheetAnimationSpeed(spriteSheetAnimationSpeed:uint):void;
