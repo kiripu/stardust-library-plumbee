@@ -27,7 +27,6 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
     private var _premultiplyAlpha : Boolean = true;
     private var _spriteSheetStartAtRandomFrame : Boolean;
     private var _totalFrames : uint;
-    private var _texture : Texture;
     private var _textures : Vector.<SubTexture>;
     private var _renderer : StardustStarlingRenderer;
 
@@ -97,13 +96,11 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
         {
             _spriteSheetSliceWidth = bitmapData.width;
         }
-        _texture = Texture.fromBitmapData(_bitmapData);
     }
 
-    [Deprecated(message="This property will be soon removed, use setTextures() instead")]
-    public function get texture():Texture
+    public function get textures() : Vector.<SubTexture>
     {
-        return _texture;
+        return _textures;
     }
 
     [Deprecated(message="This property will be soon removed, use setTextures() instead")]
@@ -200,6 +197,10 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
      **/
     public function setTextures(textures : Vector.<SubTexture>):void
     {
+        if (textures == null || textures.length == 0)
+        {
+            throw new ArgumentError("the textures parameter cannot be null and needs to hold at least 1 element");
+        }
         createRendererIfNeeded();
         _isSpriteSheet = textures.length > 1;
         _textures = textures;
