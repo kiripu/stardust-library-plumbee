@@ -12,7 +12,6 @@ import starling.display.BlendMode;
 
 import starling.display.DisplayObjectContainer;
 import starling.textures.SubTexture;
-import starling.textures.Texture;
 import starling.textures.TextureSmoothing;
 
 public class StarlingHandler extends ParticleHandler implements ISpriteSheetHandler{
@@ -22,7 +21,7 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
     private var _spriteSheetSliceHeight : uint = 32;
     private var _spriteSheetAnimationSpeed : uint = 1;
     private var _bitmapData : BitmapData;
-    private var _smoothing : String;
+    private var _smoothing : String = TextureSmoothing.NONE;
     private var _isSpriteSheet : Boolean;
     private var _premultiplyAlpha : Boolean = true;
     private var _spriteSheetStartAtRandomFrame : Boolean;
@@ -245,8 +244,6 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
 
     override public function toXML():XML {
         var xml:XML = super.toXML();
-        xml.@spriteSheetSliceWidth = _spriteSheetSliceWidth;
-        xml.@spriteSheetSliceHeight = _spriteSheetSliceHeight;
         xml.@spriteSheetAnimationSpeed = _spriteSheetAnimationSpeed;
         xml.@spriteSheetStartAtRandomFrame = _spriteSheetStartAtRandomFrame;
         xml.@smoothing = smoothing;
@@ -257,13 +254,13 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
 
     override public function parseXML(xml:XML, builder:XMLBuilder = null):void {
         super.parseXML(xml, builder);
-        _spriteSheetSliceWidth = xml.@spriteSheetSliceWidth;
-        _spriteSheetSliceHeight = xml.@spriteSheetSliceHeight;
-        _spriteSheetAnimationSpeed = xml.@spriteSheetAnimationSpeed;
+        _spriteSheetAnimationSpeed = parseInt(xml.@spriteSheetAnimationSpeed);
         _spriteSheetStartAtRandomFrame = (xml.@spriteSheetStartAtRandomFrame == "true");
         smoothing = (xml.@smoothing == "true");
         blendMode = (xml.@blendMode);
-        if (xml.@premultiplyAlpha.length()) premultiplyAlpha = (xml.@premultiplyAlpha == "true");
+        premultiplyAlpha = (xml.@premultiplyAlpha == "true");
+        if (xml.@spriteSheetSliceWidth.length()) _spriteSheetSliceWidth = parseFloat(xml.@spriteSheetSliceWidth);
+        if (xml.@spriteSheetSliceHeight.length()) _spriteSheetSliceHeight = parseFloat(xml.@spriteSheetSliceHeight);
     }
 
 }

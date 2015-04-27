@@ -252,20 +252,23 @@ public class StardustStarlingRenderer extends DisplayObject
         }
     }
 
-    public function isStateChange(tinted:Boolean, parentAlpha:Number, texture:TextureBase, textureRepeat:Boolean,
-                                  smoothing:String, blendMode:String, blendFactorSource:String,
-                                  blendFactorDestination:String, filter:FragmentFilter, premultiplyAlpha:Boolean):Boolean
+    protected function isStateChange(tinted:Boolean, parentAlpha:Number, texture:TextureBase,
+                                     textureRepeat:Boolean, smoothing:String, blendMode:String,
+                                     filter:FragmentFilter, premultiplyAlpha:Boolean, numParticles : uint):Boolean
     {
         if (mNumParticles == 0)
         {
             return false;
         }
+        else if (mNumParticles + numParticles > MAX_POSSIBLE_PARTICLES)
+        {
+            return true;
+        }
         else if (mTexture != null && texture != null)
         {
-            var blendFactors:Array = BlendMode.getBlendFactors(blendMode, true);
             return mTexture.base != texture || mTexture.repeat != textureRepeat ||
-                   texSmoothing != smoothing || mTinted != (tinted || parentAlpha != 1.0) ||
-                   blendFactors[0] != blendFactorSource || blendFactors[1] != blendFactorDestination ||
+                   texSmoothing != smoothing || this.blendMode != blendMode ||
+                   mTinted != (tinted || parentAlpha != 1.0) ||
                    mFilter != filter || this.premultiplyAlpha != premultiplyAlpha;
         }
         return true;
@@ -283,41 +286,39 @@ public class StardustStarlingRenderer extends DisplayObject
         mBatched = false;
     }
 
-    private function batchNeighbours() : int
+    protected function batchNeighbours() : int
     {
         var mNumBatchedParticles : int = 0;
         var last:int = parent.getChildIndex(this);
-
         while (++last < parent.numChildren)
         {
-            var blendFactors:Array = BlendMode.getBlendFactors(blendMode, true);
-            var nextPS:StardustStarlingRenderer = parent.getChildAt(last) as StardustStarlingRenderer;
-            if (nextPS != null && nextPS.mNumParticles > 0 &&
-                !nextPS.isStateChange(mTinted, alpha, mTexture.base,
-                        mTexture.repeat, texSmoothing, blendMode,
-                        blendFactors[0], blendFactors[1], mFilter, premultiplyAlpha))
+            var nextPS : StardustStarlingRenderer = parent.getChildAt(last) as StardustStarlingRenderer;
+            if (nextPS && !nextPS.isStateChange(mTinted, alpha, mTexture.base, mTexture.repeat, texSmoothing,
+                                                blendMode, mFilter, premultiplyAlpha, mNumParticles))
             {
-                if (mNumParticles + mNumBatchedParticles + nextPS.mNumParticles > maxParticles)
+                if (nextPS.mNumParticles > 0)
                 {
-                    trace("Over " + maxParticles + " particles! Aborting rendering");
-                    break;
+                    vertexes.fixed = false;
+                    var targetIndex : int = (mNumParticles + mNumBatchedParticles) * 32; // 4 * 8
+                    var sourceIndex : int = 0;
+                    var sourceEnd : int = nextPS.mNumParticles * 32; // 4 * 8
+                    while (sourceIndex < sourceEnd)
+                    {
+                        vertexes[int(targetIndex++)] = nextPS.vertexes[int(sourceIndex++)];
+                    }
+                    vertexes.fixed = true;
+
+                    mNumBatchedParticles += nextPS.mNumParticles;
+
+                    nextPS.mBatched = true;
+
+                    //disable filter of batched system temporarily
+                    nextPS.filter = null;
                 }
-                vertexes.fixed = false;
-                var targetIndex:int = (mNumParticles + mNumBatchedParticles) * 32; // 4 * 8
-                var sourceIndex:int = 0;
-                var sourceEnd:int = nextPS.mNumParticles * 32; // 4 * 8
-                while (sourceIndex < sourceEnd)
-                {
-                    vertexes[int(targetIndex++)] = nextPS.vertexes[int(sourceIndex++)];
-                }
-                vertexes.fixed = true;
-
-                mNumBatchedParticles += nextPS.mNumParticles;
-
-                nextPS.mBatched = true;
-
-                //disable filter of batched system temporarily
-                nextPS.filter = null;
+            }
+            else
+            {
+                break;
             }
         }
         return mNumBatchedParticles;
@@ -330,6 +331,11 @@ public class StardustStarlingRenderer extends DisplayObject
         if (mNumParticles == 0 || StarlingParticleBuffers.buffersCreated == false)
         {
             return;
+        }
+        if (mNumBatchedParticles > maxParticles)
+        {
+            trace("Over " + maxParticles + " particles! Aborting rendering");
+            return
         }
         // always call this method when you write custom rendering code!
         // it causes all previously batched quads/images to render.

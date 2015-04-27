@@ -81,26 +81,32 @@
         /**
          * initial Red color component; in the [0,1] range.
          */
+		[Deprecated(message="This property will be soon removed")]
         public var initColorR:Number;
         /**
          * initial Green color component; in the [0,1] range.
          */
+		[Deprecated(message="This property will be soon removed")]
         public var initColorG:Number;
         /**
          * initial Blue color component; in the [0,1] range.
          */
+		[Deprecated(message="This property will be soon removed")]
         public var initColorB:Number;
         /**
          * Red color component; in the [0,1] range.
          */
+		[Deprecated(message="This property will be soon removed")]
         public var endColorR:Number;
         /**
          * Green color component; in the [0,1] range.
          */
+		[Deprecated(message="This property will be soon removed")]
         public var endColorG:Number;
         /**
          * Blue color component; in the [0,1] range.
          */
+		[Deprecated(message="This property will be soon removed")]
         public var endColorB:Number;
 		/**
 		 * Dictionary for storing additional information.
