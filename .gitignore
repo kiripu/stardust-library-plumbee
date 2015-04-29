@@ -4,3 +4,4 @@ target/*
 .idea/*
 build/*
 !build/stardust-library.swc
+!build/poms/pom-default.xml

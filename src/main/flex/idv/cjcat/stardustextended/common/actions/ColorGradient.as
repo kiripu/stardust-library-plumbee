@@ -82,6 +82,10 @@
 				colorGs.push(ColorUtil.extractGreen(color));
 				colorAlphas.push(ColorUtil.extractAlpha32(color));
 			}
+			colorRs.fixed = true;
+			colorBs.fixed = true;
+			colorGs.fixed = true;
+			colorAlphas.fixed = true;
 			bd.dispose();
 		}
 

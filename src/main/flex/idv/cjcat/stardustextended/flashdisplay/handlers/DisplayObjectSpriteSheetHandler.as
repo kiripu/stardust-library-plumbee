@@ -1,5 +1,5 @@
 package idv.cjcat.stardustextended.flashdisplay.handlers {
-import idv.cjcat.stardustextended.flashdisplay.*;
+
 import idv.cjcat.stardustextended.twoD.handlers.*;
 
 import flash.display.Bitmap;
@@ -13,7 +13,6 @@ import idv.cjcat.stardustextended.common.emitters.Emitter;
 
 import idv.cjcat.stardustextended.common.particles.Particle;
 import idv.cjcat.stardustextended.common.xml.XMLBuilder;
-import idv.cjcat.stardustextended.flashdisplay.handlers.SpriteSheetBitmapSlicedCache;
 import idv.cjcat.stardustextended.flashdisplay.utils.DisplayObjectPool;
 
 public class DisplayObjectSpriteSheetHandler extends DisplayObjectHandler implements ISpriteSheetHandler

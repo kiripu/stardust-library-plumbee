@@ -1,19 +1,17 @@
 ﻿package idv.cjcat.stardustextended.twoD.actions.triggers {
+
+	import idv.cjcat.stardustextended.common.actions.triggers.ActionTrigger;
 	import idv.cjcat.stardustextended.common.particles.Particle;
 	import idv.cjcat.stardustextended.common.emitters.Emitter;
 	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
-import idv.cjcat.stardustextended.twoD.actions.IZoneContainer;
+	import idv.cjcat.stardustextended.twoD.actions.IZoneContainer;
 	import idv.cjcat.stardustextended.twoD.zones.SinglePoint;
 	import idv.cjcat.stardustextended.twoD.zones.Zone;
 	
 	/**
 	 * This action trigger is triggered when a particle is contained in a zone.
-	 * 
-	 * <p>
-	 * Default priority = -6;
-	 * </p>
 	 */
-	public class ZoneTrigger extends ActionTrigger2D implements IZoneContainer {
+	public class ZoneTrigger extends ActionTrigger implements IZoneContainer {
 		
 		private var _zone:Zone;
 		public function ZoneTrigger(zone:Zone = null) {

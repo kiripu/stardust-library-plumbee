@@ -1,4 +1,5 @@
 ﻿package idv.cjcat.stardustextended.common.actions.triggers {
+
 	import idv.cjcat.stardustextended.common.actions.Action;
 	import idv.cjcat.stardustextended.common.actions.CompositeAction;
 	import idv.cjcat.stardustextended.common.emitters.Emitter;
@@ -6,7 +7,7 @@
 	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 	
 	/**
-	 * <code>ActionTrigger</code> is a conditional composite action.
+	 * <code>ActionTrigger</code> is an abstract class for conditional composite actions.
 	 * 
 	 * <p>
 	 * Only when the <code>testTrigger()</code> method returns true will the component actions' <code>update()</code> methods be called.
@@ -36,11 +37,11 @@
 		 * Used if the trigger is added to a composite action.
 		 */
 		override public final function update(emitter:Emitter, particle:Particle, timeDelta:Number, currentTime:Number):void {
-			var aa:Array = actionCollection.actions;
 			var testResult:Boolean = testTrigger(emitter, particle, timeDelta);
 			if (inverted) testResult = !testResult;
 			if (testResult) {
-				for each (var action:Action in aa) {
+                var aa:Array = actionCollection.actions;
+                for each (var action:Action in aa) {
 					action.update(emitter, particle, timeDelta, currentTime);
 				}
 			}

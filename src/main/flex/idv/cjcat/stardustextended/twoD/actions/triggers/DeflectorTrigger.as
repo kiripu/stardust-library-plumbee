@@ -1,16 +1,13 @@
-﻿package idv.cjcat.stardustextended.twoD.actions.triggers  {
-	import idv.cjcat.stardustextended.common.emitters.Emitter;
+﻿package idv.cjcat.stardustextended.twoD.actions.triggers
+{
+
+    import idv.cjcat.stardustextended.common.actions.triggers.ActionTrigger;
+    import idv.cjcat.stardustextended.common.emitters.Emitter;
 	import idv.cjcat.stardustextended.common.particles.Particle;
 	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
-	import idv.cjcat.stardustextended.twoD.actions.triggers.ActionTrigger2D;
 	import idv.cjcat.stardustextended.twoD.deflectors.Deflector;
-	
-	/**
-	 * <p>
-	 * Default priority = -1;
-	 * </p>
-	 */
-	public class DeflectorTrigger extends ActionTrigger2D {
+
+	public class DeflectorTrigger extends ActionTrigger {
 		
 		public var deflector:Deflector;
 		

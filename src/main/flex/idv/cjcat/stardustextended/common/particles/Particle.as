@@ -173,7 +173,7 @@
 
         public static function compareFunction(p1 : Particle, p2 : Particle) : Number
         {
-            if (p1["x"] < p2["x"])
+            if (p1.x < p2.x)
             {
                 return -1;
             }

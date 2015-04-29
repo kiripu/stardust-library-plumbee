@@ -7,10 +7,8 @@
 	 * This actions is a group of actions. Multiple actions can be grouped together into one single composite action.
 	 * 
 	 * <p>
-	 * Note that if the bitwise AND of a composite action's mask and a particle's mask is non-zero, 
-	 * all underlying component actions' <code>update()</code> methods will be called for the particle, 
-	 * without further checking the masks of these actions if the <code>checkComponentMasks</code> property is false, 
-	 * which is false by default.
+	 * If the <code>checkComponentMasks</code> property is true, actions will only be executed if
+	 * their mask evaluates to true
 	 * </p>
 	 */
 	public class CompositeAction extends Action implements ActionCollector {
@@ -29,7 +27,7 @@
 			activeActions = [];
 			for each (var action:Action in _actionCollection.actions) {
 				if (action.active) {
-					if (action.mask) {
+					if (!checkComponentMasks || action.mask) {
 						activeActions.push(action);
 						action.preUpdate(emitter, time);
 					}

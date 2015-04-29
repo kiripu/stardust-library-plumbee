@@ -64,7 +64,7 @@ import idv.cjcat.stardustextended.common.emitters.Emitter;
 		
 		/**
 		 * Adds an initializer to the spawning action.
-		 * @param	initializer
+		 * @param initializer
 		 */
 		public function addInitializer(initializer:Initializer):void {
 			_factory.addInitializer(initializer);
@@ -72,7 +72,7 @@ import idv.cjcat.stardustextended.common.emitters.Emitter;
 		
 		/**
 		 * Removes an initializer from the spawning action.
-		 * @param	initializer
+		 * @param initializer
 		 */
 		public function removeInitializer(initializer:Initializer):void {
 			_factory.removeInitializer(initializer);

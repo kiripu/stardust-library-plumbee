@@ -15,7 +15,7 @@ public class ParticleProgram
 
     private static const sProgramNameCache:Dictionary = new Dictionary();
 
-    public static function getProgram(hasTexure : Boolean,
+    public static function getProgram(hasTexture : Boolean,
                                       texTinted:Boolean = false,
                                       texMipmap : Boolean = true,
                                       texRepeat : Boolean = false,
@@ -25,7 +25,7 @@ public class ParticleProgram
         var target:Starling = Starling.current;
         var programName:String;
 
-        if (hasTexure)
+        if (hasTexture)
         {
             programName = getImageProgramName(texTinted, texMipmap, texRepeat, texFormat, texSmoothing);
         }
@@ -44,7 +44,7 @@ public class ParticleProgram
             var vertexShader:String;
             var fragmentShader:String;
 
-            if (!hasTexure) // Quad shaders
+            if (!hasTexture) // Quad shaders
             {
                 vertexShader = "m44 op, va0, vc1 \n" + // 4x4 matrix transform to output clipspace
                                "mul v0, va1, vc0 \n"; // multiply alpha (vc0) with color (va1)

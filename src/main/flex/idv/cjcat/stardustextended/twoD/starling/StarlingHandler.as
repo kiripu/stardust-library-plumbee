@@ -1,6 +1,5 @@
-package idv.cjcat.stardustextended.twoD.starling {
-
-import flash.display.BitmapData;
+package idv.cjcat.stardustextended.twoD.starling
+{
 
 import idv.cjcat.stardustextended.common.emitters.Emitter;
 import idv.cjcat.stardustextended.common.handlers.ParticleHandler;
@@ -14,13 +13,13 @@ import starling.display.DisplayObjectContainer;
 import starling.textures.SubTexture;
 import starling.textures.TextureSmoothing;
 
-public class StarlingHandler extends ParticleHandler implements ISpriteSheetHandler{
+public class StarlingHandler extends ParticleHandler implements ISpriteSheetHandler
+{
 
     private var _blendMode:String = BlendMode.NORMAL;
     private var _spriteSheetSliceWidth : uint = 32;
     private var _spriteSheetSliceHeight : uint = 32;
     private var _spriteSheetAnimationSpeed : uint = 1;
-    private var _bitmapData : BitmapData;
     private var _smoothing : String = TextureSmoothing.NONE;
     private var _isSpriteSheet : Boolean;
     private var _premultiplyAlpha : Boolean = true;
@@ -80,31 +79,9 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
         }
     }
 
-    [Deprecated(message="This property will be soon removed, use setTextures() instead")]
-    public function set bitmapData(bitmapData:BitmapData):void {
-        _bitmapData = bitmapData;
-        if (_bitmapData == null)
-        {
-            return;
-        }
-        if (_spriteSheetSliceHeight > bitmapData.height)
-        {
-            _spriteSheetSliceHeight = bitmapData.height;
-        }
-        if (_spriteSheetSliceWidth > bitmapData.width)
-        {
-            _spriteSheetSliceWidth = bitmapData.width;
-        }
-    }
-
     public function get textures() : Vector.<SubTexture>
     {
         return _textures;
-    }
-
-    [Deprecated(message="This property will be soon removed, use setTextures() instead")]
-    public function get bitmapData():BitmapData {
-        return _bitmapData;
     }
 
     [Deprecated(message="This property will be soon removed, use setTextures() instead")]
@@ -210,7 +187,7 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
             {
                 throw new Error("The texture " + texture + " does not share the same base root with others");
             }
-            // TODO: use the transformationMatrix
+            // TODO use the transformationMatrix
             var frame : Frame = new Frame(
                     texture.region.x / texture.root.width,
                     texture.region.y / texture.root.height,
