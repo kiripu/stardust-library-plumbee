@@ -56,17 +56,23 @@ import idv.cjcat.stardustextended.common.emitters.Emitter;
 		}
 		
 		override public function update(emitter:Emitter, particle:Particle, timeDelta:Number, currentTime:Number):void {
-			if (!_waypoints.length) return;
+			var numWPs : uint = _waypoints.length;
+			if (numWPs == 0) return;
 
 			if (!particle.dictionary[FollowWaypoints]) particle.dictionary[FollowWaypoints] = 0;
 			
 			var index:int = particle.dictionary[FollowWaypoints];
-			
+			if (index >= numWPs)
+			{
+				index = numWPs - 1;
+                particle.dictionary[FollowWaypoints] = index;
+			}
+
 			var waypoint:Waypoint = _waypoints[index] as Waypoint;
 			var dx:Number = particle.x - waypoint.x;
 			var dy:Number = particle.y - waypoint.y;
 			if (dx * dx + dy * dy <= waypoint.radius * waypoint.radius) {
-				if (index < _waypoints.length - 1) {
+				if (index < numWPs - 1) {
 					particle.dictionary[FollowWaypoints]++;
 					waypoint = _waypoints[index + 1];
 				} else {
