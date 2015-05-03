@@ -133,7 +133,6 @@
             var len:int;
 			var action:Action;
 			var p:Particle;
-			var key:*;
 			var sorted:Boolean = false;
 			
 			//query clock ticks
