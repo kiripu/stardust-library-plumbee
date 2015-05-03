@@ -59,7 +59,10 @@ import idv.cjcat.stardustextended.common.emitters.Emitter;
 			var numWPs : uint = _waypoints.length;
 			if (numWPs == 0) return;
 
-			if (!particle.dictionary[FollowWaypoints]) particle.dictionary[FollowWaypoints] = 0;
+			if (!particle.dictionary[FollowWaypoints])
+            {
+                particle.dictionary[FollowWaypoints] = 0;
+            }
 			
 			var index:int = particle.dictionary[FollowWaypoints];
 			if (index >= numWPs)
@@ -71,13 +74,24 @@ import idv.cjcat.stardustextended.common.emitters.Emitter;
 			var waypoint:Waypoint = _waypoints[index] as Waypoint;
 			var dx:Number = particle.x - waypoint.x;
 			var dy:Number = particle.y - waypoint.y;
-			if (dx * dx + dy * dy <= waypoint.radius * waypoint.radius) {
-				if (index < numWPs - 1) {
+			if (dx * dx + dy * dy <= waypoint.radius * waypoint.radius)
+            {
+				if (index < numWPs - 1)
+                {
 					particle.dictionary[FollowWaypoints]++;
 					waypoint = _waypoints[index + 1];
-				} else {
-					if (loop) waypoint = _waypoints[0];
-					else return;
+				}
+                else
+                {
+					if (loop)
+					{
+                        particle.dictionary[FollowWaypoints] = 0;
+						waypoint = _waypoints[0];
+					}
+					else
+                    {
+                        return;
+                    }
 				}
 				dx = particle.x - waypoint.x;
 				dy = particle.y - waypoint.y;
@@ -85,7 +99,10 @@ import idv.cjcat.stardustextended.common.emitters.Emitter;
 			
 			var r:Vec2D = Vec2DPool.get(dx, dy);
 			var len:Number = r.length;
-			if (len < waypoint.epsilon) len = waypoint.epsilon;
+			if (len < waypoint.epsilon)
+            {
+                len = waypoint.epsilon;
+            }
 			r.length = -waypoint.strength * Math.pow(len, -0.5 * waypoint.attenuationPower);
 			if (!massless) r.length /= particle.mass;
 			Vec2DPool.recycle(r);
@@ -117,7 +134,8 @@ import idv.cjcat.stardustextended.common.emitters.Emitter;
 				waypointsXML.appendChild(waypointXML);
 			}
 			xml.appendChild(waypointsXML);
-			
+            xml.@loop = loop;
+            xml.@massless = massless;
 			return xml;
 		}
 		
@@ -136,6 +154,8 @@ import idv.cjcat.stardustextended.common.emitters.Emitter;
 				
 				addWaypoint(waypoint);
 			}
+            loop = (xml.@loop == "true");
+            massless = (xml.@massless == "true");
 		}
 		//------------------------------------------------------------------------------------------------
 		//XML
