@@ -10,7 +10,6 @@
     import idv.cjcat.stardustextended.common.handlers.ParticleHandler;
     import idv.cjcat.stardustextended.common.initializers.Initializer;
     import idv.cjcat.stardustextended.common.initializers.InitializerCollector;
-    import idv.cjcat.stardustextended.common.particles.InfoRecycler;
     import idv.cjcat.stardustextended.common.particles.Particle;
     import idv.cjcat.stardustextended.common.particles.PooledParticleFactory;
     import idv.cjcat.stardustextended.common.StardustElement;
@@ -180,11 +179,6 @@
 				}
 
 				if (p.isDead) {
-					//handle dead particle
-					for (key in p.recyclers) {
-						InfoRecycler(key).recycleInfo(p);
-					}
-					//invoke handler
 					_particleHandler.particleRemoved(p);
 					
 					p.destroy();

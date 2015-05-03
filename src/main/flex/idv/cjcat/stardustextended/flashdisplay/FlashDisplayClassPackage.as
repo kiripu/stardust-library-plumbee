@@ -5,8 +5,6 @@
 	import idv.cjcat.stardustextended.flashdisplay.handlers.DisplayObjectHandler;
 	import idv.cjcat.stardustextended.flashdisplay.handlers.DisplayObjectSpriteSheetHandler;
 	import idv.cjcat.stardustextended.flashdisplay.handlers.SingularBitmapHandler;
-	import idv.cjcat.stardustextended.flashdisplay.initializers.DisplayObjectParent;
-	import idv.cjcat.stardustextended.flashdisplay.initializers.PooledDisplayObjectClass;
 	
 	/**
 	 * Packs together classes for the classic display list.
@@ -21,10 +19,6 @@
 		}
 
 		override protected final function populateClasses():void {
-
-			//2D initializers
-			classes.push(DisplayObjectParent);
-			classes.push(PooledDisplayObjectClass);
 
 			//2D particle handlers
 			classes.push(BitmapHandler);

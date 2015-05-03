@@ -109,15 +109,9 @@ public class DisplayObjectSpriteSheetHandler extends DisplayObjectHandler implem
         }
     }
 
-    public function set bitmapData(bitmapData : BitmapData) :void
+    public function addImage(img : BitmapData) : void
     {
-        _bitmapData = bitmapData;
-        makeSpriteSheetCache();
-    }
-
-    public function get bitmapData() : BitmapData
-    {
-        return _bitmapData;
+        //  TODO call this from the loader
     }
 
     public function set spriteSheetSliceWidth(value:uint):void {

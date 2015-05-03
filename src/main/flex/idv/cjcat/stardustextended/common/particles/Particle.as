@@ -112,11 +112,9 @@
 		 * Dictionary for storing additional information.
 		 */
 		public var dictionary:Dictionary;
-		
-		public var recyclers:Dictionary;
 
         /**
-         * The current frame to display if the particle is animated. Use the AnimateSpriteSheet action to set it.
+         * Particle handlers use this property to determine which frame to display if the particle is animated
          */
 		public var currentAnimationFrame : int = 0;
 
@@ -129,7 +127,6 @@
 
 		public function Particle() {
 			dictionary = new Dictionary();
-			recyclers = new Dictionary();
 		}
 		
 		/**
@@ -168,7 +165,6 @@
 			target = null;
 			var key : *;
 			for (key in dictionary) delete dictionary[key];
-			for (key in recyclers) delete recyclers[key];
 		}
 
         public static function compareFunction(p1 : Particle, p2 : Particle) : Number

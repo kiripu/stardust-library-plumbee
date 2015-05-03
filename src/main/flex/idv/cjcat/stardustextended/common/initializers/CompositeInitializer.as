@@ -44,20 +44,6 @@
 			for each (var initializer:Initializer in initializers) removeInitializer(initializer);
 		}
 		
-		override public final function recycleInfo(particle:Particle):void {
-			for each (var initializer:Initializer in initializers) {
-				initializer.recycleInfo(particle);
-			}
-		}
-		
-		override public final function get needsRecycle():Boolean {
-			for each (var initializer:Initializer in initializers) {
-				if (initializer.needsRecycle) return true;
-			}
-			return false;
-		}
-		
-		
 		//XML
 		//------------------------------------------------------------------------------------------------
 		

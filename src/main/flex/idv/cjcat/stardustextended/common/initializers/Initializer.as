@@ -3,7 +3,6 @@
     import idv.cjcat.stardustextended.cjsignals.ISignal;
     import idv.cjcat.stardustextended.cjsignals.Signal;
     import idv.cjcat.stardustextended.common.emitters.Emitter;
-    import idv.cjcat.stardustextended.common.particles.InfoRecycler;
     import idv.cjcat.stardustextended.common.particles.Particle;
     import idv.cjcat.stardustextended.common.StardustElement;
     import idv.cjcat.stardustextended.common.xml.XMLBuilder;
@@ -19,7 +18,7 @@
 	 * Default priority = 0;
 	 * </p>
 	 */
-	public class Initializer extends StardustElement implements InfoRecycler {
+	public class Initializer extends StardustElement {
 		
 		
 		//signals
@@ -71,7 +70,6 @@
                 for (var m : int = 0; m < particles.length; ++m) {
                     particle = particles[m];
 					initialize(particle);
-					if (needsRecycle) particle.recyclers[this] = this;
 				}
 			}
 		}
@@ -101,18 +99,6 @@
 		public function set priority(value:int):void {
 			_priority = value;
 			onPriorityChange.dispatch(this);
-		}
-		
-		/**
-		 * [Template Method] This method is called after a particle's death if the <code>needsRecycle()</code> method returns true.
-		 * @param	particle
-		 */
-		public function recycleInfo(particle:Particle):void {
-			
-		}
-		
-		public function get needsRecycle():Boolean {
-			return false;
 		}
 
         public function reset():void {
