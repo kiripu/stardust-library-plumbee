@@ -1,4 +1,5 @@
 package idv.cjcat.stardustextended.flashdisplay.handlers {
+import idv.cjcat.stardustextended.common.emitters.Emitter;
 import idv.cjcat.stardustextended.flashdisplay.*;
 
 import flash.display.DisplayObject;
@@ -65,14 +66,17 @@ public class DisplayObjectHandler extends ParticleHandler {
         displayObj.parent.removeChild(displayObj);
     }
 
-    override public function readParticle(particle:Particle):void {
-        displayObj = DisplayObject(particle.target);
+    override public function stepEnd(emitter:Emitter, particles:Vector.<Particle>, time:Number):void {
+        for each (var particle : Particle in particles)
+        {
+            displayObj = DisplayObject(particle.target);
 
-        displayObj.x = particle.x;
-        displayObj.y = particle.y;
-        displayObj.rotation = particle.rotation;
-        displayObj.scaleX = displayObj.scaleY = particle.scale;
-        displayObj.alpha = particle.alpha;
+            displayObj.x = particle.x;
+            displayObj.y = particle.y;
+            displayObj.rotation = particle.rotation;
+            displayObj.scaleX = displayObj.scaleY = particle.scale;
+            displayObj.alpha = particle.alpha;
+        }
     }
 
     public function set blendMode(val : String) : void {

@@ -100,10 +100,6 @@
 			_priority = value;
 			onPriorityChange.dispatch(this);
 		}
-
-        public function reset():void {
-            //override if needed
-        }
 		
 		//XML
 		//------------------------------------------------------------------------------------------------

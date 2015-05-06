@@ -20,24 +20,29 @@
 		
 		/**
 		 * Creates particles with associated initializers.
-		 * @param	count
-		 * @return
+		 * @param count
+         * @param currentTime
+		 * @return the newly created particles
 		 */
 		public final function createParticles(count:int, currentTime : Number):Vector.<Particle> {
-			var i:int, len:int;
-			var particles:Vector.<Particle> = new Vector.<Particle>();
-			for (i = 0; i < count; i++) {
-				var particle:Particle = createNewParticle();
-				particle.init();
-				particles.push(particle);
-			}
-			
-			var initializers:Array = _initializerCollection.initializers;
-			for (i = 0, len = initializers.length; i < len; ++i) {
-				Initializer(initializers[i]).doInitialize(particles, currentTime);
-			}
-			
-			return particles;
+            var particles:Vector.<Particle> = new Vector.<Particle>();
+            if (count > 0)
+            {
+                var i:int;
+                var len:int;
+                for (i = 0; i < count; i++) {
+                    var particle:Particle = createNewParticle();
+                    particle.init();
+                    particles.push(particle);
+                }
+
+                var initializers:Array = _initializerCollection.initializers;
+                for (i = 0, len = initializers.length; i < len; ++i)
+                {
+                    Initializer(initializers[i]).doInitialize(particles, currentTime);
+                }
+            }
+            return particles;
 		}
 		
 		/** @private */

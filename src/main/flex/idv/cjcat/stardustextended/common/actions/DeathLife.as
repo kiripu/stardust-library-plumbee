@@ -8,10 +8,6 @@
 	 * Remember to add this action to the emitter if you wish particles to be removed from simulation when their lives reach zero. 
 	 * Otherwise, the particles will not be removed.
 	 * </p>
-	 * 
-	 * <p>
-	 * Default priority = -1;
-	 * </p>
 	 */
 	public class DeathLife extends Action {
 

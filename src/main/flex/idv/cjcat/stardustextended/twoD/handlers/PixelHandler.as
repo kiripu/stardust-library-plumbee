@@ -1,7 +1,9 @@
 package idv.cjcat.stardustextended.twoD.handlers {
 
 	import flash.display.BitmapData;
-	import idv.cjcat.stardustextended.common.handlers.ParticleHandler;
+
+import idv.cjcat.stardustextended.common.emitters.Emitter;
+import idv.cjcat.stardustextended.common.handlers.ParticleHandler;
 	import idv.cjcat.stardustextended.common.particles.Particle;
 	import idv.cjcat.stardustextended.common.utils.ColorUtil;
 	
@@ -20,17 +22,18 @@ package idv.cjcat.stardustextended.twoD.handlers {
 		}
 
 		private var x:int, y:int, finalColor:uint;
-		
-		override public function readParticle(particle:Particle):void {
-			
-			x = int(particle.x + 0.5);
-			if ((x < 0) || (x >= targetBitmapData.width)) return;
-			y = int(particle.y + 0.5);
-			if ((y < 0) || (y >= targetBitmapData.height)) return;
+		override public function stepEnd(emitter:Emitter, particles:Vector.<Particle>, time:Number):void {
+			for each (var particle : Particle in particles)
+			{
+				x = int(particle.x + 0.5);
+				if ((x < 0) || (x >= targetBitmapData.width)) return;
+				y = int(particle.y + 0.5);
+				if ((y < 0) || (y >= targetBitmapData.height)) return;
 
-			var rgbColor : uint = ColorUtil.rgbToHex(particle.colorR, particle.colorG, particle.colorB);
-			finalColor = (rgbColor & 0xFFFFFF) | uint(uint(particle.alpha * 255) << 24);
-			targetBitmapData.setPixel32(x, y, finalColor);
+				var rgbColor : uint = ColorUtil.rgbToHex(particle.colorR, particle.colorG, particle.colorB);
+				finalColor = (rgbColor & 0xFFFFFF) | uint(uint(particle.alpha * 255) << 24);
+				targetBitmapData.setPixel32(x, y, finalColor);
+			}
 		}
 		
 		

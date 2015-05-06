@@ -45,22 +45,25 @@ public class DisplayObjectSpriteSheetHandler extends DisplayObjectHandler implem
         _time = time;
     }
 
-    override public function readParticle(particle:Particle):void {
-        if (_isSpriteSheet && _spriteSheetAnimationSpeed > 0)
+    override public function stepEnd(emitter:Emitter, particles:Vector.<Particle>, time:Number):void {
+        super.stepEnd(emitter, particles, time);
+        for each (var particle : Particle in particles)
         {
-            var currFrame : uint = particle.currentAnimationFrame;
-            const nextFrame : uint = (currFrame + _time) % _totalFrames;
-            const nextImageIndex : uint = uint(nextFrame / _spriteSheetAnimationSpeed);
-            const currImageIndex : uint = uint(currFrame / _spriteSheetAnimationSpeed);
-            if ( nextImageIndex != currImageIndex )
+            if (_isSpriteSheet && _spriteSheetAnimationSpeed > 0)
             {
-                var bmp : Bitmap = Bitmap(particle.target);
-                bmp.bitmapData = spriteCache.bds[nextImageIndex];
-                bmp.smoothing = _smoothing;
+                var currFrame : uint = particle.currentAnimationFrame;
+                const nextFrame : uint = (currFrame + _time) % _totalFrames;
+                const nextImageIndex : uint = uint(nextFrame / _spriteSheetAnimationSpeed);
+                const currImageIndex : uint = uint(currFrame / _spriteSheetAnimationSpeed);
+                if ( nextImageIndex != currImageIndex )
+                {
+                    var bmp : Bitmap = Bitmap(particle.target);
+                    bmp.bitmapData = spriteCache.bds[nextImageIndex];
+                    bmp.smoothing = _smoothing;
+                }
+                particle.currentAnimationFrame = nextFrame;
             }
-            particle.currentAnimationFrame = nextFrame;
         }
-        super.readParticle(particle);
     }
 
     override public function particleAdded(particle:Particle):void

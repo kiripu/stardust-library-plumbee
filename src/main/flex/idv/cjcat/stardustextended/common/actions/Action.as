@@ -102,7 +102,7 @@
 		 * after the <code>update()</code> calls with each particles in the emitter.
 		 * 
 		 * <p>
-		 * All setup operations before the <code>update()</code> calls should be done here.
+		 * All setup operations after the <code>update()</code> calls should be done here.
 		 * </p>
 		 * @param	emitter		The associated emitter.
 		 * @param	time		The timespan of each emitter's step.
@@ -147,10 +147,6 @@
 		 * </p>
 		 */
 		public var mask : int;
-
-        public function reset():void {
-            //override if needed
-        }
 		
 		//XML
 		//------------------------------------------------------------------------------------------------

@@ -37,7 +37,7 @@
 		 * Returns null if no deflection occurred. A non-null value can trigger the <code>DeflectorTrigger</code> action trigger.
 		 * @param	particle
 		 * @return
-		 * @see idv.cjcat.stardustextended.twoD.actions.triggers.DeflectorTrigger
+		 * @see idv.cjcat.stardustextended.common.actions.triggers.DeflectorTrigger
 		 */
 		protected function calculateMotionData4D(particle:Particle):MotionData4D {
 			//abstract method

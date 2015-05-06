@@ -1,142 +1,121 @@
-﻿package idv.cjcat.stardustextended.twoD.actions {
-import idv.cjcat.stardustextended.common.actions.Action;
-import idv.cjcat.stardustextended.common.emitters.Emitter;
-	import idv.cjcat.stardustextended.common.initializers.Initializer;
-	import idv.cjcat.stardustextended.common.initializers.InitializerCollector;
-	import idv.cjcat.stardustextended.common.math.Random;
-	import idv.cjcat.stardustextended.common.math.StardustMath;
-	import idv.cjcat.stardustextended.common.math.UniformRandom;
-	import idv.cjcat.stardustextended.common.particles.Particle;
-	import idv.cjcat.stardustextended.common.particles.PooledParticleFactory;
-	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
-	import idv.cjcat.stardustextended.twoD.geom.Vec2D;
-	import idv.cjcat.stardustextended.twoD.geom.Vec2DPool;
+﻿package idv.cjcat.stardustextended.twoD.actions
+{
+
+    import idv.cjcat.stardustextended.common.actions.Action;
+    import idv.cjcat.stardustextended.common.actions.triggers.DeathTrigger;
+    import idv.cjcat.stardustextended.common.actions.triggers.Trigger;
+    import idv.cjcat.stardustextended.common.emitters.Emitter;
+    import idv.cjcat.stardustextended.common.particles.Particle;
+    import idv.cjcat.stardustextended.common.xml.XMLBuilder;
+    import idv.cjcat.stardustextended.twoD.geom.Vec2D;
 	
-	/**
-	 * Spawns new particles at the position of existing particles.
-	 * 
-	 * <p>
-	 * This action can be used to create effects such as fireworks, rocket trails, etc.
-	 * </p>
-	 * 
-	 * <p>
-	 * Newly spawned particles are initialized by initializers added to the spawning process through the <code>addInitializer()</code> method.
-	 * </p>
-	 */
-	public class Spawn extends Action implements InitializerCollector {
+    /**
+     * Spawns new particles at the position of existing particles.
+     * This action can be used to create effects such as fireworks, rocket trails, etc.
+     *
+     * You must specify an emitter that will emit the new particles. This action offsets the emitters newly created
+     * particles position to the position this emitters particles.
+     * You should set the spawner emitter's active property to false so it does not emit particles by itself.
+     * Furthermore to spawn particles you need to add a trigger to this action.
+     */
+	public class Spawn extends Action
+    {
 		
 		public var inheritDirection:Boolean;
 		public var inheritVelocity:Boolean;
-		private var _countRandom:Random;
-		private var _factory:PooledParticleFactory;
+        public var spawnerEmitter : Emitter;
+        public var spawnerEmitterId : String;
+        private var _trigger : Trigger;
 
-		public function Spawn(count:Random = null, inheritDirection:Boolean = true, inheritVelocity:Boolean = false) {
+		public function Spawn(inheritDirection:Boolean = true, inheritVelocity:Boolean = false, trigger : Trigger = null)
+        {
+            super();
+            priority = -10;
 			this.inheritDirection = inheritDirection;
 			this.inheritVelocity = inheritVelocity;
-			this.countRandom = count;
-			_factory = new PooledParticleFactory();
+            this.trigger = trigger;
 		}
 
-		private var particles:Vector.<Particle>;
-		private var v:Vec2D;
-		override public function update(emitter:Emitter, particle:Particle, timeDelta:Number, currentTime:Number):void {
-			particles = _factory.createParticles( StardustMath.randomFloor(_countRandom.random()), currentTime);
-            var p:Particle;
-            for (var m : int = 0; m < particles.length; ++m) {
-                p = particles[m];
-				p.x += particle.x;
-				p.y += particle.y;
-				if (inheritVelocity) {
-					p.vx += particle.vx;
-					p.vy += particle.vy;
-				}
-				if (inheritDirection) {
-					v = Vec2DPool.get(p.vx, p.vy);
-					v.rotateThis(Math.atan2(particle.vx, -particle.vy), true);
-					p.vx = v.x;
-					p.vy = v.y;
-					Vec2DPool.recycle(v);
-				}
-			}
-			
-			emitter.addParticles(particles);
+        public function get trigger() : Trigger
+        {
+            return _trigger;
+        }
+
+        public function set trigger(value : Trigger) : void
+        {
+            if (value == null)
+            {
+                value = new DeathTrigger();
+            }
+            _trigger = value;
+        }
+
+		override public function update(emitter:Emitter, particle:Particle, timeDelta:Number, currentTime:Number):void
+        {
+            if (spawnerEmitter == null)
+            {
+                return;
+            }
+            if (_trigger.testTrigger(emitter, particle, timeDelta))
+            {
+                var p:Particle;
+                var v:Vec2D;
+                var newParticles : Vector.<Particle> = spawnerEmitter.createParticles(timeDelta);
+                var len : uint = newParticles.length;
+                for (var m : int = 0; m < len; ++m)
+                {
+                    p = newParticles[m];
+                    p.x += particle.x;
+                    p.y += particle.y;
+                    if (inheritVelocity) {
+                        p.vx += particle.vx;
+                        p.vy += particle.vy;
+                    }
+                    if (inheritDirection) {
+                        p.rotation += particle.rotation;
+                    }
+                }
+            }
 		}
-		
-		/**
-		 * Adds an initializer to the spawning action.
-		 * @param initializer
-		 */
-		public function addInitializer(initializer:Initializer):void {
-			_factory.addInitializer(initializer);
-		}
-		
-		/**
-		 * Removes an initializer from the spawning action.
-		 * @param initializer
-		 */
-		public function removeInitializer(initializer:Initializer):void {
-			_factory.removeInitializer(initializer);
-		}
-		
-		/**
-		 * Removes all initializers from the spawning action.
-		 */
-		public function clearInitializers():void {
-			_factory.clearInitializers();
-		}
-		
-		/**
-		 * The <code>Random</code> object that determines how many particles to spawn each time.
-		 */
-		public function get countRandom():Random { return _countRandom; }
-		public function set countRandom(value:Random):void {
-			if (!value) value = new UniformRandom(0, 0);
-			_countRandom = value;
-		}
-		
+
 		//XML
 		//------------------------------------------------------------------------------------------------
-		
-		override public function getRelatedObjects():Array {
-			return [_countRandom].concat(_factory.initializerCollection.initializers);
-		}
 		
 		override public function getXMLTagName():String {
 			return "Spawn";
 		}
-		
+
+        override public function getRelatedObjects():Array {
+            return [_trigger];
+        }
+
 		override public function toXML():XML {
 			var xml:XML = super.toXML();
 			
 			xml.@inheritDirection = inheritDirection;
 			xml.@inheritVelocity = inheritVelocity;
-			xml.@countRandom = _countRandom.name;
-			
-			if (_factory.initializerCollection.initializers.length > 0) {
-				xml.appendChild(<initializers/>);
-				var initializer:Initializer;
-				for each (initializer in _factory.initializerCollection.initializers) {
-					xml.initializers.appendChild(initializer.getXMLTag());
-				}
-			}
-			
+            xml.@trigger = _trigger.name;
+
+            if (spawnerEmitter)
+            {
+                xml.@spawnerEmitter = spawnerEmitter.name;
+            }
+
 			return xml;
 		}
 		
 		override public function parseXML(xml:XML, builder:XMLBuilder = null):void {
 			super.parseXML(xml, builder);
 			
-			if (xml.@inheritDirection.length()) inheritDirection = (xml.@inheritDirection == "true");
-			if (xml.@inheritVelocity.length()) inheritVelocity = (xml.@inheritVelocity == "true");
-			if (xml.@countRandom.length()) countRandom = builder.getElementByName(xml.@countRandom) as Random;
-			
-			clearInitializers();
-			for each (var node:XML in xml.initializers.*) {
-				addInitializer(builder.getElementByName(node.@name) as Initializer);
-			}
-		}
+			inheritDirection = (xml.@inheritDirection == "true");
+			inheritVelocity = (xml.@inheritVelocity == "true");
+
+            if (xml.@spawnerEmitter) spawnerEmitterId = xml.@spawnerEmitter;
+            _trigger = builder.getElementByName(xml.@trigger) as Trigger;
+        }
 		
 		//------------------------------------------------------------------------------------------------
 		//end of XML
-	}
+
+    }
 }

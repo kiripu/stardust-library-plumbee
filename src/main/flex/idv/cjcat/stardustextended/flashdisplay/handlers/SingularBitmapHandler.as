@@ -3,7 +3,9 @@ package idv.cjcat.stardustextended.flashdisplay.handlers {
 	import flash.display.DisplayObject;
 	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
-	import idv.cjcat.stardustextended.common.handlers.ParticleHandler;
+
+import idv.cjcat.stardustextended.common.emitters.Emitter;
+import idv.cjcat.stardustextended.common.handlers.ParticleHandler;
 	import idv.cjcat.stardustextended.common.math.StardustMath;
 	import idv.cjcat.stardustextended.common.particles.Particle;
 	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
@@ -27,19 +29,19 @@ package idv.cjcat.stardustextended.flashdisplay.handlers {
 
 		private var mat:Matrix = new Matrix();
 		private var colorTransform:ColorTransform = new ColorTransform(1, 1, 1);
-		
-		override public function readParticle(particle:Particle):void {
+		override public function stepEnd(emitter:Emitter, particles:Vector.<Particle>, time:Number):void {
+            for each (var particle : Particle in particles)
+            {
+                mat.identity();
+                mat.scale(particle.scale, particle.scale);
+                mat.rotate(particle.rotation * StardustMath.DEGREE_TO_RADIAN);
+                mat.translate(particle.x, particle.y);
 
-			mat.identity();
-			mat.scale(particle.scale, particle.scale);
-			mat.rotate(particle.rotation * StardustMath.DEGREE_TO_RADIAN);
-			mat.translate(particle.x, particle.y);
-			
-			colorTransform.alphaMultiplier = particle.alpha;
-			
-			targetBitmapData.draw(displayObject, mat, colorTransform, blendMode);
+                colorTransform.alphaMultiplier = particle.alpha;
+
+                targetBitmapData.draw(displayObject, mat, colorTransform, blendMode);
+            }
 		}
-		
 		
 		//XML
 		//------------------------------------------------------------------------------------------------

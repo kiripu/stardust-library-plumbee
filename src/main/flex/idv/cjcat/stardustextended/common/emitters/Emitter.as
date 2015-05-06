@@ -24,30 +24,13 @@
 		//signals
 		//------------------------------------------------------------------------------------------------
 
-		protected const _onEmpty:ISignal = new Signal(Emitter);
-		/**
-		 * Dispatched when the emitter is empty of particles.
-		 * <p/>
-		 * Signature: (emitter:Emitter)
-		 */
-		public function get onEmpty():ISignal { return _onEmpty; }
-
-		protected const _onStepBegin:ISignal = new Signal(Emitter, Vector.<Particle>, Number);
-		/**
-		 * Dispatched at the beginning of each step.
-		 * <p/>
-		 * Signature: (emitter:Emitter, particles:ParticleCollection, time:Number)
-		 */
-		public function get onStepBegin():ISignal { return _onStepBegin; }
-
-		protected const _onStepEnd:ISignal = new Signal(Emitter, Vector.<Particle>, Number);
 		/**
 		 * Dispatched at the end of each step.
 		 * <p/>
-		 * Signature: (emitter:Emitter, particles:ParticleCollection, time:Number)
+		 * Signature: (emitter:Emitter, particles:Vector.<Particle>, time:Number)
 		 */
 		public function get onStepEnd():ISignal { return _onStepEnd; }
-		
+        protected const _onStepEnd:ISignal = new Signal(Emitter, Vector.<Particle>, Number);
 		//------------------------------------------------------------------------------------------------
 		//end of signals
 		
@@ -125,8 +108,8 @@
 		 * </p>
 		 * @param	time The time interval of a single step of simulation. For instance, doubling this parameter causes the simulation to go twice as fast.
 		 */
-		public final function step(time:Number = 1):void {
-			_onStepBegin.dispatch(this, _particles, time);
+		public final function step(time:Number = 1) : void
+		{
 			_particleHandler.stepBegin(this, _particles, time);
 			
 			var i:int;
@@ -134,12 +117,10 @@
 			var action:Action;
 			var p:Particle;
 			var sorted:Boolean = false;
-			
-			//query clock ticks
-			if (active) {
-				var pCount:int = _clock.getTicks(time);
-				var newParticles:Vector.<Particle> = factory.createParticles(pCount, currentTime);
-				addParticles(newParticles);
+
+			if (active)
+            {
+				createParticles(time);
 			}
 
 			//filter out active actions
@@ -147,7 +128,10 @@
             len = actions.length;
 			for (i = 0; i < len; ++i) {
 				action = actions[i];
-				if (action.active && action.mask) activeActions.push(action);
+				if (action.active && action.mask)
+                {
+                    activeActions.push(action);
+                }
 			}
 
 			//sorting
@@ -185,8 +169,6 @@
 
                     _particles.splice(m, 1);
                     m--;
-				} else {
-					_particleHandler.readParticle(p);
 				}
 			}
 			
@@ -196,8 +178,8 @@
 			}
 			
 			_onStepEnd.dispatch(this, _particles, time);
+
 			_particleHandler.stepEnd(this, _particles, time);
-			if (_particles.length == 0) _onEmpty.dispatch(this);
 
             currentTime = currentTime + time;
 		}
@@ -283,12 +265,6 @@
         {
             currentTime = 0;
             clearParticles();
-            for (var i:int = 0; i < initializers.length; ++i) {
-                Initializer(initializers[i]).reset();
-            }
-            for (i = 0; i < actions.length; ++i) {
-                Action(actions[i]).reset();
-            }
 			_clock.reset();
         }
 		
@@ -301,7 +277,17 @@
 		public final function get numParticles():int {
 			return _particles.length;
 		}
-		
+
+        /**
+         * This method is called by the emitter to create new particles.
+         */
+        public final function createParticles(time : uint) : Vector.<Particle> {
+            var pCount : int = _clock.getTicks(time);
+            var newParticles : Vector.<Particle> = factory.createParticles(pCount, currentTime);
+            addParticles(newParticles);
+            return newParticles;
+        }
+
 		/**
 		 * This method is used to manually add existing particles to the emitter's simulation.
 		 * 

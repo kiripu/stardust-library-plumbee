@@ -4,7 +4,7 @@
 	import idv.cjcat.stardustextended.common.emitters.Emitter;
 	import idv.cjcat.stardustextended.common.particles.Particle;
 	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
-	import idv.cjcat.stardustextended.twoD.actions.triggers.DeflectorTrigger;
+	import idv.cjcat.stardustextended.common.actions.triggers.DeflectorTrigger;
 	import idv.cjcat.stardustextended.twoD.deflectors.Deflector;
 	import idv.cjcat.stardustextended.twoD.geom.MotionData4D;
 	

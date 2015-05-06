@@ -33,7 +33,8 @@ package idv.cjcat.stardustextended.common.handlers {
 		}
 		
 		/**
-		 * [Abstract Method] Invoked when each emitter step ends.
+		 * [Abstract Method] Invoked when each emitter step ends. Particles are at their final position and ready to be
+         * rendered.
 		 * @param	emitter
 		 * @param	particles
 		 * @param	time
@@ -59,16 +60,6 @@ package idv.cjcat.stardustextended.common.handlers {
 		public function particleRemoved(particle:Particle):void {
 			
 		}
-		
-		/**
-		 * [Abstract Method] Invoked for each particle when each particle's actions are all executed. 
-		 * Read out the particle's data in this method.
-		 * @param	particle
-		 */
-		public function readParticle(particle:Particle):void {
-			
-		}
-		
 		
 		//XML
 		//------------------------------------------------------------------------------------------------

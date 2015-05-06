@@ -1,19 +1,16 @@
-﻿package idv.cjcat.stardustextended.twoD.actions.triggers
+﻿package idv.cjcat.stardustextended.common.actions.triggers
 {
 
-    import idv.cjcat.stardustextended.common.actions.triggers.ActionTrigger;
-    import idv.cjcat.stardustextended.common.emitters.Emitter;
+	import idv.cjcat.stardustextended.common.emitters.Emitter;
 	import idv.cjcat.stardustextended.common.particles.Particle;
 	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 	import idv.cjcat.stardustextended.twoD.deflectors.Deflector;
 
-	public class DeflectorTrigger extends ActionTrigger {
+	public class DeflectorTrigger extends Trigger {
 		
 		public var deflector:Deflector;
 		
 		public function DeflectorTrigger(deflector:Deflector = null) {
-			priority = -6;
-			
 			this.deflector = deflector;
 		}
 		
@@ -35,9 +32,7 @@
 		
 		override public function toXML():XML {
 			var xml:XML = super.toXML();
-			
 			if (deflector) xml.@deflector = deflector.name;
-			
 			return xml;
 		}
 		
