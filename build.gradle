@@ -22,7 +22,7 @@ apply plugin: 'ideafx'
 apply plugin: 'maven'
 
 group = 'com.funkypandagame'
-version = '3.13'
+version = '3.14'
 type = 'swc'
 output = 'stardust-library'
 playerVersion = '15.0'
