@@ -1,13 +1,13 @@
-package idv.cjcat.stardustextended.flashdisplay.handlers {
+package idv.cjcat.stardustextended.flashdisplay.handlers
+{
+
 import idv.cjcat.stardustextended.common.emitters.Emitter;
-import idv.cjcat.stardustextended.flashdisplay.*;
 
 import flash.display.DisplayObject;
 import flash.display.DisplayObjectContainer;
 import idv.cjcat.stardustextended.common.handlers.ParticleHandler;
 import idv.cjcat.stardustextended.common.particles.Particle;
 import idv.cjcat.stardustextended.common.xml.XMLBuilder;
-import idv.cjcat.stardustextended.flashdisplay.handlers.AddChildMode;
 
 /**
  * This handler adds display object particles to the target container's display list,
@@ -41,7 +41,7 @@ public class DisplayObjectHandler extends ParticleHandler {
 
     override public function particleAdded(particle:Particle):void {
         displayObj = DisplayObject(particle.target);
-        displayObj.blendMode = blendMode;
+        displayObj.blendMode = _blendMode;
 
         if (!forceParentChange && displayObj.parent) return;
 

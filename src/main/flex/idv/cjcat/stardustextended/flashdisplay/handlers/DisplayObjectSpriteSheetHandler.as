@@ -1,35 +1,33 @@
 package idv.cjcat.stardustextended.flashdisplay.handlers {
 
-import idv.cjcat.stardustextended.twoD.handlers.*;
-
-import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.DisplayObject;
 import flash.display.DisplayObjectContainer;
 import flash.geom.ColorTransform;
-import flash.utils.Dictionary;
 
 import idv.cjcat.stardustextended.common.emitters.Emitter;
 
 import idv.cjcat.stardustextended.common.particles.Particle;
+import idv.cjcat.stardustextended.common.utils.ColorUtil;
 import idv.cjcat.stardustextended.common.xml.XMLBuilder;
+import idv.cjcat.stardustextended.flashdisplay.particletargets.CenteredBitmap;
 import idv.cjcat.stardustextended.flashdisplay.utils.DisplayObjectPool;
+import idv.cjcat.stardustextended.twoD.handlers.ISpriteSheetHandler;
+
+import starling.utils.Color;
 
 public class DisplayObjectSpriteSheetHandler extends DisplayObjectHandler implements ISpriteSheetHandler
 {
-
-    private static const slicedSpriteCache : Dictionary = new Dictionary();
     private var _spriteSheetStartAtRandomFrame : Boolean;
     private var _smoothing : Boolean;
     private var _spriteSheetAnimationSpeed : uint;
     private var _pool:DisplayObjectPool;
-    private var spriteCache : SpriteSheetBitmapSlicedCache;
     private var _totalFrames : uint;
-    private var _bitmapData : BitmapData;
     private var _spriteSheetSliceWidth : uint;
     private var _spriteSheetSliceHeight : uint;
     private var _isSpriteSheet : Boolean;
     private var _time : Number;
+    private var _images : Vector.<BitmapData>;
 
     public function DisplayObjectSpriteSheetHandler(container:DisplayObjectContainer = null,
                                                     blendMode:String = "normal",
@@ -37,7 +35,7 @@ public class DisplayObjectSpriteSheetHandler extends DisplayObjectHandler implem
     {
         super(container, blendMode, addChildMode);
         _pool = new DisplayObjectPool();
-        _pool.reset(Bitmap, null);
+        _pool.reset(CenteredBitmap, null);
     }
 
     override public function stepBegin(emitter:Emitter, particles:Vector.<Particle>, time:Number):void
@@ -49,26 +47,28 @@ public class DisplayObjectSpriteSheetHandler extends DisplayObjectHandler implem
         super.stepEnd(emitter, particles, time);
         for each (var particle : Particle in particles)
         {
+            var bmp : CenteredBitmap = CenteredBitmap(particle.target);
             if (_isSpriteSheet && _spriteSheetAnimationSpeed > 0)
             {
                 var currFrame : uint = particle.currentAnimationFrame;
-                const nextFrame : uint = (currFrame + _time) % _totalFrames;
-                const nextImageIndex : uint = uint(nextFrame / _spriteSheetAnimationSpeed);
-                const currImageIndex : uint = uint(currFrame / _spriteSheetAnimationSpeed);
+                var nextFrame : uint = (currFrame + _time) % _totalFrames;
+                var nextImageIndex : uint = uint(nextFrame / _spriteSheetAnimationSpeed);
+                var currImageIndex : uint = uint(currFrame / _spriteSheetAnimationSpeed);
                 if ( nextImageIndex != currImageIndex )
                 {
-                    var bmp : Bitmap = Bitmap(particle.target);
-                    bmp.bitmapData = spriteCache.bds[nextImageIndex];
+                    bmp.bitmapData = _images[nextImageIndex];
                     bmp.smoothing = _smoothing;
                 }
                 particle.currentAnimationFrame = nextFrame;
             }
+            // optimize this if possible
+            bmp.transform.colorTransform = new ColorTransform(particle.colorR, particle.colorG, particle.colorB, particle.alpha);
         }
     }
 
     override public function particleAdded(particle:Particle):void
     {
-        const bmp : Bitmap = Bitmap(_pool.get());
+        var bmp : CenteredBitmap = CenteredBitmap(_pool.get());
         particle.target = bmp;
 
         if (_isSpriteSheet)
@@ -81,23 +81,21 @@ public class DisplayObjectSpriteSheetHandler extends DisplayObjectHandler implem
             }
             if (_spriteSheetAnimationSpeed > 0)
             {
-                bmp.bitmapData = spriteCache.bds[uint(currFrame / _spriteSheetAnimationSpeed)];
+                bmp.bitmapData = _images[uint(currFrame / _spriteSheetAnimationSpeed)];
             }
             else
             {
-                bmp.bitmapData = spriteCache.bds[currFrame];
+                bmp.bitmapData = _images[currFrame];
             }
             particle.currentAnimationFrame = currFrame;
         }
         else
         {
-            bmp.bitmapData = _bitmapData;
+            bmp.bitmapData = _images[0];
         }
         bmp.smoothing = _smoothing;
-        bmp.x = - bmp.width * 0.5;
-        bmp.y = - bmp.height * 0.5;
 
-        bmp.transform.colorTransform = new ColorTransform(particle.colorR, particle.colorG, particle.colorB);
+        bmp.transform.colorTransform = new ColorTransform(particle.colorR, particle.colorG, particle.colorB, particle.alpha);
 
         super.particleAdded(particle);
     }
@@ -112,14 +110,14 @@ public class DisplayObjectSpriteSheetHandler extends DisplayObjectHandler implem
         }
     }
 
-    public function addImage(img : BitmapData) : void
+    public function setImages(images : Vector.<BitmapData>) : void
     {
-        //  TODO call this from the loader
+        _images = images;
+        makeSpriteSheetCache();
     }
 
     public function set spriteSheetSliceWidth(value:uint):void {
         _spriteSheetSliceWidth = value;
-        makeSpriteSheetCache();
     }
 
     public function get spriteSheetSliceWidth() : uint {
@@ -128,7 +126,6 @@ public class DisplayObjectSpriteSheetHandler extends DisplayObjectHandler implem
 
     public function set spriteSheetSliceHeight(value:uint):void {
         _spriteSheetSliceHeight = value;
-        makeSpriteSheetCache();
     }
 
     public function get spriteSheetSliceHeight() : uint {
@@ -166,35 +163,17 @@ public class DisplayObjectSpriteSheetHandler extends DisplayObjectHandler implem
 
     private function makeSpriteSheetCache() :void
     {
-        if (_bitmapData == null || _spriteSheetSliceWidth == 0 || _spriteSheetSliceHeight == 0)
+        if (_images == null)
         {
             return;
         }
-        _isSpriteSheet = _bitmapData.width > _spriteSheetSliceWidth || _bitmapData.height > _spriteSheetSliceHeight;
-        if (_isSpriteSheet) {
-            if (!slicedSpriteCache[_bitmapData]) {
-                slicedSpriteCache[_bitmapData] = new Dictionary();
-            }
-            const sizeKey:Number = _spriteSheetSliceWidth * 10000000 + _spriteSheetSliceHeight;
-            if (!slicedSpriteCache[_bitmapData][sizeKey]) {
-                slicedSpriteCache[_bitmapData][sizeKey] = new SpriteSheetBitmapSlicedCache(_bitmapData, _spriteSheetSliceWidth, _spriteSheetSliceHeight);
-            }
-            spriteCache = slicedSpriteCache[_bitmapData][sizeKey];
-            var numStates : uint = _spriteSheetAnimationSpeed;
-            if (numStates == 0)
-            {
-                numStates = 1; // frame can only change at particle birth
-            }
-            _totalFrames = numStates * spriteCache.bds.length;
-        }
-    }
-
-    public static function clearCache() :void
-    {
-        for each (var key : Dictionary in slicedSpriteCache)
+        _isSpriteSheet = _images.length > 1;
+        var numStates : uint = _spriteSheetAnimationSpeed;
+        if (numStates == 0)
         {
-            delete slicedSpriteCache[key];
+            numStates = 1; // frame can only change at particle birth
         }
+        _totalFrames = numStates * _images.length;
     }
 
     //XML
