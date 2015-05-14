@@ -8,13 +8,10 @@ import flash.geom.ColorTransform;
 import idv.cjcat.stardustextended.common.emitters.Emitter;
 
 import idv.cjcat.stardustextended.common.particles.Particle;
-import idv.cjcat.stardustextended.common.utils.ColorUtil;
 import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 import idv.cjcat.stardustextended.flashdisplay.particletargets.CenteredBitmap;
 import idv.cjcat.stardustextended.flashdisplay.utils.DisplayObjectPool;
 import idv.cjcat.stardustextended.twoD.handlers.ISpriteSheetHandler;
-
-import starling.utils.Color;
 
 public class DisplayObjectSpriteSheetHandler extends DisplayObjectHandler implements ISpriteSheetHandler
 {
@@ -23,8 +20,6 @@ public class DisplayObjectSpriteSheetHandler extends DisplayObjectHandler implem
     private var _spriteSheetAnimationSpeed : uint;
     private var _pool:DisplayObjectPool;
     private var _totalFrames : uint;
-    private var _spriteSheetSliceWidth : uint;
-    private var _spriteSheetSliceHeight : uint;
     private var _isSpriteSheet : Boolean;
     private var _time : Number;
     private var _images : Vector.<BitmapData>;
@@ -116,22 +111,6 @@ public class DisplayObjectSpriteSheetHandler extends DisplayObjectHandler implem
         makeSpriteSheetCache();
     }
 
-    public function set spriteSheetSliceWidth(value:uint):void {
-        _spriteSheetSliceWidth = value;
-    }
-
-    public function get spriteSheetSliceWidth() : uint {
-        return _spriteSheetSliceWidth;
-    }
-
-    public function set spriteSheetSliceHeight(value:uint):void {
-        _spriteSheetSliceHeight = value;
-    }
-
-    public function get spriteSheetSliceHeight() : uint {
-        return _spriteSheetSliceHeight;
-    }
-
     public function set spriteSheetAnimationSpeed(spriteSheetAnimationSpeed:uint):void {
         _spriteSheetAnimationSpeed = spriteSheetAnimationSpeed;
         makeSpriteSheetCache();
@@ -185,8 +164,6 @@ public class DisplayObjectSpriteSheetHandler extends DisplayObjectHandler implem
 
     override public function toXML():XML {
         var xml:XML = super.toXML();
-        xml.@spriteSheetSliceWidth = _spriteSheetSliceWidth;
-        xml.@spriteSheetSliceHeight = _spriteSheetSliceHeight;
         xml.@spriteSheetAnimationSpeed = _spriteSheetAnimationSpeed;
         xml.@spriteSheetStartAtRandomFrame = _spriteSheetStartAtRandomFrame;
         xml.@smoothing = _smoothing;
@@ -195,8 +172,6 @@ public class DisplayObjectSpriteSheetHandler extends DisplayObjectHandler implem
 
     override public function parseXML(xml:XML, builder:XMLBuilder = null):void {
         super.parseXML(xml, builder);
-        _spriteSheetSliceWidth = xml.@spriteSheetSliceWidth;
-        _spriteSheetSliceHeight = xml.@spriteSheetSliceHeight;
         _spriteSheetAnimationSpeed = xml.@spriteSheetAnimationSpeed;
         _spriteSheetStartAtRandomFrame = (xml.@spriteSheetStartAtRandomFrame == "true");
         _smoothing = (xml.@smoothing == "true");

@@ -17,8 +17,6 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
 {
 
     private var _blendMode:String = BlendMode.NORMAL;
-    private var _spriteSheetSliceWidth : uint = 32;
-    private var _spriteSheetSliceHeight : uint = 32;
     private var _spriteSheetAnimationSpeed : uint = 1;
     private var _smoothing : String = TextureSmoothing.NONE;
     private var _isSpriteSheet : Boolean;
@@ -79,29 +77,9 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
         }
     }
 
-    public function get textures() : Vector.<SubTexture>
+    public function get renderer():StardustStarlingRenderer
     {
-        return _textures;
-    }
-
-    [Deprecated(message="This property will be soon removed, use setTextures() instead")]
-    public function set spriteSheetSliceWidth(value:uint):void {
-        _spriteSheetSliceWidth = value;
-    }
-
-    [Deprecated(message="This property will be soon removed, use setTextures() instead")]
-    public function get spriteSheetSliceWidth() : uint {
-        return _spriteSheetSliceWidth;
-    }
-
-    [Deprecated(message="This property will be soon removed, use setTextures() instead")]
-    public function set spriteSheetSliceHeight(value:uint):void {
-        _spriteSheetSliceHeight = value;
-    }
-
-    [Deprecated(message="This property will be soon removed, use setTextures() instead")]
-    public function get spriteSheetSliceHeight() : uint {
-        return _spriteSheetSliceHeight;
+        return _renderer;
     }
 
     public function set spriteSheetAnimationSpeed(spriteSheetAnimationSpeed:uint):void {
@@ -192,7 +170,7 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
                     texture.region.x / texture.root.width,
                     texture.region.y / texture.root.height,
                     (texture.region.x + texture.region.width) / texture.root.width,
-                    (texture.region.y + texture.region.height)/ texture.root.height,
+                    (texture.region.y + texture.region.height) / texture.root.height,
                     texture.width * 0.5,
                     texture.height * 0.5);
             var numFrames : uint = _spriteSheetAnimationSpeed;
@@ -209,9 +187,9 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
         _renderer.setTextures(textures[0].root, frames);
     }
 
-    public function get renderer():StardustStarlingRenderer
+    public function get textures() : Vector.<SubTexture>
     {
-        return _renderer;
+        return _textures;
     }
 
     //////////////////////////////////////////////////////// XML
@@ -236,8 +214,6 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
         smoothing = (xml.@smoothing == "true");
         blendMode = (xml.@blendMode);
         premultiplyAlpha = (xml.@premultiplyAlpha == "true");
-        if (xml.@spriteSheetSliceWidth.length()) _spriteSheetSliceWidth = parseFloat(xml.@spriteSheetSliceWidth);
-        if (xml.@spriteSheetSliceHeight.length()) _spriteSheetSliceHeight = parseFloat(xml.@spriteSheetSliceHeight);
     }
 
 }
