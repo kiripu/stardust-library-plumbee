@@ -4,6 +4,7 @@ import idv.cjcat.stardustextended.common.actions.Action;
 import idv.cjcat.stardustextended.common.emitters.Emitter;
 import idv.cjcat.stardustextended.common.particles.Particle;
 import idv.cjcat.stardustextended.common.xml.XMLBuilder;
+import idv.cjcat.stardustextended.twoD.zones.RectZone;
 import idv.cjcat.stardustextended.twoD.zones.Zone;
 import idv.cjcat.stardustextended.twoD.zones.ZoneCollection;
 
@@ -28,14 +29,22 @@ import idv.cjcat.stardustextended.twoD.zones.ZoneCollection;
 		 */
 		public var inverted:Boolean;
 		
-		public function DeathZone(zone:Zone = null, inverted:Boolean = false) {
+		public function DeathZone(zones : Vector.<Zone> = null, inverted:Boolean = false) {
 			priority = -6;
 
             zoneCollection = new ZoneCollection();
+            if (zones)
+            {
+                zoneCollection.zones = zones;
+            }
+            else
+            {
+                zoneCollection.zones.push(new RectZone())
+            }
 			this.inverted = inverted;
 		}
-		
-		override public function update(emitter:Emitter, particle:Particle, timeDelta:Number, currentTime:Number):void {
+
+        override public function update(emitter:Emitter, particle:Particle, timeDelta:Number, currentTime:Number):void {
 			var dead:Boolean = zoneCollection.contains(particle.x, particle.y);
 			if (inverted) dead = !dead;
 			if (dead) particle.isDead = true;
@@ -61,8 +70,19 @@ import idv.cjcat.stardustextended.twoD.zones.ZoneCollection;
 		
 		override public function parseXML(xml:XML, builder:XMLBuilder = null):void {
 			super.parseXML(xml, builder);
-            zoneCollection.parseFromStardustXML(xml, builder);
-			if (xml.@inverted.length()) inverted = (xml.@inverted == "true");
+            if (xml.@zone.length())
+			{
+				trace("WARNING: the simulation contains a deprecated property 'zone' for " + getXMLTagName());
+				zoneCollection.zones = Vector.<Zone>( [Zone(builder.getElementByName(xml.@zone))] );
+			}
+            else
+            {
+                zoneCollection.parseFromStardustXML(xml, builder);
+            }
+			if (xml.@inverted.length())
+            {
+                inverted = (xml.@inverted == "true");
+            }
 		}
 		
 		//------------------------------------------------------------------------------------------------

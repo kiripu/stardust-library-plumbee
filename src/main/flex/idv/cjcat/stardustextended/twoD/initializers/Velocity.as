@@ -6,6 +6,7 @@ import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 import idv.cjcat.stardustextended.twoD.actions.IZoneContainer;
 import idv.cjcat.stardustextended.twoD.geom.MotionData2D;
 import idv.cjcat.stardustextended.twoD.geom.MotionData2DPool;
+import idv.cjcat.stardustextended.twoD.zones.SinglePoint;
 import idv.cjcat.stardustextended.twoD.zones.Zone;
 import idv.cjcat.stardustextended.twoD.zones.ZoneCollection;
 
@@ -17,17 +18,28 @@ import idv.cjcat.stardustextended.twoD.zones.ZoneCollection;
 	 * (The vector pointing from the origin to the random point).
 	 * </p>
 	 */
-	public class Velocity extends Initializer implements IZoneContainer{
+	public class Velocity extends Initializer implements IZoneContainer
+    {
 
         protected var zoneCollection : ZoneCollection;
         public function get zones() : Vector.<Zone> { return zoneCollection.zones; }
         public function set zones(value : Vector.<Zone>) : void {zoneCollection.zones = value;}
 
-		public function Velocity() {
+		public function Velocity(zones : Vector.<Zone> = null)
+        {
             zoneCollection = new ZoneCollection();
-		}
-		
-		override public function initialize(particle:Particle):void {
+            if (zones)
+            {
+                zoneCollection.zones = zones;
+            }
+            else
+            {
+                zoneCollection.zones.push(new SinglePoint(0, 1))
+            }
+        }
+
+
+        override public function initialize(particle:Particle):void {
             var md2D : MotionData2D = zoneCollection.getRandomPointInZones();
             if (md2D)
             {
@@ -60,7 +72,15 @@ import idv.cjcat.stardustextended.twoD.zones.ZoneCollection;
 		override public function parseXML(xml:XML, builder:XMLBuilder = null):void
         {
 			super.parseXML(xml, builder);
-            zoneCollection.parseFromStardustXML(xml, builder);
+            if (xml.@zone.length())
+            {
+                trace("WARNING: the simulation contains a deprecated property 'zone' for " + getXMLTagName());
+                zoneCollection.zones = Vector.<Zone>( [Zone(builder.getElementByName(xml.@zone))] );
+            }
+            else
+            {
+                zoneCollection.parseFromStardustXML(xml, builder);
+            }
 		}
 		
 		//------------------------------------------------------------------------------------------------

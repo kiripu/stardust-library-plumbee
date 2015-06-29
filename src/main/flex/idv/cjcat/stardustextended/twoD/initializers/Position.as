@@ -7,6 +7,7 @@ import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 import idv.cjcat.stardustextended.twoD.actions.IZoneContainer;
 import idv.cjcat.stardustextended.twoD.geom.MotionData2D;
 import idv.cjcat.stardustextended.twoD.geom.MotionData2DPool;
+import idv.cjcat.stardustextended.twoD.zones.RectZone;
 import idv.cjcat.stardustextended.twoD.zones.Zone;
 import idv.cjcat.stardustextended.twoD.zones.ZoneCollection;
 
@@ -23,8 +24,17 @@ public class Position extends Initializer implements IZoneContainer
     public function get zones() : Vector.<Zone> { return zoneCollection.zones; }
     public function set zones(value : Vector.<Zone>) : void { zoneCollection.zones = value; }
 
-    public function Position() {
+    public function Position(zones : Vector.<Zone> = null)
+    {
         zoneCollection = new ZoneCollection();
+        if (zones)
+        {
+            zoneCollection.zones = zones;
+        }
+        else
+        {
+            zoneCollection.zones.push(new RectZone())
+        }
     }
 
     override public function initialize(particle:Particle):void {
@@ -55,7 +65,15 @@ public class Position extends Initializer implements IZoneContainer
 
     override public function parseXML(xml : XML, builder : XMLBuilder = null):void {
         super.parseXML(xml, builder);
-        zoneCollection.parseFromStardustXML(xml, builder);
+        if (xml.@zone.length())
+        {
+            trace("WARNING: the simulation contains a deprecated property 'zone' for " + getXMLTagName());
+            zoneCollection.zones = Vector.<Zone>( [Zone(builder.getElementByName(xml.@zone))] );
+        }
+        else
+        {
+            zoneCollection.parseFromStardustXML(xml, builder);
+        }
     }
 
     //------------------------------------------------------------------------------------------------

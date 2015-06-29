@@ -18,7 +18,7 @@ import idv.cjcat.stardustextended.common.math.Random;
 		private var _width:Number;
 		private var _height:Number;
 		
-		public function RectZone(x:Number = 0, y:Number = 0, width:Number = 640, height:Number = 480, randomX:Random = null, randomY:Random = null) {
+		public function RectZone(x:Number = 0, y:Number = 0, width:Number = 150, height:Number = 50, randomX:Random = null, randomY:Random = null) {
 			if (!randomX) randomX = new UniformRandom();
 			if (!randomY) randomY = new UniformRandom();
 			

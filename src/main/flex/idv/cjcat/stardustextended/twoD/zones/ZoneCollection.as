@@ -79,9 +79,10 @@ public class ZoneCollection
     [Inline]
     public final function parseFromStardustXML(stardustXML : XML, builder : XMLBuilder) : void
     {
+        zones = new Vector.<Zone>();
         for each (var node : XML in stardustXML.zones.*)
         {
-            zones.push(builder.getElementByName(node.@name) as Zone);
+            zones.push( Zone(builder.getElementByName(node.@name)) );
         }
     }
 }

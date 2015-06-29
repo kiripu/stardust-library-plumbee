@@ -6,10 +6,11 @@ import idv.cjcat.stardustextended.common.particles.Particle;
 import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 import idv.cjcat.stardustextended.twoD.geom.Vec2D;
 import idv.cjcat.stardustextended.twoD.geom.Vec2DPool;
+import idv.cjcat.stardustextended.twoD.zones.RectZone;
 import idv.cjcat.stardustextended.twoD.zones.Zone;
 import idv.cjcat.stardustextended.twoD.zones.ZoneCollection;
 
-/**
+    /**
 	 * Causes particles to change acceleration specified zone.
 	 * 
 	 * <p>
@@ -47,7 +48,7 @@ import idv.cjcat.stardustextended.twoD.zones.ZoneCollection;
         public function get zones() : Vector.<Zone> { return zoneCollection.zones; }
         public function set zones(value : Vector.<Zone>) : void { zoneCollection.zones = value; }
 
-		public function AccelerationZone(_inverted:Boolean = false) {
+		public function AccelerationZone(zones : Vector.<Zone> = null, _inverted:Boolean = false) {
 			priority = -6;
 
 			inverted = _inverted;
@@ -55,7 +56,15 @@ import idv.cjcat.stardustextended.twoD.zones.ZoneCollection;
 			useParticleDirection = true;
 			_direction = new Vec2D(1, 0);
             zoneCollection = new ZoneCollection();
-		}
+            if (zones)
+            {
+                zoneCollection.zones = zones;
+            }
+            else
+            {
+                zoneCollection.zones.push(new RectZone())
+            }
+        }
 		
 		override public function update(emitter:Emitter, particle:Particle, timeDelta:Number, currentTime:Number):void {
 			var affected : Boolean = zoneCollection.contains(particle.x, particle.y);
@@ -113,7 +122,15 @@ import idv.cjcat.stardustextended.twoD.zones.ZoneCollection;
 		
 		override public function parseXML(xml:XML, builder:XMLBuilder = null):void {
 			super.parseXML(xml, builder);
-            zoneCollection.parseFromStardustXML(xml, builder);
+			if (xml.@zone.length())
+			{
+				trace("WARNING: the simulation contains a deprecated property 'zone' for " + getXMLTagName());
+				zoneCollection.zones = Vector.<Zone>( [Zone(builder.getElementByName(xml.@zone))] );
+			}
+            else
+            {
+                zoneCollection.parseFromStardustXML(xml, builder);
+            }
 			inverted = (xml.@inverted == "true");
 			acceleration = parseFloat(xml.@acceleration);
 			useParticleDirection = (xml.@useParticleDirection == "true");
