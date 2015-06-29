@@ -1,5 +1,7 @@
 ﻿package idv.cjcat.stardustextended.twoD.deflectors {
-	import idv.cjcat.stardustextended.common.StardustElement;
+import flash.geom.Point;
+
+import idv.cjcat.stardustextended.common.StardustElement;
 	import idv.cjcat.stardustextended.common.particles.Particle;
 	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 	import idv.cjcat.stardustextended.twoD.geom.MotionData4D;
@@ -13,6 +15,7 @@
 		
 		public var active:Boolean;
 		public var bounce:Number;
+        protected const position : Point = new Point();
 		/**
 		 * Determines how slippery the surfaces are. A value of 1 (default) means that the surface is fully slippery,
 		 * a value of 0 means that particles will not slide on its surface at all.
@@ -24,14 +27,14 @@
 			bounce = 0.8;
 			slipperiness = 1;
 		}
-		
+
 		public final function getMotionData4D(particle:Particle):MotionData4D {
 			if (active) {
 				return calculateMotionData4D(particle);
 			}
 			return null;
 		}
-		
+
 		/**
 		 * [Abstract Method] Returns a <code>MotionData4D</code> object representing the deflected position and velocity coordinates for a particle. 
 		 * Returns null if no deflection occurred. A non-null value can trigger the <code>DeflectorTrigger</code> action trigger.
@@ -43,7 +46,21 @@
 			//abstract method
 			return null;
 		}
-		
+
+        /**
+         * [Abstract Method] Sets the position of this Deflector.
+         */
+        public function setPosition(xc : Number, yc : Number):void {
+            throw new Error("This method must be overridden by subclasses");
+        }
+
+        /**
+         * [Abstract Method] Gets the position of this Deflector.
+         */
+        public function getPosition():Point {
+            throw new Error("This method must be overridden by subclasses");
+        }
+
 		//XML
 		//------------------------------------------------------------------------------------------------
 		

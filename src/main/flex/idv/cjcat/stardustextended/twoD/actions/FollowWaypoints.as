@@ -23,9 +23,9 @@ import idv.cjcat.stardustextended.common.emitters.Emitter;
 		 * If true, the acceleration applied to a particle is divided by the particle's mass.
 		 */
 		public var massless:Boolean;
-		private var _waypoints:Array;
+		private var _waypoints:Vector.<Waypoint>;
 		
-		public function FollowWaypoints(waypoints:Array = null, loop:Boolean = false, massless:Boolean = true) {
+		public function FollowWaypoints(waypoints:Vector.<Waypoint> = null, loop:Boolean = false, massless:Boolean = true) {
 			this.loop = loop;
 			this.massless = massless;
 			this.waypoints = waypoints;
@@ -34,9 +34,9 @@ import idv.cjcat.stardustextended.common.emitters.Emitter;
 		/**
 		 * An array of waypoints.
 		 */
-		public function get waypoints():Array { return _waypoints; }
-		public function set waypoints(value:Array):void {
-			if (!value) value = [];
+		public function get waypoints():Vector.<Waypoint> { return _waypoints; }
+		public function set waypoints(value:Vector.<Waypoint>):void {
+			if (!value) value = new Vector.<Waypoint>();
 			_waypoints = value;
 		}
 		
@@ -52,7 +52,7 @@ import idv.cjcat.stardustextended.common.emitters.Emitter;
 		 * Removes all waypoints from the waypoint array.
 		 */
 		public function clearWaypoints():void {
-			_waypoints = [];
+			_waypoints = new Vector.<Waypoint>();
 		}
 		
 		override public function update(emitter:Emitter, particle:Particle, timeDelta:Number, currentTime:Number):void {

@@ -70,7 +70,8 @@
 			
 			_displayObjectClassInit = new DisplayObjectClass(displayObjectClass);
 			
-			_posInit = new Position(positionArea);
+			_posInit = new Position();
+			_posInit.zones.push(positionArea);
 			
 			_rotationInitRand = new UniformRandom(0, 180);
 			_rotationInit = new Rotation(_rotationInitRand);
@@ -79,8 +80,9 @@
 			_lifeInit = new Life(_lifeInitRand);
 			
 			_velocityInitSector = new SinglePoint(0, 3);
-			_velocityInit = new Velocity(_velocityInitSector);
-			
+			_velocityInit = new Velocity();
+            _velocityInit.zones.push(_velocityInitSector);
+
 			_omegaInitRand = new UniformRandom(0, 0);
 			_omegaInit = new Omega(_omegaInitRand);
 			
@@ -121,9 +123,9 @@
 		/**
 		 * Position zone.
 		 */
-		public function get position():Zone { return _posInit.zone; }
+		public function get position():Zone { return _posInit.zones[0]; }
 		public function set position(value:Zone):void {
-			_posInit.zone = value;
+			_posInit.zones = new <Zone>[value];
 		}
 		
 		/**

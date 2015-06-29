@@ -1,5 +1,7 @@
 ﻿package idv.cjcat.stardustextended.twoD.zones {
-	import idv.cjcat.stardustextended.common.math.Random;
+import flash.geom.Point;
+
+import idv.cjcat.stardustextended.common.math.Random;
 	import idv.cjcat.stardustextended.common.math.StardustMath;
 	import idv.cjcat.stardustextended.common.math.UniformRandom;
 	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
@@ -79,6 +81,11 @@
             _y1 = yc;
             _y2 = yc + yDiff;
         }
+
+		override public function getPosition():Point {
+			position.setTo(_x1, _y1);
+			return position;
+		}
 		
 		public function get random():Random { return _random; }
 		public function set random(value:Random):void {

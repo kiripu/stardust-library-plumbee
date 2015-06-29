@@ -1,5 +1,7 @@
 ﻿package idv.cjcat.stardustextended.twoD.zones {
-	import idv.cjcat.stardustextended.common.math.Random;
+import flash.geom.Point;
+
+import idv.cjcat.stardustextended.common.math.Random;
 	import idv.cjcat.stardustextended.common.math.StardustMath;
 	import idv.cjcat.stardustextended.common.math.UniformRandom;
 	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
@@ -44,6 +46,11 @@
             x = xc;
             y = yc;
         }
+
+		override public function getPosition():Point {
+			position.setTo(x, y);
+			return position;
+		}
 		
 		/**
 		 * The minimum radius of the sector.

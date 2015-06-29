@@ -6,10 +6,10 @@ import idv.cjcat.stardustextended.common.particles.Particle;
 import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 import idv.cjcat.stardustextended.twoD.geom.Vec2D;
 import idv.cjcat.stardustextended.twoD.geom.Vec2DPool;
-import idv.cjcat.stardustextended.twoD.zones.RectZone;
 import idv.cjcat.stardustextended.twoD.zones.Zone;
-	
-	/**
+import idv.cjcat.stardustextended.twoD.zones.ZoneCollection;
+
+/**
 	 * Causes particles to change acceleration specified zone.
 	 * 
 	 * <p>
@@ -18,12 +18,6 @@ import idv.cjcat.stardustextended.twoD.zones.Zone;
 	 */
 	public class AccelerationZone extends Action implements IZoneContainer {
 
-        public function get zone():Zone { return _zone; }
-        public function set zone(value:Zone):void {
-            if (!value) value = new RectZone();
-            _zone = value;
-        }
-		private var _zone:Zone;
 		/**
 		 * Inverts the zone region.
 		 */
@@ -39,30 +33,32 @@ import idv.cjcat.stardustextended.twoD.zones.Zone;
 		 */
 		public var useParticleDirection:Boolean;
 
-
 		private var _direction : Vec2D;
 		/**
 		 * the direction of the acceleration. Only used if useParticleDirection is true
 		 */
 		public function get direction():Vec2D { return _direction; }
-
 		public function set direction(value:Vec2D):void {
 			value.length = 1;
 			_direction = value;
 		}
 
-		public function AccelerationZone(zone:Zone = null, inverted:Boolean = false) {
+        protected var zoneCollection : ZoneCollection;
+        public function get zones() : Vector.<Zone> { return zoneCollection.zones; }
+        public function set zones(value : Vector.<Zone>) : void { zoneCollection.zones = value; }
+
+		public function AccelerationZone(_inverted:Boolean = false) {
 			priority = -6;
-			
-			this.zone = zone;
-			this.inverted = inverted;
+
+			inverted = _inverted;
 			acceleration = 1;
 			useParticleDirection = true;
 			_direction = new Vec2D(1, 0);
+            zoneCollection = new ZoneCollection();
 		}
 		
 		override public function update(emitter:Emitter, particle:Particle, timeDelta:Number, currentTime:Number):void {
-			var affected : Boolean = _zone.contains(particle.x, particle.y);
+			var affected : Boolean = zoneCollection.contains(particle.x, particle.y);
 			if (inverted)
 			{
 				affected = !affected;
@@ -96,18 +92,17 @@ import idv.cjcat.stardustextended.twoD.zones.Zone;
 		
 		//XML
 		//------------------------------------------------------------------------------------------------
-		
-		override public function getRelatedObjects():Array {
-			return [_zone];
-		}
+        override public function getRelatedObjects():Array {
+            return zoneCollection.toArray();
+        }
 		
 		override public function getXMLTagName():String {
 			return "AccelerationZone";
 		}
 		
 		override public function toXML():XML {
-			var xml:XML = super.toXML();
-			xml.@zone = _zone.name;
+			var xml : XML = super.toXML();
+            zoneCollection.addToStardustXML(xml);
 			xml.@inverted = inverted;
 			xml.@acceleration = acceleration;
 			xml.@useParticleDirection = useParticleDirection;
@@ -118,7 +113,7 @@ import idv.cjcat.stardustextended.twoD.zones.Zone;
 		
 		override public function parseXML(xml:XML, builder:XMLBuilder = null):void {
 			super.parseXML(xml, builder);
-			_zone = builder.getElementByName(xml.@zone) as Zone;
+            zoneCollection.parseFromStardustXML(xml, builder);
 			inverted = (xml.@inverted == "true");
 			acceleration = parseFloat(xml.@acceleration);
 			useParticleDirection = (xml.@useParticleDirection == "true");
@@ -128,5 +123,5 @@ import idv.cjcat.stardustextended.twoD.zones.Zone;
 		
 		//------------------------------------------------------------------------------------------------
 		//end of XML
-	}
+    }
 }

@@ -4,8 +4,8 @@ import idv.cjcat.stardustextended.twoD.zones.Zone;
 
 public interface IZoneContainer
 {
-    function get zone() : Zone;
+    function get zones() : Vector.<Zone>;
 
-    function set zone( value : Zone ) : void;
+    function set zones( value : Vector.<Zone> ) : void;
 }
 }

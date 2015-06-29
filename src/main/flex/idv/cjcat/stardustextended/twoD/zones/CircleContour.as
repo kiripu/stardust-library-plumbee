@@ -1,5 +1,7 @@
 ﻿package idv.cjcat.stardustextended.twoD.zones {
-	import idv.cjcat.stardustextended.common.math.StardustMath;
+import flash.geom.Point;
+
+import idv.cjcat.stardustextended.common.math.StardustMath;
 	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 	import idv.cjcat.stardustextended.twoD.geom.MotionData2D;
 	
@@ -55,7 +57,12 @@
             x = xc;
             y = yc;
         }
-		
+
+		override public function getPosition():Point {
+			position.setTo(x, y);
+            return position;
+		}
+
 		override public function calculateMotionData2D():MotionData2D {
 			var theta:Number = StardustMath.TWO_PI * Math.random();
 			return new MotionData2D(_radius * Math.cos(theta) + x, _radius * Math.sin(theta) + y);

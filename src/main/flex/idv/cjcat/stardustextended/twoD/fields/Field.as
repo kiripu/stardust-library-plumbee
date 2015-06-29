@@ -1,5 +1,7 @@
 ﻿package idv.cjcat.stardustextended.twoD.fields {
-	import idv.cjcat.stardustextended.common.StardustElement;
+import flash.geom.Point;
+
+import idv.cjcat.stardustextended.common.StardustElement;
 	import idv.cjcat.stardustextended.common.particles.Particle;
 	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 	import idv.cjcat.stardustextended.twoD.geom.MotionData2D;
@@ -12,7 +14,9 @@
 		
 		public var active:Boolean;
 		public var massless:Boolean;
-		
+
+		protected const position : Point = new Point();
+
 		public function Field() {
 			active = true;
 			massless = true;
@@ -35,8 +39,20 @@
 		protected function calculateMotionData2D(particle:Particle):MotionData2D {
 			return null;
 		}
-		
-		
+
+		/**
+		 * [Abstract Method] Sets the position of this Field.
+		 */
+		public function setPosition(xc : Number, yc : Number):void {
+			throw new Error("This method must be overridden by subclasses");
+		}
+
+		/**
+		 * [Abstract Method] Gets the position of this Field.
+		 */
+		public function getPosition():Point {
+			throw new Error("This method must be overridden by subclasses");
+		}
 		//XML
 		//------------------------------------------------------------------------------------------------
 		

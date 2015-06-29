@@ -1,5 +1,7 @@
 ﻿package idv.cjcat.stardustextended.twoD.zones {
-	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
+import flash.geom.Point;
+
+import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 	import idv.cjcat.stardustextended.twoD.geom.MotionData2D;
 	import idv.cjcat.stardustextended.twoD.geom.MotionData2DPool;
 	
@@ -21,6 +23,11 @@
             x = xc;
             y = yc;
         }
+
+		override public function getPosition():Point {
+			position.setTo(x, y);
+			return position;
+		}
 		
 		override public function contains(x:Number, y:Number):Boolean {
 			if ((this.x == x) && (this.y == y)) return true;

@@ -1,5 +1,7 @@
 ﻿package idv.cjcat.stardustextended.twoD.zones {
-	import idv.cjcat.stardustextended.common.StardustElement;
+import flash.geom.Point;
+
+import idv.cjcat.stardustextended.common.StardustElement;
 	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 	import idv.cjcat.stardustextended.twoD.geom.MotionData2D;
 	import idv.cjcat.stardustextended.twoD.geom.Vec2D;
@@ -18,6 +20,9 @@
 		public var rotation:Number;
 		
 		protected var area:Number;
+
+		protected const position : Point = new Point();
+
 		public function Zone() {
 			rotation = 0;
 		}
@@ -44,6 +49,7 @@
 		 * Returns a random point in the zone.
 		 * @return
 		 */
+        [Inline]
 		public final function getPoint():MotionData2D {
 			var md2D:MotionData2D = calculateMotionData2D();
 			if (rotation != 0) {
@@ -80,7 +86,12 @@
             throw new Error("This method must be overridden by subclasses");
         }
 
-
+		/**
+		 * [Abstract Method] Gets the position of this Deflector.
+		 */
+		public function getPosition():Point {
+			throw new Error("This method must be overridden by subclasses");
+		}
         //XML
 		//------------------------------------------------------------------------------------------------
 		

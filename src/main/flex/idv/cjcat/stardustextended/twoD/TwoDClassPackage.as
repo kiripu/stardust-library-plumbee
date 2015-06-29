@@ -1,7 +1,7 @@
 ﻿package idv.cjcat.stardustextended.twoD {
 
-import idv.cjcat.stardustextended.common.actions.ColorGradient;
-import idv.cjcat.stardustextended.common.xml.ClassPackage;
+	import idv.cjcat.stardustextended.common.actions.ColorGradient;
+	import idv.cjcat.stardustextended.common.xml.ClassPackage;
 	import idv.cjcat.stardustextended.twoD.actions.Accelerate;
 	import idv.cjcat.stardustextended.twoD.actions.AccelerationZone;
 	import idv.cjcat.stardustextended.twoD.actions.Collide;
@@ -42,7 +42,6 @@ import idv.cjcat.stardustextended.common.xml.ClassPackage;
 	import idv.cjcat.stardustextended.twoD.zones.BitmapZone;
 	import idv.cjcat.stardustextended.twoD.zones.CircleContour;
 	import idv.cjcat.stardustextended.twoD.zones.CircleZone;
-	import idv.cjcat.stardustextended.twoD.zones.Composite;
 	import idv.cjcat.stardustextended.twoD.zones.Line;
 	import idv.cjcat.stardustextended.twoD.zones.RectContour;
 	import idv.cjcat.stardustextended.twoD.zones.RectZone;
@@ -115,7 +114,6 @@ import idv.cjcat.stardustextended.common.xml.ClassPackage;
 			classes.push(BitmapZone);
 			classes.push(CircleContour);
 			classes.push(CircleZone);
-			classes.push(Composite);
 			classes.push(Line);
 			classes.push(RectContour);
 			classes.push(RectZone);

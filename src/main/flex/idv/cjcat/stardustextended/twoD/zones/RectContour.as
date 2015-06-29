@@ -1,5 +1,7 @@
 ﻿package idv.cjcat.stardustextended.twoD.zones {
-	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
+import flash.geom.Point;
+
+import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 	
 	/**
 	 * Rectangular contour.
@@ -18,7 +20,7 @@
 		private var _line3:Line;
 		private var _line4:Line;
 		
-		public function RectContour(x:Number = 0, y:Number = 0, width:Number = 640, height:Number = 480) {
+		public function RectContour(x:Number = 0, y:Number = 0, width:Number = 200, height:Number = 100) {
 			_line1 = new Line();
 			_line2 = new Line();
 			_line3 = new Line();
@@ -35,6 +37,8 @@
 			this.y = y;
 			this.width = width;
 			this.height = height;
+
+            updateArea();
 		}
 		
 		public function get x():Number { return _x; }
@@ -80,6 +84,11 @@
             _y = yc;
             updateContour();
         }
+
+		override public function getPosition():Point {
+			position.setTo(_x, _y);
+			return position;
+		}
 		
 		private function updateContour():void {
 			_line1.x1 = x;
@@ -123,9 +132,7 @@
 		
 		override public function toXML():XML {
 			var xml:XML = super.toXML();
-			
 			delete xml.zones;
-			
 			xml.@virtualThickness = virtualThickness;
 			xml.@x = x;
 			xml.@y = y;
@@ -137,7 +144,12 @@
 		
 		override public function parseXML(xml:XML, builder:XMLBuilder = null):void {
 			super.parseXML(xml, builder);
-			
+            // parsing removes all zones, so we add them back
+            addZone(_line1);
+            addZone(_line2);
+            addZone(_line3);
+            addZone(_line4);
+
 			if (xml.@virtualThickness.length()) virtualThickness = parseFloat(xml.@virtualThickness);
 			
 			if (xml.@x.length()) x = parseFloat(xml.@x);

@@ -30,12 +30,12 @@
 	 */
 	public class Deflect extends Action {
 		
-		protected var _deflectors:Array;
+		protected var _deflectors:Vector.<Deflector>;
 		protected var hasTrigger:Boolean;
 
 		public function Deflect() {
 			priority = -5;
-			_deflectors = [];
+			_deflectors = new Vector.<Deflector>();
 		}
 		
 		/**
@@ -52,19 +52,23 @@
 		 */
 		public function removeDeflector(deflector:Deflector):void {
 			var index:int = _deflectors.indexOf(deflector);
-			if (index >= 0) _deflectors.splice(index, 1);
+			if (_deflectors.indexOf(deflector) >= 0) _deflectors.splice(index, 1);
 		}
 		
 		/**
 		 * Removes all deflectors from the simulation.
 		 */
 		public function clearDeflectors():void {
-			_deflectors = [];
+			_deflectors = new Vector.<Deflector>();
 		}
 
-		public function get deflectors():Array {
+		public function get deflectors():Vector.<Deflector> {
 			return _deflectors;
 		}
+
+        public function set deflectors(val : Vector.<Deflector>):void {
+            _deflectors = val;
+        }
 
 		override public function update(emitter:Emitter, particle:Particle, timeDelta:Number, currentTime:Number):void {
 			for each (var deflector : Deflector in _deflectors) {
@@ -96,8 +100,14 @@
 		//XML
 		//------------------------------------------------------------------------------------------------
 		
-		override public function getRelatedObjects():Array {
-			return _deflectors;
+		override public function getRelatedObjects():Array
+		{
+			var result:Array = [];
+			for each (var elem:Deflector in deflectors)
+			{
+				result.push(elem);
+			}
+			return result;
 		}
 		
 		override public function getXMLTagName():String {

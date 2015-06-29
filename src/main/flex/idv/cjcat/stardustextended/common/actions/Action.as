@@ -59,7 +59,7 @@
 		 */
 		public var active:Boolean;
 
-		private var _priority:int;
+		protected var _priority:int;
 		
 		public function Action() {
 			priority = 0;

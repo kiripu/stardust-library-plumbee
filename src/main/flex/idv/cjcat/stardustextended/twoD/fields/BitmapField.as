@@ -1,6 +1,8 @@
 ﻿package idv.cjcat.stardustextended.twoD.fields {
 	import flash.display.BitmapData;
-	import idv.cjcat.stardustextended.common.math.StardustMath;
+import flash.geom.Point;
+
+import idv.cjcat.stardustextended.common.math.StardustMath;
 	import idv.cjcat.stardustextended.common.particles.Particle;
 	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 	import idv.cjcat.stardustextended.twoD.geom.MotionData2D;
@@ -56,7 +58,7 @@
 		public var tile:Boolean;
 		
 		private var _bitmapData:BitmapData;
-		
+
 		public function BitmapField(x:Number = 0, y:Number = 0, max:Number = 1, channelX:uint = 1, channelY:uint = 2) {
 			this.x = x;
 			this.y = y;
@@ -116,8 +118,16 @@
 			
 			return MotionData2DPool.get(finalX, finalY);
 		}
-		
-		
+
+		override public function setPosition(xc : Number, yc : Number):void {
+			x = xc;
+            y = yc;
+		}
+
+		override public function getPosition():Point {
+            position.setTo(x, y);
+			return position;
+		}
 		//XML
 		//------------------------------------------------------------------------------------------------
 		

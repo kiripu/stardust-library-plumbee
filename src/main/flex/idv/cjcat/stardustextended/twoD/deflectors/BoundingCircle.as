@@ -1,4 +1,6 @@
 ﻿package idv.cjcat.stardustextended.twoD.deflectors {
+import flash.geom.Point;
+
 import idv.cjcat.stardustextended.common.particles.Particle;
 import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 	import idv.cjcat.stardustextended.twoD.geom.MotionData4D;
@@ -60,8 +62,16 @@ import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 			
 			return MotionData4DPool.get(x + r.x, y + r.y, particle.vx - factor * v.x, particle.vy - factor * v.y);
 		}
-		
-		
+
+		override public function setPosition(xc : Number, yc : Number):void {
+			x = xc;
+			y = yc;
+		}
+
+		override public function getPosition():Point {
+			position.setTo(x, y);
+			return position;
+		}
 		//XML
 		//------------------------------------------------------------------------------------------------
 		

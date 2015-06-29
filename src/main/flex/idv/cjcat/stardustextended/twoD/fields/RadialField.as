@@ -1,4 +1,6 @@
 ﻿package idv.cjcat.stardustextended.twoD.fields {
+import flash.geom.Point;
+
 import idv.cjcat.stardustextended.common.particles.Particle;
 import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 	import idv.cjcat.stardustextended.twoD.geom.MotionData2D;
@@ -33,7 +35,7 @@ import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 		 * This is to prevent simulation from blowing up for points too near to the center.
 		 */
 		public var epsilon:Number;
-		
+
 		public function RadialField(x:Number = 0, y:Number = 0, strength:Number = 1, attenuationPower:Number = 0, epsilon:Number = 1) {
 			this.x = x;
 			this.y = y;
@@ -41,20 +43,26 @@ import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 			this.attenuationPower = attenuationPower;
 			this.epsilon = epsilon;
 		}
-		
-		private var r:Vec2D;
-		private var len:Number;
+
 		override protected function calculateMotionData2D(particle:Particle):MotionData2D {
-			r = Vec2DPool.get(particle.x - x, particle.y - y);
-			len = r.length;
+			var r : Vec2D = Vec2DPool.get(particle.x - x, particle.y - y);
+            var len : Number = r.length;
 			if (len < epsilon) len = epsilon;
 			r.length = strength * Math.pow(len, -0.5 * attenuationPower);
 			Vec2DPool.recycle(r);
 			
 			return MotionData2DPool.get(r.x, r.y);
 		}
-		
-		
+
+		override public function setPosition(xc : Number, yc : Number):void {
+			x = xc;
+			y = yc;
+		}
+
+		override public function getPosition():Point {
+            position.setTo(x, y);
+			return position;
+		}
 		//XML
 		//------------------------------------------------------------------------------------------------
 		

@@ -1,4 +1,6 @@
 ﻿package idv.cjcat.stardustextended.twoD.fields {
+import flash.geom.Point;
+
 import idv.cjcat.stardustextended.common.particles.Particle;
 import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 	import idv.cjcat.stardustextended.twoD.geom.MotionData2D;
@@ -12,7 +14,6 @@ import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 	 * </p>
 	 */
 	public class UniformField extends Field {
-		
 		/**
 		 * The X component of the returned <code>MotionData2D</code> object.
 		 */
@@ -30,8 +31,16 @@ import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 		override protected function calculateMotionData2D(particle:Particle):MotionData2D {
 			return MotionData2DPool.get(x, y);
 		}
-		
-		
+
+		override public function setPosition(xc : Number, yc : Number):void {
+			// do nothing, position can not be set on this field.
+		}
+
+
+		override public function getPosition():Point {
+            position.setTo(0, 0);
+            return position;
+		}
 		//XML
 		//------------------------------------------------------------------------------------------------
 		
