@@ -4,13 +4,15 @@ import flash.geom.Point;
 import idv.cjcat.stardustextended.common.StardustElement;
 	import idv.cjcat.stardustextended.common.particles.Particle;
 	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
-	import idv.cjcat.stardustextended.twoD.geom.MotionData2D;
+import idv.cjcat.stardustextended.interfaces.IPosition;
+import idv.cjcat.stardustextended.twoD.geom.MotionData2D;
 	import idv.cjcat.stardustextended.twoD.geom.MotionData2DPool;
 	
 	/**
 	 * 2D vector field.
 	 */
-	public class Field extends StardustElement {
+	public class Field extends StardustElement implements IPosition
+	{
 		
 		public var active:Boolean;
 		public var massless:Boolean;

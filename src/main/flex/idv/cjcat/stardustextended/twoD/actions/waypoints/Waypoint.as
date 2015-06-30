@@ -1,11 +1,15 @@
 ﻿package idv.cjcat.stardustextended.twoD.actions.waypoints {
-	
-	/**
+import flash.geom.Point;
+
+import idv.cjcat.stardustextended.interfaces.IPosition;
+
+/**
 	 * Waypoint used by the <code>FollowWaypoints</code> action.
 	 * 
 	 * @see idv.cjcat.stardustextended.twoD.actions.FollowWaypoints
 	 */
-	public class Waypoint {
+	public class Waypoint implements IPosition
+	{
 		
 		/**
 		 * The X coordinate of the center of the waypoint.
@@ -33,7 +37,9 @@
 		 * This is to prevent simulation from blowing up for points too near to the center.
 		 */
 		public var epsilon:Number;
-		
+
+        private var position : Point;
+
 		public function Waypoint(x:Number = 0, y:Number = 0, radius:Number = 20, strength:Number = 1, attenuationPower:Number = 0, epsilon:Number = 1) {
 			this.x = x;
 			this.y = y;
@@ -41,6 +47,17 @@
 			this.strength = strength;
 			this.attenuationPower = attenuationPower;
 			this.epsilon = epsilon;
+            position = new Point(x, y);
 		}
+
+        public function setPosition(xc : Number, yc : Number):void {
+            x = xc;
+            y = yc;
+        }
+
+        public function getPosition():Point {
+            position.setTo(x, y);
+            return position;
+        }
 	}
 }

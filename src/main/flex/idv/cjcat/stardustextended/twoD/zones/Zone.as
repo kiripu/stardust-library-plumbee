@@ -4,6 +4,7 @@ import flash.geom.Point;
 
 import idv.cjcat.stardustextended.common.StardustElement;
 import idv.cjcat.stardustextended.common.xml.XMLBuilder;
+import idv.cjcat.stardustextended.interfaces.IPosition;
 import idv.cjcat.stardustextended.twoD.geom.MotionData2D;
 import idv.cjcat.stardustextended.twoD.geom.Vec2D;
 import idv.cjcat.stardustextended.twoD.geom.Vec2DPool;
@@ -16,7 +17,8 @@ import idv.cjcat.stardustextended.twoD.geom.Vec2DPool;
 	 * which corresponds to a random point within the zone.
 	 * </p>
 	 */
-	public class Zone extends StardustElement {
+	public class Zone extends StardustElement implements IPosition
+	{
 		
 		public var rotation:Number;
 		

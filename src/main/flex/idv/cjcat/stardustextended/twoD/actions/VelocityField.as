@@ -1,11 +1,13 @@
-﻿package idv.cjcat.stardustextended.twoD.actions {
+﻿package idv.cjcat.stardustextended.twoD.actions
+{
+
 import idv.cjcat.stardustextended.common.actions.Action;
 import idv.cjcat.stardustextended.common.emitters.Emitter;
-	import idv.cjcat.stardustextended.common.particles.Particle;
-	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
-	import idv.cjcat.stardustextended.twoD.fields.Field;
-	import idv.cjcat.stardustextended.twoD.geom.MotionData2D;
-	import idv.cjcat.stardustextended.twoD.geom.MotionData2DPool;
+import idv.cjcat.stardustextended.common.particles.Particle;
+import idv.cjcat.stardustextended.common.xml.XMLBuilder;
+import idv.cjcat.stardustextended.twoD.fields.Field;
+import idv.cjcat.stardustextended.twoD.geom.MotionData2D;
+import idv.cjcat.stardustextended.twoD.geom.MotionData2DPool;
 	
 	/**
 	 * Alters a particle's velocity based on a vector field.
@@ -19,13 +21,35 @@ import idv.cjcat.stardustextended.common.emitters.Emitter;
 	 * Default priority = -2;
 	 * </p>
 	 */
-	public class VelocityField extends Action {
+	public class VelocityField extends Action implements IFieldContainer {
 		
-		public var field:Field;
-		public function VelocityField(field:Field = null) {
+		protected var field:Field;
+
+		public function VelocityField(_field : Field = null)
+        {
 			priority = -2;
-			
-			this.field = field;
+			field = _field;
+		}
+
+		public function get fields() : Vector.<Field>
+		{
+            if (field)
+            {
+                return new <Field>[field];
+            }
+            return new Vector.<Field>();
+		}
+
+		public function set fields(value : Vector.<Field>) : void
+		{
+            if (value && value.length > 0)
+            {
+                field = value[0];
+            }
+            else
+            {
+                field = null;
+            }
 		}
 		
 		override public function update(emitter:Emitter, particle:Particle, timeDelta:Number, currentTime:Number):void {

@@ -4,14 +4,16 @@ import flash.geom.Point;
 import idv.cjcat.stardustextended.common.StardustElement;
 	import idv.cjcat.stardustextended.common.particles.Particle;
 	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
-	import idv.cjcat.stardustextended.twoD.geom.MotionData4D;
+import idv.cjcat.stardustextended.interfaces.IPosition;
+import idv.cjcat.stardustextended.twoD.geom.MotionData4D;
 	
 	/**
 	 * Used along with the <code>Deflect</code> action.
 	 * 
 	 * @see idv.cjcat.stardustextended.twoD.actions.Deflect
 	 */
-	public class Deflector extends StardustElement {
+	public class Deflector extends StardustElement implements IPosition
+	{
 		
 		public var active:Boolean;
 		public var bounce:Number;
