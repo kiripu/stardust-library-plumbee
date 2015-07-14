@@ -29,6 +29,15 @@ import idv.cjcat.stardustextended.common.emitters.Emitter;
 			this.loop = loop;
 			this.massless = massless;
 			this.waypoints = waypoints;
+			if (waypoints)
+			{
+                _waypoints = waypoints;
+			}
+			else
+			{
+                _waypoints = new Vector.<Waypoint>();
+                _waypoints.push(new Waypoint(0, 0));
+			}
 		}
 		
 		/**

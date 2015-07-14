@@ -6,6 +6,7 @@ import idv.cjcat.stardustextended.common.emitters.Emitter;
 import idv.cjcat.stardustextended.common.particles.Particle;
 import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 import idv.cjcat.stardustextended.twoD.fields.Field;
+import idv.cjcat.stardustextended.twoD.fields.UniformField;
 import idv.cjcat.stardustextended.twoD.geom.MotionData2D;
 import idv.cjcat.stardustextended.twoD.geom.MotionData2DPool;
 	
@@ -28,7 +29,14 @@ import idv.cjcat.stardustextended.twoD.geom.MotionData2DPool;
 		public function VelocityField(_field : Field = null)
         {
 			priority = -2;
-			field = _field;
+			if (field)
+			{
+                field = _field;
+			}
+			else
+			{
+				field = new UniformField(0, 1);
+			}
 		}
 
 		public function get fields() : Vector.<Field>

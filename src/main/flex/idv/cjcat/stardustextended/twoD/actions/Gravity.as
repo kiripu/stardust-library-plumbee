@@ -6,28 +6,32 @@ import idv.cjcat.stardustextended.common.emitters.Emitter;
 import idv.cjcat.stardustextended.common.particles.Particle;
 import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 import idv.cjcat.stardustextended.twoD.fields.Field;
+import idv.cjcat.stardustextended.twoD.fields.UniformField;
 import idv.cjcat.stardustextended.twoD.geom.MotionData2D;
 import idv.cjcat.stardustextended.twoD.geom.MotionData2DPool;
-	
-	/**
+
+    /**
 	 * Applies accelerations to particles according to the associated gravity fields, in pixels.
-	 * 
-	 * <p>
-	 * Default priority = -3;
-	 * </p>
-	 * 
-	 * @see idv.cjcat.stardustextended.twoD.fields.Field
+     * @see idv.cjcat.stardustextended.twoD.fields.Field
 	 */
 	public class Gravity extends Action implements IFieldContainer
 	{
 
 		protected var _fields : Vector.<Field>;
 		
-		public function Gravity() {
+		public function Gravity(fields : Vector.<Field> = null)
+        {
 			priority = -3;
-			_fields = new Vector.<Field>();
+			if (fields)
+			{
+                _fields = fields;
+			}
+			else
+			{
+                _fields = new Vector.<Field>();
+                _fields.push(new UniformField(0, 1));
+			}
 		}
-
 
         public function get fields() : Vector.<Field>
         {
