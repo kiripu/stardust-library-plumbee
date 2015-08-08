@@ -9,16 +9,14 @@
 	public class Clock extends StardustElement {
 		
 		public function Clock() {
-			
 		}
 		
 		/**
 		 * [Template Method] On each <code>Emitter.step()</code> call, this method is called.
-		 * 
-		 * <p>
+		 *
 		 * The returned value tells the emitter how many particles it should create.
-		 * </p>
-		 * @param	time	The timespan of each emitter's step.
+		 *
+		 * @param time The timespan the emitter emitter's step.
 		 * @return
 		 */
 		public function getTicks(time:Number):int {
@@ -37,7 +35,6 @@
 		override public function getElementTypeXMLTag():XML {
 			return <clocks/>;
 		}
-		
 		//------------------------------------------------------------------------------------------------
 		//end of XML
 	}

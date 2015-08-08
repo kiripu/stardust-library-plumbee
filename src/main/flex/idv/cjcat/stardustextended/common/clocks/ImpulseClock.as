@@ -8,30 +8,25 @@
 
 		/**
 		 * The time between bursts. You have to implement this functionality, Stardust is not using this property.
+		 * (its implemented on the loader/playback library)
 		 */
 		public var burstInterval:int = 33;
 		/**
-		 * How many particles to burst out after each <code>impulse()</code> call.
+		 * How many particles to create in a step if its bursting.
 		 */
 		public var impulseCount:int;
 		private var _repeatCount:int;
 		private var _dischargeCount:int;
 		private var _discharged:Boolean;
 		
-		public function ImpulseClock(impulseCount:int = 0, repeatCount:int = 1) {
+		public function ImpulseClock(impulseCount:int = 1, repeatCount:int = 1) {
 			this.impulseCount = impulseCount;
 			this.repeatCount = repeatCount;
 			_discharged = true;
 		}
 		
 		/**
-		 * The repetition count of bursting.
-		 * 
-		 * <p>
-		 * For instance, if set to 2, after the <code>impulse()</code> method is called, 
-		 * the following successive two <code>getTicks()</code> call would both return a value equal to the <code>impulseCount</code> property. 
-		 * After that, the <code>getTicks()</code> method simply returns zero before the next <code>impulse()</code> method call.
-		 * </p>
+		 * Sets the duration of a burst in steps
 		 */
 		public function get repeatCount():int { return _repeatCount; }
 		public function set repeatCount(value:int):void {
@@ -50,10 +45,11 @@
 		override public final function getTicks(time:Number):int {
 			var ticks:int;
 			if (!_discharged) {
-				if (_dischargeCount >= repeatCount) {
+				if (_dischargeCount >= _repeatCount) {
 					_discharged = true;
 					ticks = 0;
 				} else {
+                    // TODO use the randomFloow here like SteadyClock does
 					ticks = impulseCount;
 					_dischargeCount++;
 				}
@@ -68,11 +64,9 @@
             _discharged = true;
             _dischargeCount = 0;
         }
-		
-		
+
 		//XML
 		//------------------------------------------------------------------------------------------------
-		
 		override public function getXMLTagName():String {
 			return "ImpulseClock";
 		}
@@ -94,7 +88,6 @@
 			if (xml.@repeatCount.length()) repeatCount = parseInt(xml.@repeatCount);
 			if (xml.@burstInterval.length()) burstInterval = parseInt(xml.@burstInterval);
 		}
-		
 		//------------------------------------------------------------------------------------------------
 		//end of XML
 	}

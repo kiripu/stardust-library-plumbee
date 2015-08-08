@@ -40,16 +40,14 @@
 
 		private var _particles:Vector.<Particle> = new Vector.<Particle>();
 		/**
-		 * Returns an array of particles for custom parameter manipulation. 
-		 * Note that the returned array is merely a copy of the internal particle array, 
-		 * so splicing particles out from this array does not remove the particles from simulation.
+		 * Returns every managed particle for custom parameter manipulation.
+		 * The returned Vector is not a copy.
 		 * @return
 		 */
 		public function get particles():Vector.<Particle> { return _particles; }
 		
 		//------------------------------------------------------------------------------------------------
 		//end of particle collections
-
 
 		protected var _clock:Clock;
 		/**

@@ -16,7 +16,7 @@
 		 */
 		public var ticksPerCall:Number;
 		
-		public function SteadyClock(ticksPerCall:Number = 0) {
+		public function SteadyClock(ticksPerCall:Number = 1) {
 			this.ticksPerCall = ticksPerCall;
 		}
 		
@@ -33,9 +33,7 @@
 		
 		override public function toXML():XML {
 			var xml:XML = super.toXML();
-			
 			xml.@ticksPerCall = ticksPerCall;
-			
 			return xml;
 		}
 		

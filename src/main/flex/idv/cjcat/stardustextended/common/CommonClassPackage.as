@@ -8,8 +8,8 @@
 	import idv.cjcat.stardustextended.common.actions.ScaleCurve;
 	import idv.cjcat.stardustextended.common.actions.triggers.DeathTrigger;
 	import idv.cjcat.stardustextended.common.actions.triggers.LifeTrigger;
-	import idv.cjcat.stardustextended.common.clocks.CompositeClock;
 	import idv.cjcat.stardustextended.common.clocks.ImpulseClock;
+	import idv.cjcat.stardustextended.common.clocks.RandomBurstClock;
 	import idv.cjcat.stardustextended.common.clocks.RandomClock;
 	import idv.cjcat.stardustextended.common.clocks.SteadyClock;
 	import idv.cjcat.stardustextended.common.initializers.Alpha;
@@ -53,7 +53,7 @@
 			classes.push(LifeTrigger);
 			
 			//common clocks
-			classes.push(CompositeClock);
+			classes.push(RandomBurstClock);
 			classes.push(ImpulseClock);
 			classes.push(RandomClock);
 			classes.push(SteadyClock);
