@@ -37,7 +37,7 @@ import idv.cjcat.stardustextended.common.xml.XMLBuilder;
          */
         public function set burstInterval(value : Random) : void {
             _burstInterval = value;
-            setCurrentBurstInterval();
+            currentBurstInterval = 0;
         }
         public function get burstInterval() : Random { return _burstInterval; }
         private var _burstInterval : Random;
@@ -125,7 +125,7 @@ import idv.cjcat.stardustextended.common.xml.XMLBuilder;
             currentTime = 0;
             setCurrentInitialDelay();
             setCurrentBurstLength();
-            setCurrentBurstInterval();
+            currentBurstInterval = 0;
         }
 
 		//XML
