@@ -1,29 +1,19 @@
-﻿package idv.cjcat.stardustextended.common.clocks {
+﻿package idv.cjcat.stardustextended.common.clocks
+{
+
 import idv.cjcat.stardustextended.common.math.Random;
 import idv.cjcat.stardustextended.common.math.StardustMath;
 import idv.cjcat.stardustextended.common.math.UniformRandom;
 import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 	
 	/**
-	 * The impulse clock causes the emitter to create a single bursts of particles.
+	 * This clock can be used to create randomized impulses and has more parameters than ImpulseClock
 	 */
-	public class ImpulseClock extends Clock {
+	public class ImpulseClock extends Clock
+    {
 
         /**
-         * Sets the duration of a impulse in steps
-         */
-        public var impulseLength :int = 1;
-        /**
-		 * The time between impulses.
-		 */
-		public var impulseInterval:int = 33;
-		/**
-		 * How many particles to create in a step if its in an impulse.
-		 */
-		public var ticksPerCall:Number;
-
-        /**
-         * The delay in steps until the the clock starts
+         * The delay in steps until the first impulse happens
          */
         public function set initialDelay(value : Random) : void {
             _initialDelay = value;
@@ -32,17 +22,51 @@ import idv.cjcat.stardustextended.common.xml.XMLBuilder;
         public function get initialDelay() : Random { return _initialDelay; }
         protected var _initialDelay : Random;
 
-        protected var currentInitialDelay : Number;
+        /**
+         * The length of a impulses in steps.
+         */
+        public function set impulseLength(value : Random) : void {
+            _impulseLength = value;
+            setCurrentImpulseLength();
+        }
+        public function get impulseLength() : Random { return _impulseLength; }
+        protected var _impulseLength : Random;
+
+        /**
+         * The time between a impulses in steps.
+         */
+        public function set impulseInterval(value : Random) : void {
+            _impulseInterval = value;
+            currentImpulseInterval = 0;
+        }
+        public function get impulseInterval() : Random { return _impulseInterval; }
+        protected var _impulseInterval : Random;
+
+        /**
+         * How many particles to create when an impulse is happening.
+         * If less than one, it's the probability of an emitter to create a single particle in each step.
+         */
+        public var ticksPerCall : Number;
+
+        /**
+         * The time elapsed since getTicks() was first called (calling reset() resets this value).
+         * This is used by the clock internally to keep track of what phase are we in currently.
+         */
         protected var currentTime : Number;
         protected var currentImpulseInterval : Number;
-		
-		public function ImpulseClock(impulseCount:int = 1, repeatCount:int = 1, _initialDelay : Random = null)
-        {
-			this.ticksPerCall = impulseCount;
-			this.impulseLength = repeatCount;
+        protected var currentImpulseLength : Number;
+        protected var currentInitialDelay : Number;
+
+		public function ImpulseClock(_impulseInterval : Random = null,
+                                         _impulseLength : Random = null,
+                                         _initialDelay : Random = null,
+                                         _ticksPerCall : Number = 1)
+		{
+            impulseInterval = _impulseInterval ? _impulseInterval : new UniformRandom(20, 10);
+            impulseLength = _impulseLength ? _impulseLength : new UniformRandom(20, 15);
             initialDelay = _initialDelay ? _initialDelay : new UniformRandom(0, 0);
+            ticksPerCall = _ticksPerCall;
             currentTime = 0;
-            currentImpulseInterval = 0;
 		}
 
 		override public final function getTicks(time:Number):int
@@ -54,24 +78,33 @@ import idv.cjcat.stardustextended.common.xml.XMLBuilder;
                 currentImpulseInterval = currentImpulseInterval - time;
                 if (currentImpulseInterval < 0)
                 {
-                    if (impulseLength > 0)
+                    if (currentImpulseLength > 0)
                     {
                         ticks = StardustMath.randomFloor(ticksPerCall * time);
                     }
-                    if (currentImpulseInterval <= -impulseLength)
+                    if (currentImpulseInterval <= -currentImpulseLength)
                     {
-                       currentImpulseInterval = impulseInterval;
+                        setCurrentImpulseLength();
+                        setCurrentImpulseInterval();
                     }
                 }
             }
+            trace(currentTime, ticks)
             return ticks;
 		}
 
-        override public function reset() : void
+        [Inline]
+        private final function setCurrentImpulseLength() : void
         {
-            currentImpulseInterval = 0;
-            currentTime = 0;
-            setCurrentInitialDelay();
+            var len : Number = _impulseLength.random();
+            currentImpulseLength = len > 0 ? len : 0;
+        }
+
+        [Inline]
+        private final function setCurrentImpulseInterval() : void
+        {
+            var val : Number = _impulseInterval.random();
+            currentImpulseInterval = val > 0 ? val : 0;
         }
 
         [Inline]
@@ -81,35 +114,54 @@ import idv.cjcat.stardustextended.common.xml.XMLBuilder;
             currentInitialDelay =  val > 0 ? val : 0;
         }
 
-		//XML
-		//------------------------------------------------------------------------------------------------
-		override public function getXMLTagName():String {
-			return "ImpulseClock";
-		}
-
-        override public function getRelatedObjects():Array
+        /**
+         * Resets the clock and randomizes all values
+         */
+        override public function reset() : void
         {
-            return [_initialDelay];
+            currentTime = 0;
+            setCurrentInitialDelay();
+            setCurrentImpulseLength();
+            currentImpulseInterval = 0;
         }
 
-		override public function toXML():XML {
-			var xml:XML = super.toXML();
-			xml.@impulseCount = ticksPerCall;
-			xml.@repeatCount = impulseLength;
-			xml.@burstInterval = impulseInterval;
+		//XML
+		//------------------------------------------------------------------------------------------------
+        override public function getRelatedObjects():Array {
+            return [_impulseInterval, _impulseLength, _initialDelay];
+        }
+
+        override public function getXMLTagName():String
+        {
+			return "ImpulseClock";
+		}
+		
+		override public function toXML():XML
+        {
+			var xml : XML = super.toXML();
+            xml.@ticksPerCall = ticksPerCall;
+            xml.@impulseInterval = _impulseInterval.name;
+            xml.@impulseLength = _impulseLength.name;
             xml.@initialDelay = _initialDelay.name;
 			return xml;
 		}
 		
-		override public function parseXML(xml:XML, builder:XMLBuilder = null):void {
+		override public function parseXML(xml:XML, builder:XMLBuilder = null):void
+        {
 			super.parseXML(xml, builder);
-			// these are legacy names, changing them would break existing simulations
-			if (xml.@impulseCount.length()) ticksPerCall = parseFloat(xml.@impulseCount);
-			if (xml.@repeatCount.length()) impulseLength = parseInt(xml.@repeatCount);
-			if (xml.@burstInterval.length()) impulseInterval = parseInt(xml.@burstInterval);
-            if (xml.@initialDelay.length()) initialDelay =  builder.getElementByName(xml.@initialDelay) as Random;
-		}
+
+            if (xml.@ticksPerCall.length()) ticksPerCall = parseFloat(xml.@ticksPerCall);
+            if (xml.@impulseLength.length()) impulseLength = builder.getElementByName(xml.@impulseLength) as Random;
+            if (xml.@impulseInterval.length()) impulseInterval = builder.getElementByName(xml.@impulseInterval) as Random;
+
+            if (xml.@initialDelay.length()) initialDelay = builder.getElementByName(xml.@initialDelay) as Random;
+
+            // Legacy names, for simulations created with old versions
+            if (xml.@impulseCount.length()) ticksPerCall = parseFloat(xml.@impulseCount);
+            if (xml.@repeatCount.length()) impulseLength = new UniformRandom(parseInt(xml.@repeatCount), 0);
+            if (xml.@burstInterval.length()) impulseInterval = new UniformRandom(parseInt(xml.@burstInterval), 0);
+        }
 		//------------------------------------------------------------------------------------------------
 		//end of XML
-	}
+    }
 }
