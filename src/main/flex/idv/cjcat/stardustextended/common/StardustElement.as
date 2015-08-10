@@ -20,8 +20,7 @@
 			
 			this.name = str + "_" + elementCounter[str];
 		}
-		
-		
+
 		//XML
 		//------------------------------------------------------------------------------------------------
 		
@@ -79,7 +78,14 @@
 		 */
 		public function parseXML(xml:XML, builder:XMLBuilder = null):void {
 		}
-		
+
+        /**
+         * This is called when the whole simulation's XML parsing is complete
+         */
+        public function onXMLInitComplete() : void
+        {
+
+        }
 		//------------------------------------------------------------------------------------------------
 		//end of XML
 	}

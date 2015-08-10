@@ -87,8 +87,13 @@ import idv.cjcat.stardustextended.common.xml.XMLBuilder;
         {
 			super.parseXML(xml, builder);
 			ticksPerCall = parseFloat(xml.@ticksPerCall);
-            if (xml.@initialDelay.length()) initialDelay =  builder.getElementByName(xml.@initialDelay) as Random;
+            if (xml.@initialDelay.length()) _initialDelay =  builder.getElementByName(xml.@initialDelay) as Random;
 		}
+
+        override public function onXMLInitComplete() : void
+        {
+            setCurrentInitialDelay();
+        }
 		//------------------------------------------------------------------------------------------------
 		//end of XML
 	}

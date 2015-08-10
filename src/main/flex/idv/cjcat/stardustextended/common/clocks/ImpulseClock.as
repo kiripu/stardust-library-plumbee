@@ -17,7 +17,7 @@ import idv.cjcat.stardustextended.common.xml.XMLBuilder;
          */
         public function set initialDelay(value : Random) : void {
             _initialDelay = value;
-            setCurrentInitialDelay()
+            setCurrentInitialDelay();
         }
         public function get initialDelay() : Random { return _initialDelay; }
         protected var _initialDelay : Random;
@@ -71,6 +71,7 @@ import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 
 		override public final function getTicks(time:Number):int
         {
+
             var ticks : int = 0;
             currentTime = currentTime + time;
             if (currentTime > currentInitialDelay)
@@ -110,7 +111,7 @@ import idv.cjcat.stardustextended.common.xml.XMLBuilder;
         private final function setCurrentInitialDelay() : void
         {
             var val : Number = _initialDelay.random();
-            currentInitialDelay =  val > 0 ? val : 0;
+            currentInitialDelay = val > 0 ? val : 0;
         }
 
         /**
@@ -122,6 +123,12 @@ import idv.cjcat.stardustextended.common.xml.XMLBuilder;
             setCurrentInitialDelay();
             setCurrentImpulseLength();
             currentImpulseInterval = 0;
+        }
+
+        public function getDebugInfo() : String
+        {
+            return "time:" + currentTime + " impInt: " + currentImpulseInterval +
+                    " impLen: " + currentImpulseLength + " initDelay: " + currentInitialDelay;
         }
 
 		//XML
@@ -149,16 +156,23 @@ import idv.cjcat.stardustextended.common.xml.XMLBuilder;
         {
 			super.parseXML(xml, builder);
 
+            // The randoms its using might not be initialized yet
             if (xml.@ticksPerCall.length()) ticksPerCall = parseFloat(xml.@ticksPerCall);
-            if (xml.@impulseLength.length()) impulseLength = builder.getElementByName(xml.@impulseLength) as Random;
+            if (xml.@impulseLength.length()) _impulseLength = builder.getElementByName(xml.@impulseLength) as Random;
             if (xml.@impulseInterval.length()) impulseInterval = builder.getElementByName(xml.@impulseInterval) as Random;
 
-            if (xml.@initialDelay.length()) initialDelay = builder.getElementByName(xml.@initialDelay) as Random;
+            if (xml.@initialDelay.length()) _initialDelay = builder.getElementByName(xml.@initialDelay) as Random;
 
             // Legacy names, for simulations created with old versions
             if (xml.@impulseCount.length()) ticksPerCall = parseFloat(xml.@impulseCount);
             if (xml.@repeatCount.length()) impulseLength = new UniformRandom(parseInt(xml.@repeatCount), 0);
             if (xml.@burstInterval.length()) impulseInterval = new UniformRandom(parseInt(xml.@burstInterval), 0);
+        }
+
+        override public function onXMLInitComplete() : void
+        {
+            setCurrentInitialDelay();
+            setCurrentImpulseLength();
         }
 		//------------------------------------------------------------------------------------------------
 		//end of XML

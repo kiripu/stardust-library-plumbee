@@ -192,6 +192,9 @@
 				element = StardustElement(elements[node.@name.toString()]);
 				element.parseXML(node, this);
 			}
+            for each (var stardustElement:StardustElement in elements) {
+                stardustElement.onXMLInitComplete();
+            }
 		}
 	}
 }
