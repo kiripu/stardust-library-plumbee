@@ -89,7 +89,6 @@ import idv.cjcat.stardustextended.common.xml.XMLBuilder;
                     }
                 }
             }
-            trace(currentTime, ticks)
             return ticks;
 		}
 
