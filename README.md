@@ -1,20 +1,18 @@
 #stardust-library
 
-Fork of the Stardust particle engine. 
+Stardust a fast, extendable particle effect library for Stage3D (it requires Starling as a dependency).
+You can create effects with the editor at http://s3.funkypandagame.com/startdust-particle-editor/stardust-editor.html (or code manually)  
+For detailed information read the Starling wiki at http://wiki.starling-framework.org/extensions/stardust-engine
 
-First commit is exactly the same as Stardust 1.3.186.
+Notes:   
+The library does not support traditional flash stage (flash.display.*) in the recent releases, the last version with support is 3.15.       
+This is a fork of the Stardust particle engine, the first commit is exactly the same as Stardust 1.3.186. 
+It has major changes compared to the original library, thus the simulations created with the original are not compatible.
 
-###Changes from the original library:
-- Bugfixes and new features for the 2D part of the library.
-- Classes that act as handlers for 3D libraries are removed because most of them are not in development anymore or the handlers are written for very old versions. Furthermore they introduce lots of dependencies to the library. This means the following packages:   
-    - threeD/alternativa3d  
-    - threeD/away3d  
-    - threeD/away3dlite  
-    - threeD/flare3d  
-    - threeD/nd3d  
-    - threeD/papervision3d   
-    - threeD/zedbox  
- 
+Changes from the original library:
+- Added Stage3D support(trough Starling), added lots of new actions and initializers, bugfixes and performance improvements.   
+- Removed support for old 3D libraries, removed 3D classes, removed 2D stage support.      
+
 ***
 
 ###Readme of the original library:
