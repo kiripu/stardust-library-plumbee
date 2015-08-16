@@ -3,11 +3,10 @@
 import flash.geom.Point;
 
 import idv.cjcat.stardustextended.common.StardustElement;
+import idv.cjcat.stardustextended.common.math.StardustMath;
 import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 import idv.cjcat.stardustextended.interfaces.IPosition;
 import idv.cjcat.stardustextended.twoD.geom.MotionData2D;
-import idv.cjcat.stardustextended.twoD.geom.Vec2D;
-import idv.cjcat.stardustextended.twoD.geom.Vec2DPool;
 
 	/**
 	 * This class defines a 2D zone.
@@ -20,9 +19,10 @@ import idv.cjcat.stardustextended.twoD.geom.Vec2DPool;
 	public class Zone extends StardustElement implements IPosition
 	{
 		
-		public var rotation:Number;
-		
-		protected var area:Number;
+		protected var _rotation:Number;
+        protected var angleCos : Number;
+        protected var angleSin : Number;
+		protected var area : Number;
 
 		protected const position : Point = new Point();
 
@@ -54,17 +54,28 @@ import idv.cjcat.stardustextended.twoD.geom.Vec2DPool;
 		 */
         [Inline]
 		public final function getPoint():MotionData2D {
-			var md2D:MotionData2D = calculateMotionData2D();
-			if (rotation != 0) {
-				var v:Vec2D = Vec2DPool.get(md2D.x, md2D.y);
-				v.rotateThis(rotation);
-				md2D.x = v.x;
-				md2D.y = v.y;
-				Vec2DPool.recycle(v);
+			var md2D : MotionData2D = calculateMotionData2D();
+			if (_rotation != 0)
+            {
+                var originalX : Number = md2D.x;
+                md2D.x = originalX * angleCos - md2D.y * angleSin;
+                md2D.y = originalX * angleSin + md2D.y * angleCos;
 			}
 			return md2D;
 		}
-		
+
+		public function get rotation() : Number
+		{
+			return _rotation;
+		}
+
+		public function set rotation(value : Number) : void
+		{
+            var valInRad : Number = value * StardustMath.DEGREE_TO_RADIAN;
+            angleCos = Math.cos(valInRad);
+            angleSin = Math.sin(valInRad);
+			_rotation = value;
+		}
 		/**
 		 * [Abstract Method] Returns a <code>MotionData2D</code> object representing a random point in the zone.
 		 * @return
@@ -108,14 +119,14 @@ import idv.cjcat.stardustextended.twoD.geom.Vec2DPool;
 		
 		override public function toXML():XML {
 			var xml:XML = super.toXML();
-			xml.@rotation = rotation;
+			xml.@rotation = _rotation;
 			return xml;
 		}
 		
 		override public function parseXML(xml:XML, builder:XMLBuilder = null):void {
 			super.parseXML(xml, builder);
 			
-			rotation = parseFloat(xml.@rotation);
+			_rotation = parseFloat(xml.@rotation);
 		}
 		
 		//------------------------------------------------------------------------------------------------
