@@ -48,11 +48,6 @@ import idv.cjcat.stardustextended.common.xml.XMLBuilder;
          */
         public var ticksPerCall : Number;
 
-        /**
-         * The time elapsed since getTicks() was first called (calling reset() resets this value).
-         * This is used by the clock internally to keep track of what phase are we in currently.
-         */
-        protected var currentTime : Number;
         protected var currentImpulseInterval : Number;
         protected var currentImpulseLength : Number;
         protected var currentInitialDelay : Number;
@@ -63,31 +58,30 @@ import idv.cjcat.stardustextended.common.xml.XMLBuilder;
                                          _ticksPerCall : Number = 1)
 		{
             impulseInterval = _impulseInterval ? _impulseInterval : new UniformRandom(20, 10);
-            impulseLength = _impulseLength ? _impulseLength : new UniformRandom(20, 15);
+            impulseLength = _impulseLength ? _impulseLength : new UniformRandom(5, 0);
             initialDelay = _initialDelay ? _initialDelay : new UniformRandom(0, 0);
             ticksPerCall = _ticksPerCall;
             currentTime = 0;
 		}
 
+        private var currentTime : Number;
+
 		override public final function getTicks(time:Number):int
         {
-
             var ticks : int = 0;
-            currentTime = currentTime + time;
-            if (currentTime > currentInitialDelay)
+            currentInitialDelay = currentInitialDelay - time;
+            if (currentInitialDelay < 0)
             {
-                currentImpulseInterval = currentImpulseInterval - time;
-                if (currentImpulseInterval < 0)
+                currentTime = currentTime + time;
+                if (currentTime <= currentImpulseLength)
                 {
-                    if (currentImpulseLength > 0)
-                    {
-                        ticks = StardustMath.randomFloor(ticksPerCall * time);
-                    }
-                    if (currentImpulseInterval <= -currentImpulseLength)
-                    {
-                        setCurrentImpulseLength();
-                        setCurrentImpulseInterval();
-                    }
+                    ticks = StardustMath.randomFloor(ticksPerCall * time);
+                }
+                if (currentTime >= currentImpulseInterval)
+                {
+                    setCurrentImpulseLength();
+                    setCurrentImpulseInterval();
+                    currentTime = 0;
                 }
             }
             return ticks;
@@ -119,16 +113,16 @@ import idv.cjcat.stardustextended.common.xml.XMLBuilder;
          */
         override public function reset() : void
         {
-            currentTime = 0;
             setCurrentInitialDelay();
             setCurrentImpulseLength();
             currentImpulseInterval = 0;
+            currentTime = 0;
         }
 
         public function getDebugInfo() : String
         {
-            return "time:" + currentTime + " impInt: " + currentImpulseInterval +
-                    " impLen: " + currentImpulseLength + " initDelay: " + currentInitialDelay;
+            return "impInt: " + currentImpulseInterval + " impLen: " + currentImpulseLength +
+                    " initDelay: " + currentInitialDelay;
         }
 
 		//XML

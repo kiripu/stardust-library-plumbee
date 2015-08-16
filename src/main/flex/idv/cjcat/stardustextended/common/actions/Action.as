@@ -1,6 +1,8 @@
 ﻿package idv.cjcat.stardustextended.common.actions {
 
-    import idv.cjcat.stardustextended.cjsignals.ISignal;
+import flash.utils.getQualifiedClassName;
+
+import idv.cjcat.stardustextended.cjsignals.ISignal;
     import idv.cjcat.stardustextended.cjsignals.Signal;
     import idv.cjcat.stardustextended.common.emitters.Emitter;
 	import idv.cjcat.stardustextended.common.particles.Particle;
@@ -124,7 +126,7 @@
 		public function get priority():int { return _priority; }
 		public function set priority(value:int):void {
 			_priority = value;
-			onPriorityChange.dispatch(this);
+			_onPriorityChange.dispatch(this);
 		}
 		
 		/**
@@ -151,8 +153,9 @@
 		//XML
 		//------------------------------------------------------------------------------------------------
 		
-		override public function getXMLTagName():String {
-			throw new Error("This is an abstract method");
+		override public function getXMLTagName():String
+        {
+            return getQualifiedClassName(this);
 		}
 		
 		override public function getElementTypeXMLTag():XML {

@@ -5,13 +5,13 @@ You can create effects with the editor at http://s3.funkypandagame.com/startdust
 For detailed information read the Starling wiki at http://wiki.starling-framework.org/extensions/stardust-engine
 
 Notes:   
-The library does not support traditional flash stage (flash.display.*) in the recent releases, the last version with support is 3.15.       
+The editor for this library does not support traditional flash stage (flash.display.*) in the recent releases, the last version with editor support is 3.15.
 This is a fork of the Stardust particle engine, the first commit is exactly the same as Stardust 1.3.186. 
 It has major changes compared to the original library, thus the simulations created with the original are not compatible.
 
 Changes from the original library:
 - Added Stage3D support(trough Starling), added lots of new actions and initializers, bugfixes and performance improvements.   
-- Removed support for old 3D libraries, removed 3D classes, removed 2D stage support.      
+- Removed support for old 3D libraries, removed 3D classes for old libraries.
 
 ***
 
