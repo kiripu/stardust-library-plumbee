@@ -37,7 +37,7 @@ import idv.cjcat.stardustextended.common.xml.XMLBuilder;
          */
         public function set impulseInterval(value : Random) : void {
             _impulseInterval = value;
-            currentImpulseInterval = 0;
+            setCurrentImpulseInterval();
         }
         public function get impulseInterval() : Random { return _impulseInterval; }
         protected var _impulseInterval : Random;
@@ -115,14 +115,8 @@ import idv.cjcat.stardustextended.common.xml.XMLBuilder;
         {
             setCurrentInitialDelay();
             setCurrentImpulseLength();
-            currentImpulseInterval = 0;
+            setCurrentImpulseInterval();
             currentTime = 0;
-        }
-
-        public function getDebugInfo() : String
-        {
-            return "impInt: " + currentImpulseInterval + " impLen: " + currentImpulseLength +
-                    " initDelay: " + currentInitialDelay;
         }
 
 		//XML
@@ -165,8 +159,7 @@ import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 
         override public function onXMLInitComplete() : void
         {
-            setCurrentInitialDelay();
-            setCurrentImpulseLength();
+           reset();
         }
 		//------------------------------------------------------------------------------------------------
 		//end of XML
