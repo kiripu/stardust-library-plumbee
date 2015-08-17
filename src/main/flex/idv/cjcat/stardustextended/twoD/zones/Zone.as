@@ -126,7 +126,7 @@ import idv.cjcat.stardustextended.twoD.geom.MotionData2D;
 		override public function parseXML(xml:XML, builder:XMLBuilder = null):void {
 			super.parseXML(xml, builder);
 			
-			_rotation = parseFloat(xml.@rotation);
+			rotation = parseFloat(xml.@rotation);
 		}
 		
 		//------------------------------------------------------------------------------------------------

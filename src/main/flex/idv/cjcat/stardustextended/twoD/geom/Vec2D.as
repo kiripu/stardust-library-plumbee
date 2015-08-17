@@ -66,27 +66,17 @@ import idv.cjcat.stardustextended.common.math.StardustMath;
 		}
 		
 		/**
-		 * Rotates a clone of the vector.
-		 * @param	angle
-		 * @param	useRadian
-		 * @return The rotated clone vector.
+		 * Rotates this vector.
+		 * @param angle Angle in degrees or radians
+		 * @param useRadian Whether the given angle is in radians.
+         * @return this vector
 		 */
-		final public function rotate(angle:Number, useRadian:Boolean = false):Vec2D {
-			var temp:Vec2D = new Vec2D(x, y);
-			temp.rotateThis(angle, useRadian);
-			return temp;
-		}
-		
-		/**
-		 * Rotates the vector.
-		 * @param	angle
-		 * @param	useRadian
-		 */
-		final public function rotateThis(angle:Number, useRadian:Boolean = false):void {
+		final public function rotate(angle:Number, useRadian:Boolean = false) : Vec2D {
 			if (!useRadian) angle = angle * StardustMath.DEGREE_TO_RADIAN;
 			var originalX:Number = x;
 			x = originalX * Math.cos(angle) - y * Math.sin(angle);
 			y = originalX * Math.sin(angle) + y * Math.cos(angle);
+			return this;
 		}
 		
 		/**

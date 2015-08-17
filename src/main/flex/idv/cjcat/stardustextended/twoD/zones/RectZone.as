@@ -5,8 +5,10 @@ import idv.cjcat.stardustextended.common.math.Random;
 	import idv.cjcat.stardustextended.common.math.UniformRandom;
 	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
 	import idv.cjcat.stardustextended.twoD.geom.MotionData2D;
-	
-	/**
+import idv.cjcat.stardustextended.twoD.geom.Vec2D;
+import idv.cjcat.stardustextended.twoD.geom.Vec2DPool;
+
+/**
 	 * Rectangular zone.
 	 */
 	public class RectZone extends Zone {
@@ -64,10 +66,19 @@ import idv.cjcat.stardustextended.common.math.Random;
 			return new MotionData2D(randomX.random(), randomY.random());
 		}
 		
-		override public function contains(x:Number, y:Number):Boolean {
-			if ((x < this.x) || (x > (this.x + width))) return false;
-			else if ((y < this.y) || (y > (this.y + height))) return false;
-			return true;
+		override public function contains(xc:Number, yc:Number):Boolean
+		{
+            if (_rotation != 0)
+            {
+                // rotate the point backwards instead, it has the same result
+                var vec : Vec2D = Vec2DPool.get(xc, yc);
+                vec.rotate(-_rotation);
+                xc = vec.x;
+                yc = vec.y;
+            }
+            if ((xc < x) || (xc > (x + _width))) return false;
+            else if ((yc < y) || (yc > (y + _height))) return false;
+            return true;
 		}
 
         override public function setPosition(xc : Number, yc : Number):void {
