@@ -1,6 +1,6 @@
 ﻿package idv.cjcat.stardustextended.flashdisplay {
 
-	import idv.cjcat.stardustextended.common.xml.ClassPackage;
+	import idv.cjcat.stardustextended.xml.ClassPackage;
 	import idv.cjcat.stardustextended.flashdisplay.handlers.BitmapHandler;
 	import idv.cjcat.stardustextended.flashdisplay.handlers.DisplayObjectHandler;
 	import idv.cjcat.stardustextended.flashdisplay.handlers.DisplayObjectSpriteSheetHandler;

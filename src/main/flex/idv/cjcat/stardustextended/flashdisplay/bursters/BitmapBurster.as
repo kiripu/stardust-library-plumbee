@@ -4,9 +4,9 @@
 	import flash.display.Sprite;
 	import flash.geom.Matrix;
 
-	import idv.cjcat.stardustextended.common.bursters.Burster;
+	import idv.cjcat.stardustextended.flashdisplay.bursters.Burster;
 
-	import idv.cjcat.stardustextended.common.particles.Particle;
+	import idv.cjcat.stardustextended.particles.Particle;
 	
 	/**
 	 * Bursts out particles with <code>target</code> properties being references to small rectangular fractions (cells) of a bitmap.

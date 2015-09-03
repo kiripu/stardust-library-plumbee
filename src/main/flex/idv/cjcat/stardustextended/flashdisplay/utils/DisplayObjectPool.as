@@ -1,7 +1,7 @@
 ﻿package idv.cjcat.stardustextended.flashdisplay.utils {
 
 	import flash.display.DisplayObject;
-	import idv.cjcat.stardustextended.common.utils.construct;
+	import idv.cjcat.stardustextended.flashdisplay.utils.construct;
 	
 	public class DisplayObjectPool {
 		

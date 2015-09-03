@@ -1,13 +1,13 @@
 package idv.cjcat.stardustextended.flashdisplay.handlers
 {
 
-import idv.cjcat.stardustextended.common.emitters.Emitter;
+import idv.cjcat.stardustextended.emitters.Emitter;
 
 import flash.display.DisplayObject;
 import flash.display.DisplayObjectContainer;
-import idv.cjcat.stardustextended.common.handlers.ParticleHandler;
-import idv.cjcat.stardustextended.common.particles.Particle;
-import idv.cjcat.stardustextended.common.xml.XMLBuilder;
+import idv.cjcat.stardustextended.handlers.ParticleHandler;
+import idv.cjcat.stardustextended.particles.Particle;
+import idv.cjcat.stardustextended.xml.XMLBuilder;
 
 /**
  * This handler adds display object particles to the target container's display list,

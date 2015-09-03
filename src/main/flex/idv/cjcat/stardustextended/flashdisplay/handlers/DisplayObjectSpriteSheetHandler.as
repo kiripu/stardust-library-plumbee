@@ -5,13 +5,13 @@ import flash.display.DisplayObject;
 import flash.display.DisplayObjectContainer;
 import flash.geom.ColorTransform;
 
-import idv.cjcat.stardustextended.common.emitters.Emitter;
+import idv.cjcat.stardustextended.emitters.Emitter;
 
-import idv.cjcat.stardustextended.common.particles.Particle;
-import idv.cjcat.stardustextended.common.xml.XMLBuilder;
+import idv.cjcat.stardustextended.particles.Particle;
+import idv.cjcat.stardustextended.xml.XMLBuilder;
 import idv.cjcat.stardustextended.flashdisplay.particletargets.CenteredBitmap;
 import idv.cjcat.stardustextended.flashdisplay.utils.DisplayObjectPool;
-import idv.cjcat.stardustextended.twoD.handlers.ISpriteSheetHandler;
+import idv.cjcat.stardustextended.handlers.ISpriteSheetHandler;
 
 public class DisplayObjectSpriteSheetHandler extends DisplayObjectHandler implements ISpriteSheetHandler
 {

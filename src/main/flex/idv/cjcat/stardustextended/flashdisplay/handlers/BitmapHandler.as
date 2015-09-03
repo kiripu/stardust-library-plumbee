@@ -3,12 +3,12 @@ package idv.cjcat.stardustextended.flashdisplay.handlers {
 	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
 
-    import idv.cjcat.stardustextended.common.emitters.Emitter;
-    import idv.cjcat.stardustextended.common.math.StardustMath;
+    import idv.cjcat.stardustextended.emitters.Emitter;
+    import idv.cjcat.stardustextended.math.StardustMath;
     import flash.display.BitmapData;
-	import idv.cjcat.stardustextended.common.handlers.ParticleHandler;
-	import idv.cjcat.stardustextended.common.particles.Particle;
-	import idv.cjcat.stardustextended.common.xml.XMLBuilder;
+	import idv.cjcat.stardustextended.handlers.ParticleHandler;
+	import idv.cjcat.stardustextended.particles.Particle;
+	import idv.cjcat.stardustextended.xml.XMLBuilder;
 	
 	/**
 	 * This handler draws display object particles into a bitmap.
