@@ -1,7 +1,6 @@
 ﻿package idv.cjcat.stardustextended.zones {
-import flash.geom.Point;
 
-import idv.cjcat.stardustextended.math.StardustMath;
+	import idv.cjcat.stardustextended.math.StardustMath;
 	import idv.cjcat.stardustextended.xml.XMLBuilder;
 	import idv.cjcat.stardustextended.geom.MotionData2D;
 	
@@ -10,22 +9,13 @@ import idv.cjcat.stardustextended.math.StardustMath;
 	 */
 	public class CircleContour extends Contour {
 		
-		/**
-		 * The X coordinate of the center.
-		 */
-		public var x:Number;
-		/**
-		 * The Y coordinate of the center.
-		 */
-		public var y:Number;
-		
 		private var _radius:Number;
 		private var _r1SQ:Number;
 		private var _r2SQ:Number;
 		
 		public function CircleContour(x:Number = 0, y:Number = 0, radius:Number = 100) {
-			this.x = x;
-			this.y = y;
+			this._x = x;
+			this._y = y;
 			this.radius = radius;
 		}
 		
@@ -47,25 +37,15 @@ import idv.cjcat.stardustextended.math.StardustMath;
 		}
 		
 		override public function contains(xc:Number, yc:Number):Boolean {
-			var dx:Number = x - xc;
-			var dy:Number = y - yc;
+			var dx:Number = _x - xc;
+			var dy:Number = _y - yc;
 			var dSQ:Number = dx * dx + dy * dy;
 			return !((dSQ > _r1SQ) || (dSQ < _r2SQ));
 		}
 
-        override public function setPosition(xc : Number, yc : Number):void {
-            x = xc;
-            y = yc;
-        }
-
-		override public function getPosition():Point {
-			position.setTo(x, y);
-            return position;
-		}
-
 		override public function calculateMotionData2D():MotionData2D {
 			var theta:Number = StardustMath.TWO_PI * Math.random();
-			return new MotionData2D(_radius * Math.cos(theta) + x, _radius * Math.sin(theta) + y);
+			return new MotionData2D(_radius * Math.cos(theta), _radius * Math.sin(theta));
 		}
 		
 		
@@ -91,8 +71,8 @@ import idv.cjcat.stardustextended.math.StardustMath;
 		override public function parseXML(xml:XML, builder:XMLBuilder = null):void {
 			super.parseXML(xml, builder);
 			
-			if (xml.@x.length()) x = parseFloat(xml.@x);
-			if (xml.@y.length()) y = parseFloat(xml.@y);
+			if (xml.@x.length()) _x = parseFloat(xml.@x);
+			if (xml.@y.length()) _y = parseFloat(xml.@y);
 			if (xml.@radius.length()) radius = parseFloat(xml.@radius);
 		}
 		

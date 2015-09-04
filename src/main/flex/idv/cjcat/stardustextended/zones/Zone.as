@@ -26,6 +26,14 @@ import idv.cjcat.stardustextended.geom.MotionData2D;
 
 		protected const position : Point = new Point();
 
+        protected var _x:Number;
+        public function get x():Number { return _x; }
+        public function set x(value:Number):void { _x = value }
+
+        protected var _y:Number;
+        public function get y():Number { return _y; }
+        public function set y(value:Number):void { _y = value; }
+
 		public function Zone() {
 			rotation = 0;
 		}
@@ -52,8 +60,7 @@ import idv.cjcat.stardustextended.geom.MotionData2D;
 		 * Returns a random point in the zone.
 		 * @return
 		 */
-        [Inline]
-		public final function getPoint():MotionData2D {
+		public function getPoint() : MotionData2D {
 			var md2D : MotionData2D = calculateMotionData2D();
 			if (_rotation != 0)
             {
@@ -61,6 +68,8 @@ import idv.cjcat.stardustextended.geom.MotionData2D;
                 md2D.x = originalX * angleCos - md2D.y * angleSin;
                 md2D.y = originalX * angleSin + md2D.y * angleCos;
 			}
+            md2D.x = _x + md2D.x;
+            md2D.y = _y + md2D.y;
 			return md2D;
 		}
 
@@ -77,7 +86,8 @@ import idv.cjcat.stardustextended.geom.MotionData2D;
 			_rotation = value;
 		}
 		/**
-		 * [Abstract Method] Returns a <code>MotionData2D</code> object representing a random point in the zone.
+		 * [Abstract Method] Returns a <code>MotionData2D</code> object representing a random point in the zone
+         * without rotation and translation
 		 * @return
 		 */
 		public function calculateMotionData2D():MotionData2D {
@@ -94,17 +104,19 @@ import idv.cjcat.stardustextended.geom.MotionData2D;
 		}
 
         /**
-         * [Abstract Method] Sets the position of this zone.
+         * Sets the position of this zone.
          */
         public function setPosition(xc : Number, yc : Number):void {
-            throw new Error("This method must be overridden by subclasses");
+            x = xc;
+            y = yc;
         }
 
 		/**
-		 * [Abstract Method] Gets the position of this Deflector.
+		 * Gets the position of this Deflector.
 		 */
 		public function getPosition():Point {
-			throw new Error("This method must be overridden by subclasses");
+            position.setTo(x, y);
+            return position;
 		}
         //XML
 		//------------------------------------------------------------------------------------------------

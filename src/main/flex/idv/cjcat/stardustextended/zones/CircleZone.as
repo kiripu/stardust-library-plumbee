@@ -1,31 +1,23 @@
-﻿package idv.cjcat.stardustextended.zones {
-import flash.geom.Point;
+﻿package idv.cjcat.stardustextended.zones
+{
 
 import idv.cjcat.stardustextended.math.StardustMath;
-	import idv.cjcat.stardustextended.xml.XMLBuilder;
-	import idv.cjcat.stardustextended.geom.MotionData2D;
-	import idv.cjcat.stardustextended.geom.MotionData2DPool;
+import idv.cjcat.stardustextended.xml.XMLBuilder;
+import idv.cjcat.stardustextended.geom.MotionData2D;
+import idv.cjcat.stardustextended.geom.MotionData2DPool;
 	
 	/**
 	 * Circular zone.
 	 */
-	public class CircleZone extends Zone {
-		
-		/**
-		 * The X coordinate of the center.
-		 */
-		public var x:Number;
-		/**
-		 * The Y coordinate of the center.
-		 */
-		public var y:Number;
+	public class CircleZone extends Zone
+	{
 		
 		private var _radius:Number;
 		private var _radiusSQ:Number;
 		
 		public function CircleZone(x:Number = 0, y:Number = 0, radius:Number = 100) {
-			this.x = x;
-			this.y = y;
+			this._x = x;
+			this._y = y;
 			this.radius = radius;
 		}
 		
@@ -38,26 +30,16 @@ import idv.cjcat.stardustextended.math.StardustMath;
 			_radiusSQ = value * value;
 			updateArea();
 		}
-
-        override public function setPosition(xc : Number, yc : Number):void {
-            x = xc;
-            y = yc;
-        }
-
-		override public function getPosition():Point {
-			position.setTo(x, y);
-			return position;
-		}
 		
 		override public function calculateMotionData2D():MotionData2D {
 			var theta:Number = StardustMath.TWO_PI * Math.random();
 			var r:Number = _radius * Math.sqrt(Math.random());
-			return MotionData2DPool.get(r * Math.cos(theta) + x, r * Math.sin(theta) + y);
+			return MotionData2DPool.get(r * Math.cos(theta), r * Math.sin(theta));
 		}
 		
 		override public function contains(x:Number, y:Number):Boolean {
-			var dx:Number = this.x - x;
-			var dy:Number = this.y - y;
+			var dx:Number = this._x - x;
+			var dy:Number = this._y - y;
 			return ((dx * dx + dy * dy) <= _radiusSQ)?(true):(false);
 		}
 		
@@ -79,19 +61,17 @@ import idv.cjcat.stardustextended.math.StardustMath;
 		
 		override public function toXML():XML {
 			var xml:XML = super.toXML();
-			
-			xml.@x = x;
-			xml.@y = y;
+			xml.@x = _x;
+			xml.@y = _y;
 			xml.@radius = radius;
-			
 			return xml;
 		}
 		
 		override public function parseXML(xml:XML, builder:XMLBuilder = null):void {
 			super.parseXML(xml, builder);
 			
-			if (xml.@x.length()) x = parseFloat(xml.@x);
-			if (xml.@y.length()) y = parseFloat(xml.@y);
+			if (xml.@x.length()) _x = parseFloat(xml.@x);
+			if (xml.@y.length()) _y = parseFloat(xml.@y);
 			if (xml.@radius.length()) radius = parseFloat(xml.@radius);
 		}
 		

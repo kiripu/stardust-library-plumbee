@@ -1,6 +1,7 @@
-﻿package idv.cjcat.stardustextended.zones {
-import flash.geom.Point;
+﻿package idv.cjcat.stardustextended.zones
+{
 
+import idv.cjcat.stardustextended.geom.MotionData2D;
 import idv.cjcat.stardustextended.xml.XMLBuilder;
 	
 	/**
@@ -9,9 +10,7 @@ import idv.cjcat.stardustextended.xml.XMLBuilder;
 	public class RectContour extends Composite {
 		
 		private var _virtualThickness:Number;
-		
-		private var _x:Number;
-		private var _y:Number;
+
 		private var _width:Number;
 		private var _height:Number;
 		
@@ -20,7 +19,7 @@ import idv.cjcat.stardustextended.xml.XMLBuilder;
 		private var _line3:Line;
 		private var _line4:Line;
 		
-		public function RectContour(x:Number = 0, y:Number = 0, width:Number = 200, height:Number = 100) {
+		public function RectContour(x:Number = 0, y:Number = 0, _width:Number = 200, _height:Number = 100) {
 			_line1 = new Line();
 			_line2 = new Line();
 			_line3 = new Line();
@@ -33,28 +32,27 @@ import idv.cjcat.stardustextended.xml.XMLBuilder;
 			
 			virtualThickness = 1;
 			
-			this.x = x;
-			this.y = y;
-			this.width = width;
-			this.height = height;
+			_x = x;
+			_y = y;
+			width = _width;
+			height = _height;
 
             updateArea();
 		}
-		
-		public function get x():Number { return _x; }
-		public function set x(value:Number):void {
-			_x = value;
-			updateContour();
-			updateArea();
-		}
-		
-		public function get y():Number { return _y; }
-		public function set y(value:Number):void {
-			_y = value;
-			updateContour();
-			updateArea();
-		}
-		
+
+        override public function getPoint():MotionData2D {
+            var md2D : MotionData2D = super.getPoint();
+            if (_rotation != 0)
+            {
+                var originalX : Number = md2D.x;
+                md2D.x = originalX * angleCos - md2D.y * angleSin;
+                md2D.y = originalX * angleSin + md2D.y * angleCos;
+            }
+            md2D.x = _x + md2D.x;
+            md2D.y = _y + md2D.y;
+            return md2D;
+        }
+
 		public function get width():Number { return _width; }
 		public function set width(value:Number):void {
 			_width = value;
@@ -78,38 +76,27 @@ import idv.cjcat.stardustextended.xml.XMLBuilder;
 			_line4.virtualThickness = value;
 			updateArea();
 		}
-
-        override public function setPosition(xc : Number, yc : Number):void {
-            _x = xc;
-            _y = yc;
-            updateContour();
-        }
-
-		override public function getPosition():Point {
-			position.setTo(_x, _y);
-			return position;
-		}
 		
 		private function updateContour():void {
-			_line1.x1 = x;
-			_line1.y1 = y;
-			_line1.x2 = x + width;
-			_line1.y2 = y;
+			_line1.x = 0;
+			_line1.y = 0;
+			_line1.x2 = width;
+			_line1.y2 = 0;
 			
-			_line2.x1 = x;
-			_line2.y1 = y + height;
-			_line2.x2 = x + width;
-			_line2.y2 = y + height;
+			_line2.x = 0;
+			_line2.y = height;
+			_line2.x2 = width;
+			_line2.y2 = height;
 			
-			_line3.x1 = x;
-			_line3.y1 = y;
-			_line3.x2 = x;
-			_line3.y2 = y + height;
+			_line3.x = 0;
+			_line3.y = 0;
+			_line3.x2 = 0;
+			_line3.y2 = height;
 			
-			_line4.x1 = x + width;
-			_line4.y1 = y;
-			_line4.x2 = x + width;
-			_line4.y2 = y + height;
+			_line4.x = width;
+			_line4.y = 0;
+			_line4.x2 = width;
+			_line4.y2 = height;
 		}
 
         override protected function updateArea():void {
@@ -134,8 +121,8 @@ import idv.cjcat.stardustextended.xml.XMLBuilder;
 			var xml:XML = super.toXML();
 			delete xml.zones;
 			xml.@virtualThickness = virtualThickness;
-			xml.@x = x;
-			xml.@y = y;
+			xml.@x = _x;
+			xml.@y = _y;
 			xml.@width = width;
 			xml.@height = height;
 			

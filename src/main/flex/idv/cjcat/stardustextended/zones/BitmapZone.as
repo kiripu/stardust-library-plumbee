@@ -1,7 +1,7 @@
 ﻿package idv.cjcat.stardustextended.zones {
+
 	import flash.display.BitmapData;
-import flash.geom.Point;
-import flash.utils.ByteArray;
+    import flash.utils.ByteArray;
 	import idv.cjcat.stardustextended.xml.XMLBuilder;
 	import idv.cjcat.stardustextended.geom.MotionData2D;
 	import idv.cjcat.stardustextended.geom.MotionData2DPool;
@@ -10,15 +10,7 @@ import flash.utils.ByteArray;
 	 * Zone formed by a bitmap's non-transparent pixels.
 	 */
 	public class BitmapZone extends Zone {
-		
-		/**
-		 * The X coordinate of the top-left corner of the zone.
-		 */
-		public var x:Number;
-		/**
-		 * The Y coordinate of the top-left corner of the zone.
-		 */
-		public var y:Number;
+
 		/**
 		 * The horizontal scale of the bitmap.
 		 */
@@ -68,16 +60,6 @@ import flash.utils.ByteArray;
 				}
 			}
 		}
-
-        override public function setPosition(xc : Number, yc : Number):void {
-            x = xc;
-            y = yc;
-        }
-
-		override public function getPosition():Point {
-			position.setTo(x, y);
-			return position;
-		}
 		
 		override public function contains(x:Number, y:Number):Boolean {
 			x = int(x + 0.5);
@@ -87,9 +69,9 @@ import flash.utils.ByteArray;
 		}
 		
 		override public function calculateMotionData2D():MotionData2D {
-			if (xCoords.length == 0) return MotionData2DPool.get(x, y);
+			if (xCoords.length == 0) return MotionData2DPool.get(0, 0);
 			var index:int = int(coordLength * Math.random());
-			return MotionData2DPool.get(xCoords[index] * scaleX + x, yCoords[index] * scaleY + y);
+			return MotionData2DPool.get(xCoords[index] * scaleX, yCoords[index] * scaleY);
 		}
 		
 		
@@ -102,20 +84,18 @@ import flash.utils.ByteArray;
 		
 		override public function toXML():XML {
 			var xml:XML = super.toXML();
-			
-			xml.@x = x;
-			xml.@y = y;
+			xml.@x = _x;
+			xml.@y = _y;
 			xml.@scaleX = scaleX;
 			xml.@scaleY = scaleY;
-			
 			return xml;
 		}
 		
 		override public function parseXML(xml:XML, builder:XMLBuilder = null):void {
 			super.parseXML(xml, builder);
 			
-			if (xml.@x.length()) x = parseFloat(xml.@x);
-			if (xml.@y.length()) y = parseFloat(xml.@y);
+			if (xml.@x.length()) _x = parseFloat(xml.@x);
+			if (xml.@y.length()) _y = parseFloat(xml.@y);
 			if (xml.@scaleX.length()) scaleX = parseFloat(xml.@scaleX);
 			if (xml.@scaleY.length()) scaleY = parseFloat(xml.@scaleY);
 		}

@@ -33,7 +33,7 @@ import idv.cjcat.stardustextended.zones.ZoneCollection;
             }
             else
             {
-                zoneCollection.zones.push(new SinglePoint(0, 1))
+                zoneCollection.zones.push(new SinglePoint(0,0));
             }
         }
 

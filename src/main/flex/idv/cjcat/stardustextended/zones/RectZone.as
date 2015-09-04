@@ -1,20 +1,17 @@
-﻿package idv.cjcat.stardustextended.zones {
-import flash.geom.Point;
-
-import idv.cjcat.stardustextended.math.Random;
+﻿package idv.cjcat.stardustextended.zones
+{
+    import idv.cjcat.stardustextended.math.Random;
 	import idv.cjcat.stardustextended.math.UniformRandom;
 	import idv.cjcat.stardustextended.xml.XMLBuilder;
 	import idv.cjcat.stardustextended.geom.MotionData2D;
-import idv.cjcat.stardustextended.geom.Vec2D;
-import idv.cjcat.stardustextended.geom.Vec2DPool;
+    import idv.cjcat.stardustextended.geom.Vec2D;
+    import idv.cjcat.stardustextended.geom.Vec2DPool;
 
-/**
+    /**
 	 * Rectangular zone.
 	 */
 	public class RectZone extends Zone {
-		
-		public var x:Number;
-		public var y:Number;
+
 		private var _randomX:Random;
 		private var _randomY:Random;
 		private var _width:Number;
@@ -24,8 +21,8 @@ import idv.cjcat.stardustextended.geom.Vec2DPool;
 			if (!randomX) randomX = new UniformRandom();
 			if (!randomY) randomY = new UniformRandom();
 			
-			this.x = x;
-			this.y = y;
+			this._x = x;
+			this._y = y;
 			this.width = width;
 			this.height = height;
 			this.randomX = randomX;
@@ -61,9 +58,9 @@ import idv.cjcat.stardustextended.geom.Vec2DPool;
 		}
 		
 		override public function calculateMotionData2D():MotionData2D {
-			randomX.setRange(x, x + _width);
-			randomY.setRange(y, y + _height);
-			return new MotionData2D(randomX.random(), randomY.random());
+			_randomX.setRange(0, _width);
+			_randomY.setRange(0, _height);
+			return new MotionData2D(_randomX.random(), _randomY.random());
 		}
 		
 		override public function contains(xc:Number, yc:Number):Boolean
@@ -76,19 +73,9 @@ import idv.cjcat.stardustextended.geom.Vec2DPool;
                 xc = vec.x;
                 yc = vec.y;
             }
-            if ((xc < x) || (xc > (x + _width))) return false;
-            else if ((yc < y) || (yc > (y + _height))) return false;
+            if ((xc < _x) || (xc > (_x + _width))) return false;
+            else if ((yc < _y) || (yc > (_y + _height))) return false;
             return true;
-		}
-
-        override public function setPosition(xc : Number, yc : Number):void {
-            x = xc;
-            y = yc;
-        }
-
-		override public function getPosition():Point {
-			position.setTo(x, y);
-			return position;
 		}
 		
 		//XML
@@ -105,12 +92,12 @@ import idv.cjcat.stardustextended.geom.Vec2DPool;
 		override public function toXML():XML {
 			var xml:XML = super.toXML();
 			
-			xml.@x = x;
-			xml.@y = y;
-			xml.@width = width;
-			xml.@height = height;
-			xml.@randomX = randomX.name;
-			xml.@randomY = randomY.name;
+			xml.@x = _x;
+			xml.@y = _y;
+			xml.@width = _width;
+			xml.@height = _height;
+			xml.@randomX = _randomX.name;
+			xml.@randomY = _randomY.name;
 			
 			return xml;
 		}
@@ -118,8 +105,8 @@ import idv.cjcat.stardustextended.geom.Vec2DPool;
 		override public function parseXML(xml:XML, builder:XMLBuilder = null):void {
 			super.parseXML(xml, builder);
 			
-			if (xml.@x.length()) x = parseFloat(xml.@x);
-			if (xml.@y.length()) y = parseFloat(xml.@y);
+			if (xml.@x.length()) _x = parseFloat(xml.@x);
+			if (xml.@y.length()) _y = parseFloat(xml.@y);
 			if (xml.@width.length()) width = parseFloat(xml.@width);
 			if (xml.@height.length()) height = parseFloat(xml.@height);
 			if (xml.@randomX.length()) randomX = builder.getElementByName(xml.@randomX) as Random;

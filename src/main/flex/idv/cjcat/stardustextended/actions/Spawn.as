@@ -6,7 +6,6 @@
     import idv.cjcat.stardustextended.emitters.Emitter;
     import idv.cjcat.stardustextended.particles.Particle;
     import idv.cjcat.stardustextended.xml.XMLBuilder;
-    import idv.cjcat.stardustextended.geom.Vec2D;
 	
     /**
      * Spawns new particles at the position of existing particles.
@@ -58,7 +57,6 @@
             if (_trigger.testTrigger(emitter, particle, timeDelta))
             {
                 var p:Particle;
-                var v:Vec2D;
                 var newParticles : Vector.<Particle> = spawnerEmitter.createParticles(timeDelta);
                 var len : uint = newParticles.length;
                 for (var m : int = 0; m < len; ++m)

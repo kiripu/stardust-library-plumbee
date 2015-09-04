@@ -1,25 +1,16 @@
-﻿package idv.cjcat.stardustextended.zones {
-import flash.geom.Point;
+﻿package idv.cjcat.stardustextended.zones
+{
 
 import idv.cjcat.stardustextended.math.Random;
-	import idv.cjcat.stardustextended.math.StardustMath;
-	import idv.cjcat.stardustextended.math.UniformRandom;
-	import idv.cjcat.stardustextended.xml.XMLBuilder;
-	import idv.cjcat.stardustextended.geom.MotionData2D;
+import idv.cjcat.stardustextended.math.StardustMath;
+import idv.cjcat.stardustextended.math.UniformRandom;
+import idv.cjcat.stardustextended.xml.XMLBuilder;
+import idv.cjcat.stardustextended.geom.MotionData2D;
 	
 	/**
 	 * Sector-shaped zone.
 	 */
 	public class Sector extends Zone {
-		
-		/**
-		 * The X coordinate of the center of the sector.
-		 */
-		public var x:Number;
-		/**
-		 * The Y coordinate of the center of the sector.
-		 */
-		public var y:Number;
 
 		private var _randomT:Random;
 		private var _minRadius:Number;
@@ -32,24 +23,14 @@ import idv.cjcat.stardustextended.math.Random;
 		public function Sector(x:Number = 0, y:Number = 0, minRadius:Number = 0, maxRadius:Number = 100, minAngle:Number = 0, maxAngle:Number = 360) {
 			_randomT = new UniformRandom();
 			
-			this.x = x;
-			this.y = y;
+			this._x = x;
+			this._y = y;
 			this._minRadius = minRadius;
 			this._maxRadius = maxRadius;
 			this._minAngle = minAngle;
 			this._maxAngle = maxAngle;
 			
 			updateArea();
-		}
-
-        override public function setPosition(xc : Number, yc : Number):void {
-            x = xc;
-            y = yc;
-        }
-
-		override public function getPosition():Point {
-			position.setTo(x, y);
-			return position;
 		}
 		
 		/**
@@ -89,13 +70,13 @@ import idv.cjcat.stardustextended.math.Random;
 		}
 		
 		override public function calculateMotionData2D():MotionData2D {
-			if (_maxRadius == 0) return new MotionData2D(x, y);
+			if (_maxRadius == 0) return new MotionData2D(_x, _y);
 
 			_randomT.setRange(_minAngleRad, _maxAngleRad);
 			var theta:Number = _randomT.random();
 			var r:Number = StardustMath.interpolate(0, _minRadius, 1, _maxRadius, Math.sqrt(Math.random()));
 			
-			return new MotionData2D(r * Math.cos(theta) + x, r * Math.sin(theta) + y);
+			return new MotionData2D(r * Math.cos(theta), r * Math.sin(theta));
 		}
 		
 		override protected function updateArea():void {
@@ -117,8 +98,8 @@ import idv.cjcat.stardustextended.math.Random;
 		}
 		
 		override public function contains(x:Number, y:Number):Boolean {
-            const dx:Number = this.x - x;
-            const dy:Number = this.y - y;
+            const dx:Number = this._x - x;
+            const dy:Number = this._y - y;
             const isInsideOuterCircle : Boolean = ((dx * dx + dy * dy) <= _maxRadius * _maxRadius);
             if ( !isInsideOuterCircle )
             {
@@ -152,22 +133,20 @@ import idv.cjcat.stardustextended.math.Random;
 		
 		override public function toXML():XML {
 			var xml:XML = super.toXML();
-			
-			xml.@x = x;
-			xml.@y = y;
+			xml.@x = _x;
+			xml.@y = _y;
 			xml.@minRadius = minRadius;
 			xml.@maxRadius = maxRadius;
 			xml.@minAngle = minAngle;
 			xml.@maxAngle = maxAngle;
-			
 			return xml;
 		}
 		
 		override public function parseXML(xml:XML, builder:XMLBuilder = null):void {
 			super.parseXML(xml, builder);
 			
-			if (xml.@x.length()) x = parseFloat(xml.@x);
-			if (xml.@y.length()) y = parseFloat(xml.@y);
+			if (xml.@x.length()) _x = parseFloat(xml.@x);
+			if (xml.@y.length()) _y = parseFloat(xml.@y);
 			if (xml.@minRadius.length()) minRadius = parseFloat(xml.@minRadius);
 			if (xml.@maxRadius.length()) maxRadius = parseFloat(xml.@maxRadius);
 			if (xml.@minAngle.length()) minAngle = parseFloat(xml.@minAngle);

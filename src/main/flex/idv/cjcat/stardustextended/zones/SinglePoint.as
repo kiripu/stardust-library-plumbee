@@ -1,41 +1,28 @@
 ﻿package idv.cjcat.stardustextended.zones {
-import flash.geom.Point;
 
 import idv.cjcat.stardustextended.xml.XMLBuilder;
-	import idv.cjcat.stardustextended.geom.MotionData2D;
-	import idv.cjcat.stardustextended.geom.MotionData2DPool;
+import idv.cjcat.stardustextended.geom.MotionData2D;
+import idv.cjcat.stardustextended.geom.MotionData2DPool;
 	
 	/**
 	 * Single point zone.
 	 */
-	public class SinglePoint extends Contour {
-		
-		public var x:Number;
-		public var y:Number;
+	public class SinglePoint extends Contour
+	{
 		
 		public function SinglePoint(x:Number = 0, y:Number = 0) {
-			this.x = x;
-			this.y = y;
+			_x = x;
+			_y = y;
 			updateArea();
-		}
-
-        override public function setPosition(xc : Number, yc : Number):void {
-            x = xc;
-            y = yc;
-        }
-
-		override public function getPosition():Point {
-			position.setTo(x, y);
-			return position;
 		}
 		
 		override public function contains(x:Number, y:Number):Boolean {
-			if ((this.x == x) && (this.y == y)) return true;
+			if ((_x == x) && (_y == y)) return true;
 			return false;
 		}
 		
 		override public function calculateMotionData2D():MotionData2D {
-			return MotionData2DPool.get(x, y);
+			return MotionData2DPool.get(0, 0);
 		}
 		
 		override protected function updateArea():void {
@@ -52,18 +39,15 @@ import idv.cjcat.stardustextended.xml.XMLBuilder;
 		
 		override public function toXML():XML {
 			var xml:XML = super.toXML();
-			
-			xml.@x = x;
-			xml.@y = y;
-			
+			xml.@x = _x;
+			xml.@y = _y;
 			return xml;
 		}
 		
 		override public function parseXML(xml:XML, builder:XMLBuilder = null):void {
 			super.parseXML(xml, builder);
-			
-			if (xml.@x.length()) x = parseFloat(xml.@x);
-			if (xml.@y.length()) y = parseFloat(xml.@y);
+			if (xml.@x.length()) _x = parseFloat(xml.@x);
+			if (xml.@y.length()) _y = parseFloat(xml.@y);
 		}
 		
 		//------------------------------------------------------------------------------------------------
