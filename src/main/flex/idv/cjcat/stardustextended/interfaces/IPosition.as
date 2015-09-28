@@ -4,8 +4,8 @@ import flash.geom.Point;
 
 public interface IPosition
 {
-    function setPosition(xc : Number, yc : Number):void;
+    function setPosition(xc : Number, yc : Number) : void;
 
-    function getPosition():Point;
+    function getPosition() : Point;
 }
 }

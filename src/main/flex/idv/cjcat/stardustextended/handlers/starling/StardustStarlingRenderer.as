@@ -1,4 +1,5 @@
-package idv.cjcat.stardustextended.handlers.starling {
+package idv.cjcat.stardustextended.handlers.starling
+{
 
 import flash.display3D.Context3D;
 import flash.display3D.Context3DProgramType;
@@ -23,31 +24,30 @@ import starling.utils.VertexData;
 
 public class StardustStarlingRenderer extends DisplayObject
 {
-    public static const MAX_POSSIBLE_PARTICLES:int = 16383;
+    public static const MAX_POSSIBLE_PARTICLES : int = 16383;
     private static const DEGREES_TO_RADIANS : Number = Math.PI / 180;
-    private static const sCosLUT:Vector.<Number> = new Vector.<Number>(0x800, true);
-    private static const sSinLUT:Vector.<Number> = new Vector.<Number>(0x800, true);
-    private static var numberOfVertexBuffers:int;
-    private static var maxParticles:int;
-    private static var initCalled:Boolean = false;
+    private static const sCosLUT : Vector.<Number> = new Vector.<Number>(0x800, true);
+    private static const sSinLUT : Vector.<Number> = new Vector.<Number>(0x800, true);
+    private static var numberOfVertexBuffers : int;
+    private static var maxParticles : int;
+    private static var initCalled : Boolean = false;
     
     private var boundsRect : Rectangle;
-    private var mFilter:FragmentFilter;
+    private var mFilter : FragmentFilter;
     private var mTinted : Boolean = true;
     private var mTexture : Texture;
     private var mBatched : Boolean;
-    private var vertexes:Vector.<Number>;
+    private var vertexes : Vector.<Number>;
     private var frames : Vector.<Frame>;
 
-    public var mNumParticles:int = 0;
+    public var mNumParticles : int = 0;
     public var texSmoothing : String;
 
     public var premultiplyAlpha : Boolean = true;
 
     public function StardustStarlingRenderer()
     {
-        if (initCalled == false)
-        {
+        if (initCalled == false) {
             init();
         }
         vertexes = new <Number>[];
@@ -60,21 +60,18 @@ public class StardustStarlingRenderer extends DisplayObject
      *  Allocating one buffer with the maximum amount of particles (16383) takes up 2048KB(2MB) GPU memory.
      *  This call requires that there is a Starling context
      **/
-    public static function init(numberOfBuffers : uint = 2, maxParticlesPerBuffer : uint = MAX_POSSIBLE_PARTICLES):void
+    public static function init(numberOfBuffers : uint = 2, maxParticlesPerBuffer : uint = MAX_POSSIBLE_PARTICLES) : void
     {
         numberOfVertexBuffers = numberOfBuffers;
-        if (maxParticlesPerBuffer > MAX_POSSIBLE_PARTICLES)
-        {
+        if (maxParticlesPerBuffer > MAX_POSSIBLE_PARTICLES) {
             maxParticlesPerBuffer = MAX_POSSIBLE_PARTICLES;
             trace("StardustStarlingRenderer WARNING: Tried to render than 16383 particles, setting value to 16383");
         }
         maxParticles = maxParticlesPerBuffer;
         StarlingParticleBuffers.createBuffers(maxParticlesPerBuffer, numberOfBuffers);
 
-        if (!initCalled)
-        {
-            for (var i:int = 0; i < 0x800; ++i)
-            {
+        if (!initCalled) {
+            for (var i : int = 0; i < 0x800; ++i) {
                 sCosLUT[i & 0x7FF] = Math.cos(i * 0.00306796157577128245943617517898); // 0.003067 = 2PI/2048
                 sSinLUT[i & 0x7FF] = Math.sin(i * 0.00306796157577128245943617517898);
             }
@@ -84,69 +81,67 @@ public class StardustStarlingRenderer extends DisplayObject
         }
     }
 
-    private static function onContextCreated(event:Event):void
+    private static function onContextCreated(event : Event) : void
     {
         StarlingParticleBuffers.createBuffers(maxParticles, numberOfVertexBuffers);
     }
 
     /** Set to true if any of the rendered particles have alpha value. Default is true, setting it to false
      *  decreases load on the GPU, but particles will be rendered with 1 alpha. */
-    public function set tinted(value:Boolean):void {
+    public function set tinted(value : Boolean) : void
+    {
         mTinted = value;
     }
 
-    public function setTextures(texture: Texture, _frames:Vector.<Frame>):void
+    public function setTextures(texture : Texture, _frames : Vector.<Frame>) : void
     {
         mTexture = texture;
         frames = _frames;
     }
 
-    public function advanceTime(mParticles : Vector.<Particle>):void
+    public function advanceTime(mParticles : Vector.<Particle>) : void
     {
         mNumParticles = mParticles.length;
         vertexes.fixed = false;
         vertexes.length = mNumParticles * 32;
         vertexes.fixed = true;
-        var particle:Particle;
-        var vertexID:int = 0;
+        var particle : Particle;
+        var vertexID : int = 0;
 
-        var red:Number;
-        var green:Number;
-        var blue:Number;
-        var particleAlpha:Number;
+        var red : Number;
+        var green : Number;
+        var blue : Number;
+        var particleAlpha : Number;
 
-        var rotation:Number;
-        var x:Number, y:Number;
-        var xOffset:Number, yOffset:Number;
+        var rotation : Number;
+        var x : Number, y : Number;
+        var xOffset : Number, yOffset : Number;
 
-        var angle:uint;
-        var cos:Number;
-        var sin:Number;
-        var cosX:Number;
-        var cosY:Number;
-        var sinX:Number;
-        var sinY:Number;
-        var position:uint;
+        var angle : uint;
+        var cos : Number;
+        var sin : Number;
+        var cosX : Number;
+        var cosY : Number;
+        var sinX : Number;
+        var sinY : Number;
+        var position : uint;
         var frame : Frame;
         var bottomRightX : Number;
         var bottomRightY : Number;
         var topLeftX : Number;
         var topLeftY : Number;
 
-        for (var i:int = 0; i < mNumParticles; ++i)
-        {
+        for (var i : int = 0; i < mNumParticles; ++i) {
             vertexID = i << 2;
             particle = mParticles[i];
             // color & alpha
             particleAlpha = particle.alpha;
-            if (premultiplyAlpha)
-            {
+            if (premultiplyAlpha) {
                 red = particle.colorR * particleAlpha;
                 green = particle.colorG * particleAlpha;
                 blue = particle.colorB * particleAlpha;
             }
-            else
-            {
+            else {
                 red = particle.colorR;
                 green = particle.colorG;
                 blue = particle.colorB;
@@ -165,8 +160,7 @@ public class StardustStarlingRenderer extends DisplayObject
             yOffset = frame.particleHalfHeight * particle.scale;
 
             position = vertexID << 3; // * 8
-            if (rotation)
-            {
+            if (rotation) {
                 angle = (rotation * 325.94932345220164765467394738691) & 2047;
                 cos = sCosLUT[angle];
                 sin = sSinLUT[angle];
@@ -211,8 +205,7 @@ public class StardustStarlingRenderer extends DisplayObject
                 vertexes[++position] = bottomRightX;
                 vertexes[++position] = bottomRightY;
             }
-            else
-            {
+            else {
                 vertexes[position] = x - xOffset;
                 vertexes[++position] = y - yOffset;
                 vertexes[++position] = red;
@@ -252,20 +245,17 @@ public class StardustStarlingRenderer extends DisplayObject
         }
     }
 
-    protected function isStateChange(tinted:Boolean, parentAlpha:Number, texture:TextureBase,
-                                     textureRepeat:Boolean, smoothing:String, blendMode:String,
-                                     filter:FragmentFilter, premultiplyAlpha:Boolean, numParticles : uint):Boolean
+    protected function isStateChange(tinted : Boolean, parentAlpha : Number, texture : TextureBase,
+                                     textureRepeat : Boolean, smoothing : String, blendMode : String,
+                                     filter : FragmentFilter, premultiplyAlpha : Boolean, numParticles : uint) : Boolean
     {
-        if (mNumParticles == 0)
-        {
+        if (mNumParticles == 0) {
             return false;
         }
-        else if (mNumParticles + numParticles > MAX_POSSIBLE_PARTICLES)
-        {
+        else if (mNumParticles + numParticles > MAX_POSSIBLE_PARTICLES) {
             return true;
         }
-        else if (mTexture != null && texture != null)
-        {
+        else if (mTexture != null && texture != null) {
             return mTexture.base != texture || mTexture.repeat != textureRepeat ||
                    texSmoothing != smoothing || this.blendMode != blendMode ||
                    mTinted != (tinted || parentAlpha != 1.0) ||
@@ -274,10 +264,9 @@ public class StardustStarlingRenderer extends DisplayObject
         return true;
     }
 
-    public override function render(support:RenderSupport, parentAlpha:Number):void
+    public override function render(support : RenderSupport, parentAlpha : Number) : void
     {
-        if (mNumParticles > 0 && !mBatched)
-        {
+        if (mNumParticles > 0 && !mBatched) {
             var mNumBatchedParticles : int = batchNeighbours();
             renderCustom(support, mNumBatchedParticles, parentAlpha);
         }
@@ -289,21 +278,17 @@ public class StardustStarlingRenderer extends DisplayObject
     protected function batchNeighbours() : int
     {
         var mNumBatchedParticles : int = 0;
-        var last:int = parent.getChildIndex(this);
-        while (++last < parent.numChildren)
-        {
+        var last : int = parent.getChildIndex(this);
+        while (++last < parent.numChildren) {
             var nextPS : StardustStarlingRenderer = parent.getChildAt(last) as StardustStarlingRenderer;
             if (nextPS && !nextPS.isStateChange(mTinted, alpha, mTexture.base, mTexture.repeat, texSmoothing,
-                                                blendMode, mFilter, premultiplyAlpha, mNumParticles))
-            {
-                if (nextPS.mNumParticles > 0)
-                {
+                            blendMode, mFilter, premultiplyAlpha, mNumParticles)) {
+                if (nextPS.mNumParticles > 0) {
                     vertexes.fixed = false;
                     var targetIndex : int = (mNumParticles + mNumBatchedParticles) * 32; // 4 * 8
                     var sourceIndex : int = 0;
                     var sourceEnd : int = nextPS.mNumParticles * 32; // 4 * 8
-                    while (sourceIndex < sourceEnd)
-                    {
+                    while (sourceIndex < sourceEnd) {
                         vertexes[int(targetIndex++)] = nextPS.vertexes[int(sourceIndex++)];
                     }
                     vertexes.fixed = true;
@@ -316,24 +301,21 @@ public class StardustStarlingRenderer extends DisplayObject
                     nextPS.filter = null;
                 }
             }
-            else
-            {
+            else {
                 break;
             }
         }
         return mNumBatchedParticles;
     }
 
-    private function renderCustom(support:RenderSupport, mNumBatchedParticles : int, parentAlpha:Number):void
+    private function renderCustom(support : RenderSupport, mNumBatchedParticles : int, parentAlpha : Number) : void
     {
         StarlingParticleBuffers.switchVertexBuffer();
 
-        if (mNumParticles == 0 || StarlingParticleBuffers.buffersCreated == false)
-        {
+        if (mNumParticles == 0 || StarlingParticleBuffers.buffersCreated == false) {
             return;
         }
-        if (mNumBatchedParticles > maxParticles)
-        {
+        if (mNumBatchedParticles > maxParticles) {
             trace("Over " + maxParticles + " particles! Aborting rendering");
             return
         }
@@ -342,20 +324,19 @@ public class StardustStarlingRenderer extends DisplayObject
         support.finishQuadBatch();
         support.raiseDrawCount();
 
-        var context:Context3D = Starling.context;
-        if (context == null)
-        {
+        var context : Context3D = Starling.context;
+        if (context == null) {
             throw new MissingContextError();
         }
 
-        var blendFactors:Array = BlendMode.getBlendFactors(blendMode, true);
+        var blendFactors : Array = BlendMode.getBlendFactors(blendMode, true);
         context.setBlendFactors(blendFactors[0], blendFactors[1]);
 
-        const renderAlpha:Vector.<Number> = new Vector.<Number>(4);
+        const renderAlpha : Vector.<Number> = new Vector.<Number>(4);
         renderAlpha[0] = renderAlpha[1] = renderAlpha[2] = premultiplyAlpha ? parentAlpha : 1;
         renderAlpha[3] = parentAlpha;
 
-        const renderMatrix:Matrix3D = new Matrix3D();
+        const renderMatrix : Matrix3D = new Matrix3D();
         MatrixUtil.convertTo3D(support.mvpMatrix, renderMatrix);
 
         context.setProgram(ParticleProgram.getProgram(mTexture != null, mTinted, mTexture.mipMapping, mTexture.repeat, mTexture.format, texSmoothing));
@@ -365,8 +346,7 @@ public class StardustStarlingRenderer extends DisplayObject
         StarlingParticleBuffers.vertexBuffer.uploadFromVector(vertexes, 0, Math.min(maxParticles * 4, vertexes.length / 8));
         context.setVertexBufferAt(0, StarlingParticleBuffers.vertexBuffer, VertexData.POSITION_OFFSET, Context3DVertexBufferFormat.FLOAT_2);
 
-        if (mTinted)
-        {
+        if (mTinted) {
             context.setVertexBufferAt(1, StarlingParticleBuffers.vertexBuffer, VertexData.COLOR_OFFSET, Context3DVertexBufferFormat.FLOAT_4);
         }
         context.setVertexBufferAt(2, StarlingParticleBuffers.vertexBuffer, VertexData.TEXCOORD_OFFSET, Context3DVertexBufferFormat.FLOAT_2);
@@ -379,19 +359,17 @@ public class StardustStarlingRenderer extends DisplayObject
         context.setTextureAt(0, null);
     }
 
-    public override function set filter(value:FragmentFilter):void
+    public override function set filter(value : FragmentFilter) : void
     {
-        if (!mBatched)
-        {
+        if (!mBatched) {
             mFilter = value;
         }
         super.filter = value;
     }
 
-    override public function getBounds(targetSpace:DisplayObject,resultRect:Rectangle = null):Rectangle
+    override public function getBounds(targetSpace : DisplayObject, resultRect : Rectangle = null) : Rectangle
     {
-        if (boundsRect == null)
-        {
+        if (boundsRect == null) {
             boundsRect = new Rectangle();
         }
         return boundsRect;

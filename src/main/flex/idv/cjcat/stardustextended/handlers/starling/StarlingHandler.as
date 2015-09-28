@@ -16,7 +16,7 @@ import starling.textures.TextureSmoothing;
 public class StarlingHandler extends ParticleHandler implements ISpriteSheetHandler
 {
 
-    private var _blendMode:String = BlendMode.NORMAL;
+    private var _blendMode : String = BlendMode.NORMAL;
     private var _spriteSheetAnimationSpeed : uint = 1;
     private var _smoothing : String = TextureSmoothing.NONE;
     private var _isSpriteSheet : Boolean;
@@ -26,7 +26,7 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
     private var _textures : Vector.<SubTexture>;
     private var _renderer : StardustStarlingRenderer;
 
-    public function set container(container:DisplayObjectContainer) : void
+    public function set container(container : DisplayObjectContainer) : void
     {
         createRendererIfNeeded();
         container.addChild(_renderer);
@@ -34,8 +34,7 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
 
     private function createRendererIfNeeded() : void
     {
-        if (_renderer == null)
-        {
+        if (_renderer == null) {
             _renderer = new StardustStarlingRenderer();
             _renderer.blendMode = _blendMode;
             _renderer.texSmoothing = _smoothing;
@@ -43,14 +42,13 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
         }
     }
 
-    override public function stepEnd(emitter:Emitter, particles:Vector.<Particle>, time:Number):void {
-        if (_isSpriteSheet && _spriteSheetAnimationSpeed > 0)
-        {
-            var mNumParticles:uint = particles.length;
-            for (var i:int = 0; i < mNumParticles; ++i)
-            {
+    override public function stepEnd(emitter : Emitter, particles : Vector.<Particle>, time : Number) : void
+    {
+        if (_isSpriteSheet && _spriteSheetAnimationSpeed > 0) {
+            var mNumParticles : uint = particles.length;
+            for (var i : int = 0; i < mNumParticles; ++i) {
                 var particle : Particle = particles[i];
-                var currFrame:int = particle.currentAnimationFrame;
+                var currFrame : int = particle.currentAnimationFrame;
                 currFrame++;
                 if (currFrame >= _totalFrames) {
                     currFrame = 0;
@@ -61,56 +59,60 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
         _renderer.advanceTime(particles);
     }
 
-    override public function particleAdded(particle:Particle):void {
-        if (_isSpriteSheet)
-        {
-            var currFrame:uint = 0;
-            if (_spriteSheetStartAtRandomFrame)
-            {
+    override public function particleAdded(particle : Particle) : void
+    {
+        if (_isSpriteSheet) {
+            var currFrame : uint = 0;
+            if (_spriteSheetStartAtRandomFrame) {
                 currFrame = Math.random() * _totalFrames;
             }
             particle.currentAnimationFrame = currFrame;
         }
-        else
-        {
+        else {
             particle.currentAnimationFrame = 0;
         }
     }
 
-    public function get renderer():StardustStarlingRenderer
+    public function get renderer() : StardustStarlingRenderer
     {
         return _renderer;
     }
 
-    public function set spriteSheetAnimationSpeed(spriteSheetAnimationSpeed:uint):void {
+    public function set spriteSheetAnimationSpeed(spriteSheetAnimationSpeed : uint) : void
+    {
         _spriteSheetAnimationSpeed = spriteSheetAnimationSpeed;
-        if (_textures)
-        {
+        if (_textures) {
             setTextures(_textures);
         }
     }
 
-    public function get spriteSheetAnimationSpeed():uint {
+    public function get spriteSheetAnimationSpeed() : uint
+    {
         return _spriteSheetAnimationSpeed;
     }
 
-    public function set spriteSheetStartAtRandomFrame(spriteSheetStartAtRandomFrame:Boolean):void {
+    public function set spriteSheetStartAtRandomFrame(spriteSheetStartAtRandomFrame : Boolean) : void
+    {
         _spriteSheetStartAtRandomFrame = spriteSheetStartAtRandomFrame;
     }
 
-    public function get spriteSheetStartAtRandomFrame():Boolean {
+    public function get spriteSheetStartAtRandomFrame() : Boolean
+    {
         return _spriteSheetStartAtRandomFrame;
     }
 
-    public function get isSpriteSheet():Boolean {
+    public function get isSpriteSheet() : Boolean
+    {
         return _isSpriteSheet;
     }
 
-    public function get smoothing():Boolean {
+    public function get smoothing() : Boolean
+    {
         return _smoothing != TextureSmoothing.NONE;
     }
 
-    public function set smoothing(value:Boolean):void {
+    public function set smoothing(value : Boolean) : void
+    {
         if (value == true) {
             _smoothing = TextureSmoothing.BILINEAR;
         }
@@ -121,24 +123,26 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
         _renderer.texSmoothing = _smoothing;
     }
 
-    public function get premultiplyAlpha():Boolean {
+    public function get premultiplyAlpha() : Boolean
+    {
         return _premultiplyAlpha;
     }
 
-    public function set premultiplyAlpha(value:Boolean):void {
+    public function set premultiplyAlpha(value : Boolean) : void
+    {
         _premultiplyAlpha = value;
         createRendererIfNeeded();
         _renderer.premultiplyAlpha = value;
     }
 
-    public function set blendMode(blendMode:String):void
+    public function set blendMode(blendMode : String) : void
     {
         _blendMode = blendMode;
         createRendererIfNeeded();
         _renderer.blendMode = blendMode;
     }
 
-    public function get blendMode():String
+    public function get blendMode() : String
     {
         return _blendMode;
     }
@@ -149,20 +153,17 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
      *  - The simulations must have the same render target, tinted, smoothing, blendMode, same filter
      *    and the same premultiplyAlpha values.
      **/
-    public function setTextures(textures : Vector.<SubTexture>):void
+    public function setTextures(textures : Vector.<SubTexture>) : void
     {
-        if (textures == null || textures.length == 0)
-        {
+        if (textures == null || textures.length == 0) {
             throw new ArgumentError("the textures parameter cannot be null and needs to hold at least 1 element");
         }
         createRendererIfNeeded();
         _isSpriteSheet = textures.length > 1;
         _textures = textures;
-        var frames:Vector.<Frame> = new <Frame>[];
-        for each (var texture:SubTexture in textures)
-        {
-            if (texture.root != textures[0].root)
-            {
+        var frames : Vector.<Frame> = new <Frame>[];
+        for each (var texture : SubTexture in textures) {
+            if (texture.root != textures[0].root) {
                 throw new Error("The texture " + texture + " does not share the same base root with others");
             }
             // TODO use the transformationMatrix
@@ -174,12 +175,10 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
                     texture.width * 0.5,
                     texture.height * 0.5);
             var numFrames : uint = _spriteSheetAnimationSpeed;
-            if (numFrames == 0)
-            {
+            if (numFrames == 0) {
                 numFrames = 1; // if animation speed is 0, add each frame once
             }
-            for (var k:int = 0; k < numFrames; k++)
-            {
+            for (var k : int = 0; k < numFrames; k++) {
                 frames.push(frame);
             }
         }
@@ -193,12 +192,14 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
     }
 
     //////////////////////////////////////////////////////// XML
-    override public function getXMLTagName():String {
+    override public function getXMLTagName() : String
+    {
         return "StarlingHandler";
     }
 
-    override public function toXML():XML {
-        var xml:XML = super.toXML();
+    override public function toXML() : XML
+    {
+        var xml : XML = super.toXML();
         xml.@spriteSheetAnimationSpeed = _spriteSheetAnimationSpeed;
         xml.@spriteSheetStartAtRandomFrame = _spriteSheetStartAtRandomFrame;
         xml.@smoothing = smoothing;
@@ -207,7 +208,8 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
         return xml;
     }
 
-    override public function parseXML(xml:XML, builder:XMLBuilder = null):void {
+    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
+    {
         super.parseXML(xml, builder);
         _spriteSheetAnimationSpeed = parseInt(xml.@spriteSheetAnimationSpeed);
         _spriteSheetStartAtRandomFrame = (xml.@spriteSheetStartAtRandomFrame == "true");

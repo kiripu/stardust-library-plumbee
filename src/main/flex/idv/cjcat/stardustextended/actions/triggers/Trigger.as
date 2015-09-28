@@ -8,22 +8,23 @@ import idv.cjcat.stardustextended.particles.Particle;
 public class Trigger extends StardustElement
 {
 
-    public function testTrigger(emitter:Emitter, particle:Particle, time:Number):Boolean
+    public function testTrigger(emitter : Emitter, particle : Particle, time : Number) : Boolean
     {
         throw new Error("This method must be overridden");
     }
 
     //XML
     //------------------------------------------------------------------------------------------------
-    override public function getXMLTagName():String
+    override public function getXMLTagName() : String
     {
         throw new Error("This method must be overridden");
     }
 
-    override public function getElementTypeXMLTag():XML
+    override public function getElementTypeXMLTag() : XML
     {
         return <triggers/>;
     }
+
     //------------------------------------------------------------------------------------------------
     //end of XML
 }

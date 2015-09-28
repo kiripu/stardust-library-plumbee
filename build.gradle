@@ -1,3 +1,19 @@
+/*
+Gradle script for building the library. Usage:
+Have a local or a remote Maven repository which hosts the dependencies (only Starling 1.7.0 in this case)
+Have a file called gradle.properties in [Users]/[UserName]/.gradle with the following contents:
+
+mavenUsername=[the username to access your Maven repo]
+mavenPassword=[password for your Maven repo]
+flashPlayerLocation=C:\\[path to flash player]\\flashplayer.exe
+
+(flashPlayerLocation is only needed if you want to run tests)
+(OSX only) make the gradlew file executable in the root directory
+
+Run gradlew build     to build the .swc and run tests
+Run gradlew assemble  to build the .swc
+Run gradlew tasks     to list all other tasks, e.g. to make project files for Flash Builder or IntelliJ IDEA
+*/
 import org.apache.tools.ant.taskdefs.condition.Os
 
 buildscript {
@@ -75,6 +91,7 @@ task wrapper(type: Wrapper) {
 ///////////////////////////////////////// Maven
 // this is a workaround, see https://github.com/GradleFx/GradleFx/issues/91
 uploadArchives {
+    description 'Deploys the existing .swc to the local or remote Maven repository. Also creates the pom.xml file.'
     repositories {
         mavenDeployer {
             // invoke this with the -PdeployToRepoManager command line argument

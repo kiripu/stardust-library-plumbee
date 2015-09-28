@@ -13,26 +13,24 @@ import starling.textures.TextureSmoothing;
 public class ParticleProgram
 {
 
-    private static const sProgramNameCache:Dictionary = new Dictionary();
+    private static const sProgramNameCache : Dictionary = new Dictionary();
 
     public static function getProgram(hasTexture : Boolean,
-                                      texTinted:Boolean = false,
+                                      texTinted : Boolean = false,
                                       texMipmap : Boolean = true,
                                       texRepeat : Boolean = false,
                                       texFormat : String = "bgra",
-                                      texSmoothing : String = "bilinear"):Program3D
+                                      texSmoothing : String = "bilinear") : Program3D
     {
-        var target:Starling = Starling.current;
-        var programName:String;
+        var target : Starling = Starling.current;
+        var programName : String;
 
-        if (hasTexture)
-        {
+        if (hasTexture) {
             programName = getImageProgramName(texTinted, texMipmap, texRepeat, texFormat, texSmoothing);
         }
 
-        var program:Program3D = target.getProgram(programName);
-        if (!program)
-        {
+        var program : Program3D = target.getProgram(programName);
+        if (!program) {
             // this is the input data we'll pass to the shaders:
             //
             // va0 -> position
@@ -41,8 +39,8 @@ public class ParticleProgram
             // vc0 -> alpha
             // vc1 -> mvpMatrix
             // fs0 -> texture
-            var vertexShader:String;
-            var fragmentShader:String;
+            var vertexShader : String;
+            var fragmentShader : String;
 
             if (!hasTexture) // Quad shaders
             {
@@ -56,12 +54,12 @@ public class ParticleProgram
                 vertexShader = texTinted ? "m44 op, va0, vc1 \n" + // 4x4 matrix transform to output clipspace
                                            "mul v0, va1, vc0 \n" + // multiply alpha (vc0) with color (va1)
                                            "mov v1, va2      \n" // pass texture coordinates to fragment program
-                                            : "m44 op, va0, vc1 \n" + // 4x4 matrix transform to output clipspace
-                                            "mov v1, va2      \n"; // pass texture coordinates to fragment program
+                        : "m44 op, va0, vc1 \n" + // 4x4 matrix transform to output clipspace
+                          "mov v1, va2      \n"; // pass texture coordinates to fragment program
 
                 fragmentShader = texTinted ? "tex ft1,  v1, fs0 <???> \n" + // sample texture 0
                                              "mul  oc, ft1,  v0       \n" // multiply color with texel color
-                                             : "tex  oc,  v1, fs0 <???> \n"; // sample texture 0
+                        : "tex  oc,  v1, fs0 <???> \n"; // sample texture 0
 
                 fragmentShader = fragmentShader.replace("<???>", RenderSupport.getTextureLookupFlags(texFormat, texMipmap, texRepeat, texSmoothing));
             }
@@ -70,9 +68,9 @@ public class ParticleProgram
         return program;
     }
 
-    private static function getImageProgramName(tinted:Boolean, mipMap:Boolean = true, repeat:Boolean = false, format:String = "bgra", smoothing:String = "bilinear"):String
+    private static function getImageProgramName(tinted : Boolean, mipMap : Boolean = true, repeat : Boolean = false, format : String = "bgra", smoothing : String = "bilinear") : String
     {
-        var bitField:uint = 0;
+        var bitField : uint = 0;
 
         if (tinted)
             bitField |= 1;
@@ -91,10 +89,9 @@ public class ParticleProgram
         else if (format == "compressedAlpha")
             bitField |= 1 << 6;
 
-        var name:String = sProgramNameCache[bitField];
+        var name : String = sProgramNameCache[bitField];
 
-        if (name == null)
-        {
+        if (name == null) {
             name = "__STARDUST_RENDERER." + bitField.toString(16);
             sProgramNameCache[bitField] = name;
         }

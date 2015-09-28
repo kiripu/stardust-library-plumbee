@@ -1,4 +1,5 @@
-package idv.cjcat.stardustextended.flashdisplay.handlers {
+package idv.cjcat.stardustextended.flashdisplay.handlers
+{
 
 import flash.display.BitmapData;
 import flash.display.DisplayObject;
@@ -18,39 +19,37 @@ public class DisplayObjectSpriteSheetHandler extends DisplayObjectHandler implem
     private var _spriteSheetStartAtRandomFrame : Boolean;
     private var _smoothing : Boolean;
     private var _spriteSheetAnimationSpeed : uint;
-    private var _pool:DisplayObjectPool;
+    private var _pool : DisplayObjectPool;
     private var _totalFrames : uint;
     private var _isSpriteSheet : Boolean;
     private var _time : Number;
     private var _images : Vector.<BitmapData>;
 
-    public function DisplayObjectSpriteSheetHandler(container:DisplayObjectContainer = null,
-                                                    blendMode:String = "normal",
-                                                    addChildMode:int = 0)
+    public function DisplayObjectSpriteSheetHandler(container : DisplayObjectContainer = null,
+                                                    blendMode : String = "normal",
+                                                    addChildMode : int = 0)
     {
         super(container, blendMode, addChildMode);
         _pool = new DisplayObjectPool();
         _pool.reset(CenteredBitmap, null);
     }
 
-    override public function stepBegin(emitter:Emitter, particles:Vector.<Particle>, time:Number):void
+    override public function stepBegin(emitter : Emitter, particles : Vector.<Particle>, time : Number) : void
     {
         _time = time;
     }
 
-    override public function stepEnd(emitter:Emitter, particles:Vector.<Particle>, time:Number):void {
+    override public function stepEnd(emitter : Emitter, particles : Vector.<Particle>, time : Number) : void
+    {
         super.stepEnd(emitter, particles, time);
-        for each (var particle : Particle in particles)
-        {
+        for each (var particle : Particle in particles) {
             var bmp : CenteredBitmap = CenteredBitmap(particle.target);
-            if (_isSpriteSheet && _spriteSheetAnimationSpeed > 0)
-            {
+            if (_isSpriteSheet && _spriteSheetAnimationSpeed > 0) {
                 var currFrame : uint = particle.currentAnimationFrame;
                 var nextFrame : uint = (currFrame + _time) % _totalFrames;
                 var nextImageIndex : uint = uint(nextFrame / _spriteSheetAnimationSpeed);
                 var currImageIndex : uint = uint(currFrame / _spriteSheetAnimationSpeed);
-                if ( nextImageIndex != currImageIndex )
-                {
+                if (nextImageIndex != currImageIndex) {
                     bmp.bitmapData = _images[nextImageIndex];
                     bmp.smoothing = _smoothing;
                 }
@@ -61,31 +60,26 @@ public class DisplayObjectSpriteSheetHandler extends DisplayObjectHandler implem
         }
     }
 
-    override public function particleAdded(particle:Particle):void
+    override public function particleAdded(particle : Particle) : void
     {
         var bmp : CenteredBitmap = CenteredBitmap(_pool.get());
         particle.target = bmp;
 
-        if (_isSpriteSheet)
-        {
+        if (_isSpriteSheet) {
             makeSpriteSheetCache();
-            var currFrame:uint = 0;
-            if (_spriteSheetStartAtRandomFrame)
-            {
+            var currFrame : uint = 0;
+            if (_spriteSheetStartAtRandomFrame) {
                 currFrame = Math.random() * _totalFrames;
             }
-            if (_spriteSheetAnimationSpeed > 0)
-            {
+            if (_spriteSheetAnimationSpeed > 0) {
                 bmp.bitmapData = _images[uint(currFrame / _spriteSheetAnimationSpeed)];
             }
-            else
-            {
+            else {
                 bmp.bitmapData = _images[currFrame];
             }
             particle.currentAnimationFrame = currFrame;
         }
-        else
-        {
+        else {
             bmp.bitmapData = _images[0];
         }
         bmp.smoothing = _smoothing;
@@ -95,12 +89,11 @@ public class DisplayObjectSpriteSheetHandler extends DisplayObjectHandler implem
         super.particleAdded(particle);
     }
 
-    override public function particleRemoved(particle:Particle):void
+    override public function particleRemoved(particle : Particle) : void
     {
         super.particleRemoved(particle);
-        var obj:DisplayObject = DisplayObject(particle.target);
-        if (obj)
-        {
+        var obj : DisplayObject = DisplayObject(particle.target);
+        if (obj) {
             _pool.recycle(obj);
         }
     }
@@ -111,45 +104,50 @@ public class DisplayObjectSpriteSheetHandler extends DisplayObjectHandler implem
         makeSpriteSheetCache();
     }
 
-    public function set spriteSheetAnimationSpeed(spriteSheetAnimationSpeed:uint):void {
+    public function set spriteSheetAnimationSpeed(spriteSheetAnimationSpeed : uint) : void
+    {
         _spriteSheetAnimationSpeed = spriteSheetAnimationSpeed;
         makeSpriteSheetCache();
     }
 
-    public function get spriteSheetAnimationSpeed():uint {
+    public function get spriteSheetAnimationSpeed() : uint
+    {
         return _spriteSheetAnimationSpeed;
     }
 
-    public function set spriteSheetStartAtRandomFrame(spriteSheetStartAtRandomFrame:Boolean):void {
+    public function set spriteSheetStartAtRandomFrame(spriteSheetStartAtRandomFrame : Boolean) : void
+    {
         _spriteSheetStartAtRandomFrame = spriteSheetStartAtRandomFrame;
     }
 
-    public function get spriteSheetStartAtRandomFrame():Boolean {
+    public function get spriteSheetStartAtRandomFrame() : Boolean
+    {
         return _spriteSheetStartAtRandomFrame;
     }
 
-    public function get isSpriteSheet():Boolean {
+    public function get isSpriteSheet() : Boolean
+    {
         return _isSpriteSheet;
     }
 
-    public function get smoothing():Boolean {
+    public function get smoothing() : Boolean
+    {
         return _smoothing;
     }
 
-    public function set smoothing(value:Boolean):void {
+    public function set smoothing(value : Boolean) : void
+    {
         _smoothing = value;
     }
 
-    private function makeSpriteSheetCache() :void
+    private function makeSpriteSheetCache() : void
     {
-        if (_images == null)
-        {
+        if (_images == null) {
             return;
         }
         _isSpriteSheet = _images.length > 1;
         var numStates : uint = _spriteSheetAnimationSpeed;
-        if (numStates == 0)
-        {
+        if (numStates == 0) {
             numStates = 1; // frame can only change at particle birth
         }
         _totalFrames = numStates * _images.length;
@@ -158,19 +156,22 @@ public class DisplayObjectSpriteSheetHandler extends DisplayObjectHandler implem
     //XML
     //------------------------------------------------------------------------------------------------
 
-    override public function getXMLTagName():String {
+    override public function getXMLTagName() : String
+    {
         return "DisplayObjectSpriteSheetHandler";
     }
 
-    override public function toXML():XML {
-        var xml:XML = super.toXML();
+    override public function toXML() : XML
+    {
+        var xml : XML = super.toXML();
         xml.@spriteSheetAnimationSpeed = _spriteSheetAnimationSpeed;
         xml.@spriteSheetStartAtRandomFrame = _spriteSheetStartAtRandomFrame;
         xml.@smoothing = _smoothing;
         return xml;
     }
 
-    override public function parseXML(xml:XML, builder:XMLBuilder = null):void {
+    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
+    {
         super.parseXML(xml, builder);
         _spriteSheetAnimationSpeed = xml.@spriteSheetAnimationSpeed;
         _spriteSheetStartAtRandomFrame = (xml.@spriteSheetStartAtRandomFrame == "true");

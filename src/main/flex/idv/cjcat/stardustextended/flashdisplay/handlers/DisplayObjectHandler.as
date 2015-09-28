@@ -5,6 +5,7 @@ import idv.cjcat.stardustextended.emitters.Emitter;
 
 import flash.display.DisplayObject;
 import flash.display.DisplayObjectContainer;
+
 import idv.cjcat.stardustextended.handlers.ParticleHandler;
 import idv.cjcat.stardustextended.particles.Particle;
 import idv.cjcat.stardustextended.xml.XMLBuilder;
@@ -14,32 +15,35 @@ import idv.cjcat.stardustextended.xml.XMLBuilder;
  * removes dead particles from the display list,
  * and updates the display object's x, y, rotation, scaleX, scaleY, and alpha properties.
  */
-public class DisplayObjectHandler extends ParticleHandler {
+public class DisplayObjectHandler extends ParticleHandler
+{
 
-    public var addChildMode:int;
+    public var addChildMode : int;
     /**
      * The target container.
      */
-    public var container:DisplayObjectContainer;
+    public var container : DisplayObjectContainer;
     /**
      * Whether to change a display object's parent to the target container if the object already belongs to another parent.
      */
-    public var forceParentChange:Boolean;
+    public var forceParentChange : Boolean;
     /**
      * The blend mode for drawing.
      */
-    private var _blendMode:String;
+    private var _blendMode : String;
 
-    private var displayObj:DisplayObject;
+    private var displayObj : DisplayObject;
 
-    public function DisplayObjectHandler(container:DisplayObjectContainer = null, blendMode:String = "normal", addChildMode:int = 0) {
+    public function DisplayObjectHandler(container : DisplayObjectContainer = null, blendMode : String = "normal", addChildMode : int = 0)
+    {
         this.container = container;
         this.addChildMode = addChildMode;
         this.blendMode = blendMode;
         forceParentChange = false;
     }
 
-    override public function particleAdded(particle:Particle):void {
+    override public function particleAdded(particle : Particle) : void
+    {
         displayObj = DisplayObject(particle.target);
         displayObj.blendMode = _blendMode;
 
@@ -61,14 +65,15 @@ public class DisplayObjectHandler extends ParticleHandler {
         }
     }
 
-    override public function particleRemoved(particle:Particle):void {
+    override public function particleRemoved(particle : Particle) : void
+    {
         displayObj = DisplayObject(particle.target);
         displayObj.parent.removeChild(displayObj);
     }
 
-    override public function stepEnd(emitter:Emitter, particles:Vector.<Particle>, time:Number):void {
-        for each (var particle : Particle in particles)
-        {
+    override public function stepEnd(emitter : Emitter, particles : Vector.<Particle>, time : Number) : void
+    {
+        for each (var particle : Particle in particles) {
             displayObj = DisplayObject(particle.target);
 
             displayObj.x = particle.x;
@@ -79,22 +84,27 @@ public class DisplayObjectHandler extends ParticleHandler {
         }
     }
 
-    public function set blendMode(val : String) : void {
+    public function set blendMode(val : String) : void
+    {
         _blendMode = val;
     }
 
-    public function get blendMode() : String {
+    public function get blendMode() : String
+    {
         return _blendMode;
     }
+
     //XML
     //------------------------------------------------------------------------------------------------
 
-    override public function getXMLTagName():String {
+    override public function getXMLTagName() : String
+    {
         return "DisplayObjectHandler";
     }
 
-    override public function toXML():XML {
-        var xml:XML = super.toXML();
+    override public function toXML() : XML
+    {
+        var xml : XML = super.toXML();
 
         xml.@addChildMode = addChildMode;
         xml.@forceParentChange = forceParentChange;
@@ -103,7 +113,8 @@ public class DisplayObjectHandler extends ParticleHandler {
         return xml;
     }
 
-    override public function parseXML(xml:XML, builder:XMLBuilder = null):void {
+    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
+    {
         super.parseXML(xml, builder);
 
         if (xml.@addChildMode.length()) addChildMode = parseInt(xml.@addChildMode);

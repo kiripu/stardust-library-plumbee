@@ -6,6 +6,6 @@ public interface IFieldContainer
 {
     function get fields() : Vector.<Field>;
 
-    function set fields( value : Vector.<Field> ) : void;
+    function set fields(value : Vector.<Field>) : void;
 }
 }

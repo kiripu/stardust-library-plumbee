@@ -1,21 +1,26 @@
-﻿package idv.cjcat.stardustextended.particles {
+﻿package idv.cjcat.stardustextended.particles
+{
 
 /** @private */
-	public class PooledParticleFactory extends ParticleFactory {
-		
-		protected var particlePool:ParticlePool;
-		
-		public function PooledParticleFactory() {
-			particlePool = ParticlePool.getInstance();
-		}
+public class PooledParticleFactory extends ParticleFactory
+{
 
-		override protected final function createNewParticle():Particle {
-			return particlePool.get();
-		}
+    protected var particlePool : ParticlePool;
 
-        [Inline]
-		public final function recycle(particle:Particle):void {
-			particlePool.recycle(particle);
-		}
-	}
+    public function PooledParticleFactory()
+    {
+        particlePool = ParticlePool.getInstance();
+    }
+
+    override protected final function createNewParticle() : Particle
+    {
+        return particlePool.get();
+    }
+
+    [Inline]
+    public final function recycle(particle : Particle) : void
+    {
+        particlePool.recycle(particle);
+    }
+}
 }

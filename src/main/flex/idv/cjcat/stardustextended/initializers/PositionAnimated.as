@@ -23,8 +23,16 @@ public class PositionAnimated extends Initializer implements IZoneContainer
 {
 
     protected var zoneCollection : ZoneCollection;
-    public function get zones() : Vector.<Zone> { return zoneCollection.zones; }
-    public function set zones(value : Vector.<Zone>) : void { zoneCollection.zones = value; }
+
+    public function get zones() : Vector.<Zone>
+    {
+        return zoneCollection.zones;
+    }
+
+    public function set zones(value : Vector.<Zone>) : void
+    {
+        zoneCollection.zones = value;
+    }
 
     public var inheritVelocity : Boolean = false;
     public var positions : Vector.<Point>;
@@ -34,58 +42,50 @@ public class PositionAnimated extends Initializer implements IZoneContainer
     public function PositionAnimated(zones : Vector.<Zone> = null)
     {
         zoneCollection = new ZoneCollection();
-        if (zones)
-        {
+        if (zones) {
             zoneCollection.zones = zones;
         }
-        else
-        {
+        else {
             zoneCollection.zones.push(new RectZone())
         }
     }
 
-    override public function doInitialize( particles : Vector.<Particle>, currentTime : Number ) : void
+    override public function doInitialize(particles : Vector.<Particle>, currentTime : Number) : void
     {
-        if ( positions )
-        {
+        if (positions) {
             currentPos = currentTime % positions.length;
             prevPos = (currentPos > 0) ? currentPos - 1 : positions.length - 1;
         }
-        super.doInitialize( particles, currentTime );
+        super.doInitialize(particles, currentTime);
     }
 
-    override public function initialize( particle : Particle ) : void
+    override public function initialize(particle : Particle) : void
     {
         var md2D : MotionData2D = zoneCollection.getRandomPointInZones();
-        if (md2D)
-        {
+        if (md2D) {
             particle.x = md2D.x;
             particle.y = md2D.y;
 
-            if ( positions )
-            {
+            if (positions) {
                 particle.x = md2D.x + positions[currentPos].x;
                 particle.y = md2D.y + positions[currentPos].y;
 
-                if ( inheritVelocity )
-                {
+                if (inheritVelocity) {
                     particle.vx += positions[currentPos].x - positions[prevPos].x;
                     particle.vy += positions[currentPos].y - positions[prevPos].y;
                 }
             }
-            else
-            {
+            else {
                 particle.x = md2D.x;
                 particle.y = md2D.y;
             }
-            MotionData2DPool.recycle( md2D );
+            MotionData2DPool.recycle(md2D);
         }
     }
 
     public function get currentPosition() : Point
     {
-        if ( positions )
-        {
+        if (positions) {
             return positions[currentPos];
         }
         return null;
@@ -94,7 +94,8 @@ public class PositionAnimated extends Initializer implements IZoneContainer
 
     //XML
     //------------------------------------------------------------------------------------------------
-    override public function getRelatedObjects():Array {
+    override public function getRelatedObjects() : Array
+    {
         return zoneCollection.toArray();
     }
 
@@ -108,42 +109,37 @@ public class PositionAnimated extends Initializer implements IZoneContainer
         var xml : XML = super.toXML();
         zoneCollection.addToStardustXML(xml);
         xml.@inheritVelocity = inheritVelocity;
-        if ( positions && positions.length > 0 )
-        {
-            registerClassAlias( "String", String );
-            registerClassAlias( "Point", Point );
-            registerClassAlias( "VecPoint", Vector.<Point> as Class );
+        if (positions && positions.length > 0) {
+            registerClassAlias("String", String);
+            registerClassAlias("Point", Point);
+            registerClassAlias("VecPoint", Vector.<Point> as Class);
             var ba : ByteArray = new ByteArray();
-            ba.writeObject( positions );
-            xml.@positions = Base64.encode( ba );
+            ba.writeObject(positions);
+            xml.@positions = Base64.encode(ba);
         }
         return xml;
     }
 
-    override public function parseXML( xml : XML, builder : XMLBuilder = null ) : void
+    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
     {
-        super.parseXML( xml, builder );
+        super.parseXML(xml, builder);
 
-        if (xml.@zone.length())
-        {
+        if (xml.@zone.length()) {
             trace("WARNING: the simulation contains a deprecated property 'zone' for " + getXMLTagName());
-            zoneCollection.zones = Vector.<Zone>( [Zone(builder.getElementByName(xml.@zone))] );
+            zoneCollection.zones = Vector.<Zone>([Zone(builder.getElementByName(xml.@zone))]);
         }
-        else
-        {
+        else {
             zoneCollection.parseFromStardustXML(xml, builder);
         }
-        if ( xml.@positions.length() )
-        {
-            registerClassAlias( "String", String );
-            registerClassAlias( "Point", Point );
-            registerClassAlias( "VecPoint", Vector.<Point> as Class );
+        if (xml.@positions.length()) {
+            registerClassAlias("String", String);
+            registerClassAlias("Point", Point);
+            registerClassAlias("VecPoint", Vector.<Point> as Class);
             const ba : ByteArray = Base64.decode(xml.@positions);
             ba.position = 0;
             positions = ba.readObject();
         }
-        if ( xml.@inheritVelocity.length() )
-        {
+        if (xml.@inheritVelocity.length()) {
             inheritVelocity = (xml.@inheritVelocity == "true");
         }
     }

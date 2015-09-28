@@ -56,91 +56,94 @@ import idv.cjcat.stardustextended.zones.RectZone;
 import idv.cjcat.stardustextended.zones.Sector;
 import idv.cjcat.stardustextended.zones.SinglePoint;
 
-    /**
-	 * Packs together common classes used by the editor (except StarlingHandler).
-	 */
-	public class CommonClassPackage extends ClassPackage {
-		
-		private static var _instance:CommonClassPackage;
-		
-		public static function getInstance():CommonClassPackage {
-			if (!_instance) _instance = new CommonClassPackage();
-			return _instance;
-		}
-		
-		override protected final function populateClasses():void {
-			//actions
-			classes.push(AlphaCurve);
-			classes.push(DeathLife);
-			classes.push(Die);
-			classes.push(ScaleCurve);
-			classes.push(ColorCurve);
-			classes.push(RandomDrift);
-			classes.push(Accelerate);
-			classes.push(Damping);
-			classes.push(DeathZone);
-			classes.push(Deflect);
-			classes.push(Explode);
-			classes.push(Gravity);
-			classes.push(Impulse);
-			classes.push(Move);
-			classes.push(NormalDrift);
-			classes.push(Oriented);
-			classes.push(Spawn);
-			classes.push(SpeedLimit);
-			classes.push(Spin);
-			classes.push(VelocityField);
-			classes.push(AccelerationZone);
-			classes.push(ColorGradient);
+/**
+ * Packs together common classes used by the editor (except StarlingHandler).
+ */
+public class CommonClassPackage extends ClassPackage
+{
 
-			//action triggers
-			classes.push(DeathTrigger);
-			classes.push(LifeTrigger);
+    private static var _instance : CommonClassPackage;
 
-            //deflectors
-            classes.push(LineDeflector);
-            classes.push(CircleDeflector);
-            classes.push(WrappingBox);
+    public static function getInstance() : CommonClassPackage
+    {
+        if (!_instance) _instance = new CommonClassPackage();
+        return _instance;
+    }
 
-            //fields
-            classes.push(BitmapField);
-            classes.push(RadialField);
-            classes.push(UniformField);
+    override protected final function populateClasses() : void
+    {
+        //actions
+        classes.push(AlphaCurve);
+        classes.push(DeathLife);
+        classes.push(Die);
+        classes.push(ScaleCurve);
+        classes.push(ColorCurve);
+        classes.push(RandomDrift);
+        classes.push(Accelerate);
+        classes.push(Damping);
+        classes.push(DeathZone);
+        classes.push(Deflect);
+        classes.push(Explode);
+        classes.push(Gravity);
+        classes.push(Impulse);
+        classes.push(Move);
+        classes.push(NormalDrift);
+        classes.push(Oriented);
+        classes.push(Spawn);
+        classes.push(SpeedLimit);
+        classes.push(Spin);
+        classes.push(VelocityField);
+        classes.push(AccelerationZone);
+        classes.push(ColorGradient);
 
-			//clocks
-			classes.push(ImpulseClock);
-			classes.push(SteadyClock);
-			
-			//emitters
-			classes.push(Emitter);
-			
-			//initializers
-			classes.push(Age);
-			classes.push(Alpha);
-			classes.push(Color);
-			classes.push(Life);
-			classes.push(Mass);
-			classes.push(Scale);
-            classes.push(Omega);
-            classes.push(Rotation);
-            classes.push(Velocity);
-            classes.push(PositionAnimated);
-			
-			//randoms
-			classes.push(UniformRandom);
+        //action triggers
+        classes.push(DeathTrigger);
+        classes.push(LifeTrigger);
 
-            //zones
-            classes.push(CircleContour);
-            classes.push(CircleZone);
-            classes.push(Line);
-            classes.push(RectContour);
-            classes.push(RectZone);
-            classes.push(Sector);
-            classes.push(SinglePoint);
+        //deflectors
+        classes.push(LineDeflector);
+        classes.push(CircleDeflector);
+        classes.push(WrappingBox);
 
-            classes.push(FollowWaypoints);
+        //fields
+        classes.push(BitmapField);
+        classes.push(RadialField);
+        classes.push(UniformField);
 
-            classes.push(ParticleHandler);
-		}
-	}
+        //clocks
+        classes.push(ImpulseClock);
+        classes.push(SteadyClock);
+
+        //emitters
+        classes.push(Emitter);
+
+        //initializers
+        classes.push(Age);
+        classes.push(Alpha);
+        classes.push(Color);
+        classes.push(Life);
+        classes.push(Mass);
+        classes.push(Scale);
+        classes.push(Omega);
+        classes.push(Rotation);
+        classes.push(Velocity);
+        classes.push(PositionAnimated);
+
+        //randoms
+        classes.push(UniformRandom);
+
+        //zones
+        classes.push(CircleContour);
+        classes.push(CircleZone);
+        classes.push(Line);
+        classes.push(RectContour);
+        classes.push(RectZone);
+        classes.push(Sector);
+        classes.push(SinglePoint);
+
+        classes.push(FollowWaypoints);
+
+        classes.push(ParticleHandler);
+    }
+}
 }

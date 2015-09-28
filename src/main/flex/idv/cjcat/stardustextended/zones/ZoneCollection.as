@@ -13,15 +13,14 @@ public class ZoneCollection
     {
         var md2D : MotionData2D;
         var numZones : uint = zones.length;
-        if (numZones > 1)
-        {
+        if (numZones > 1) {
             var sumArea : Number = 0;
             var areas : Array = [];
-            for (var i:int = 0; i < numZones; i++) {
+            for (var i : int = 0; i < numZones; i++) {
                 sumArea += Zone(zones[i]).getArea();
                 areas.push(sumArea);
             }
-            var position:Number = Math.random() * sumArea;
+            var position : Number = Math.random() * sumArea;
             for (i = 0; i < areas.length; i++) {
                 if (position <= areas[i]) {
                     md2D = zones[i].getPoint();
@@ -29,8 +28,7 @@ public class ZoneCollection
                 }
             }
         }
-        else if (numZones == 1)
-        {
+        else if (numZones == 1) {
             md2D = zones[0].getPoint();
         }
         return md2D; // returns null if there are no zones
@@ -40,10 +38,8 @@ public class ZoneCollection
     public final function contains(xc : Number, yc : Number) : Boolean
     {
         var contains : Boolean = false;
-        for each (var zone : Zone in zones)
-        {
-            if (zone.contains(xc, yc))
-            {
+        for each (var zone : Zone in zones) {
+            if (zone.contains(xc, yc)) {
                 contains = true;
                 break;
             }
@@ -55,8 +51,7 @@ public class ZoneCollection
     public final function toArray() : Array
     {
         const result : Array = [];
-        for(var i : int = 0; i < zones.length; i++)
-        {
+        for (var i : int = 0; i < zones.length; i++) {
             result[result.length] = zones[i];
         }
         return result;
@@ -65,12 +60,10 @@ public class ZoneCollection
     [Inline]
     public final function addToStardustXML(stardustXML : XML) : void
     {
-        if (zones.length > 0)
-        {
+        if (zones.length > 0) {
             stardustXML.appendChild(<zones/>);
-            var zone:Zone;
-            for each (zone in zones)
-            {
+            var zone : Zone;
+            for each (zone in zones) {
                 stardustXML.zones.appendChild(zone.getXMLTag());
             }
         }
@@ -80,9 +73,8 @@ public class ZoneCollection
     public final function parseFromStardustXML(stardustXML : XML, builder : XMLBuilder) : void
     {
         zones = new Vector.<Zone>();
-        for each (var node : XML in stardustXML.zones.*)
-        {
-            zones.push( Zone(builder.getElementByName(node.@name)) );
+        for each (var node : XML in stardustXML.zones.*) {
+            zones.push(Zone(builder.getElementByName(node.@name)));
         }
     }
 }

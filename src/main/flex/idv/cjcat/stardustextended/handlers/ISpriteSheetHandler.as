@@ -4,22 +4,22 @@ package idv.cjcat.stardustextended.handlers
 public interface ISpriteSheetHandler
 {
 
-    function set spriteSheetAnimationSpeed(spriteSheetAnimationSpeed:uint):void;
+    function set spriteSheetAnimationSpeed(spriteSheetAnimationSpeed : uint) : void;
 
-    function get spriteSheetAnimationSpeed():uint;
+    function get spriteSheetAnimationSpeed() : uint;
 
-    function set spriteSheetStartAtRandomFrame(spriteSheetStartAtRandomFrame:Boolean):void;
+    function set spriteSheetStartAtRandomFrame(spriteSheetStartAtRandomFrame : Boolean) : void;
 
-    function get spriteSheetStartAtRandomFrame():Boolean;
+    function get spriteSheetStartAtRandomFrame() : Boolean;
 
-    function get smoothing():Boolean;
+    function get smoothing() : Boolean;
 
-    function set smoothing(value:Boolean):void;
+    function set smoothing(value : Boolean) : void;
 
-    function get isSpriteSheet():Boolean;
+    function get isSpriteSheet() : Boolean;
 
-    function set blendMode(blendMode:String):void;
+    function set blendMode(blendMode : String) : void;
 
-    function get blendMode():String;
+    function get blendMode() : String;
 }
 }

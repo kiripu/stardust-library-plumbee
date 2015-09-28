@@ -1,20 +1,22 @@
-package idv.cjcat.stardustextended.handlers.starling {
+package idv.cjcat.stardustextended.handlers.starling
+{
 
-public class Frame {
+public class Frame
+{
 
-    public var particleHalfWidth:Number;
-    public var particleHalfHeight:Number;
-    public var topLeftX:Number;
-    public var topLeftY:Number;
-    public var bottomRightX:Number;
-    public var bottomRightY:Number;
+    public var particleHalfWidth : Number;
+    public var particleHalfHeight : Number;
+    public var topLeftX : Number;
+    public var topLeftY : Number;
+    public var bottomRightX : Number;
+    public var bottomRightY : Number;
 
-    public function Frame(_topLeftX:Number,
-                          _topLeftY:Number,
-                          _bottomRightX:Number,
-                          _bottomRightY:Number,
-                          _halfWidth:Number,
-                          _halfHeight:Number)
+    public function Frame(_topLeftX : Number,
+                          _topLeftY : Number,
+                          _bottomRightX : Number,
+                          _bottomRightY : Number,
+                          _halfWidth : Number,
+                          _halfHeight : Number)
     {
         topLeftX = _topLeftX;
         topLeftY = _topLeftY;
