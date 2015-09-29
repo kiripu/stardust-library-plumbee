@@ -13,20 +13,6 @@ import idv.cjcat.stardustextended.StardustElement;
  */
 public class ParticleHandler extends StardustElement
 {
-
-    private static var _singleton : ParticleHandler;
-
-    public static function getSingleton() : ParticleHandler
-    {
-        if (!_singleton) _singleton = new ParticleHandler();
-        return _singleton;
-    }
-
-    public function ParticleHandler()
-    {
-
-    }
-
     /**
      * [Abstract Method] Invoked when each emitter step begins.
      * @param    emitter

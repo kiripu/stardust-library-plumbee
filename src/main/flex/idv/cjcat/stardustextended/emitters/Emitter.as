@@ -58,6 +58,10 @@ public class Emitter extends StardustElement implements ActionCollector, Initial
 
     //------------------------------------------------------------------------------------------------
     //end of particle collections
+    /**
+     * Particle handler is used to render particles
+     */
+    public var particleHandler : ParticleHandler;
 
     protected var _clock : Clock;
     /**
@@ -80,22 +84,10 @@ public class Emitter extends StardustElement implements ActionCollector, Initial
     protected var factory : PooledParticleFactory = new PooledParticleFactory();
     protected const _actionCollection : ActionCollection = new ActionCollection();
     protected const activeActions : Vector.<Action> = new Vector.<Action>();
-    protected var _particleHandler : ParticleHandler;
-
-    public function get particleHandler() : ParticleHandler
-    {
-        return _particleHandler;
-    }
-    public function set particleHandler(value : ParticleHandler) : void
-    {
-        if (!value) value = ParticleHandler.getSingleton();
-        _particleHandler = value;
-    }
 
     public function Emitter(clock : Clock = null, particleHandler : ParticleHandler = null)
     {
         needsSort = false;
-
         this.clock = clock;
         this.active = true;
         this.particleHandler = particleHandler;
@@ -129,7 +121,7 @@ public class Emitter extends StardustElement implements ActionCollector, Initial
      */
     public final function step(time : Number = 1) : void
     {
-        _particleHandler.stepBegin(this, _particles, time);
+        particleHandler.stepBegin(this, _particles, time);
 
         var i : int;
         var len : int;
@@ -177,7 +169,7 @@ public class Emitter extends StardustElement implements ActionCollector, Initial
             }
 
             if (p.isDead) {
-                _particleHandler.particleRemoved(p);
+                particleHandler.particleRemoved(p);
 
                 p.destroy();
                 factory.recycle(p);
@@ -194,7 +186,7 @@ public class Emitter extends StardustElement implements ActionCollector, Initial
 
         eventDispatcher.dispatchEvent(new StardustEmitterStepEndEvent(this));
 
-        _particleHandler.stepEnd(this, _particles, time);
+        particleHandler.stepEnd(this, _particles, time);
 
         currentTime = currentTime + time;
     }
@@ -334,7 +326,7 @@ public class Emitter extends StardustElement implements ActionCollector, Initial
             particle = particles[m];
             _particles.push(particle);
             //handle adding
-            _particleHandler.particleAdded(particle);
+            particleHandler.particleAdded(particle);
         }
     }
 
@@ -347,7 +339,7 @@ public class Emitter extends StardustElement implements ActionCollector, Initial
         for (var m : int = 0; m < _particles.length; ++m) {
             particle = _particles[m];
             //handle removal
-            _particleHandler.particleRemoved(particle);
+            particleHandler.particleRemoved(particle);
 
             particle.destroy();
             factory.recycle(particle);
@@ -382,7 +374,7 @@ public class Emitter extends StardustElement implements ActionCollector, Initial
         var xml : XML = super.toXML();
         xml.@active = active.toString();
         xml.@clock = _clock.name;
-        xml.@particleHandler = _particleHandler.name;
+        xml.@particleHandler = particleHandler.name;
 
         if (actions.length) {
             xml.appendChild(<actions/>);

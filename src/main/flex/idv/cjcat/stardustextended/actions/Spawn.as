@@ -21,8 +21,8 @@ public class Spawn extends Action
 
     public var inheritDirection : Boolean;
     public var inheritVelocity : Boolean;
-    public var spawnerEmitter : Emitter;
-    public var spawnerEmitterId : String;
+    private var _spawnerEmitter : Emitter;
+    private var _spawnerEmitterId : String;
     private var _trigger : Trigger;
 
     public function Spawn(inheritDirection : Boolean = true, inheritVelocity : Boolean = false, trigger : Trigger = null)
@@ -32,6 +32,22 @@ public class Spawn extends Action
         this.inheritDirection = inheritDirection;
         this.inheritVelocity = inheritVelocity;
         this.trigger = trigger;
+    }
+
+    public function set spawnerEmitter(em : Emitter) : void
+    {
+        _spawnerEmitter = em;
+        _spawnerEmitterId = em ? em.name : null;
+    }
+
+    public function get spawnerEmitter() : Emitter
+    {
+        return _spawnerEmitter;
+    }
+
+    public function get spawnerEmitterId() : String
+    {
+        return _spawnerEmitterId;
     }
 
     public function get trigger() : Trigger
@@ -49,12 +65,12 @@ public class Spawn extends Action
 
     override public function update(emitter : Emitter, particle : Particle, timeDelta : Number, currentTime : Number) : void
     {
-        if (spawnerEmitter == null) {
+        if (_spawnerEmitter == null) {
             return;
         }
         if (_trigger.testTrigger(emitter, particle, timeDelta)) {
             var p : Particle;
-            var newParticles : Vector.<Particle> = spawnerEmitter.createParticles(timeDelta);
+            var newParticles : Vector.<Particle> = _spawnerEmitter.createParticles(timeDelta);
             var len : uint = newParticles.length;
             for (var m : int = 0; m < len; ++m) {
                 p = newParticles[m];
@@ -92,8 +108,8 @@ public class Spawn extends Action
         xml.@inheritVelocity = inheritVelocity;
         xml.@trigger = _trigger.name;
 
-        if (spawnerEmitter) {
-            xml.@spawnerEmitter = spawnerEmitter.name;
+        if (_spawnerEmitter) {
+            xml.@spawnerEmitter = _spawnerEmitter.name;
         }
 
         return xml;
@@ -106,7 +122,7 @@ public class Spawn extends Action
         inheritDirection = (xml.@inheritDirection == "true");
         inheritVelocity = (xml.@inheritVelocity == "true");
 
-        if (xml.@spawnerEmitter) spawnerEmitterId = xml.@spawnerEmitter;
+        if (xml.@spawnerEmitter) _spawnerEmitterId = xml.@spawnerEmitter;
         _trigger = builder.getElementByName(xml.@trigger) as Trigger;
     }
 
