@@ -1,5 +1,6 @@
 ﻿package idv.cjcat.stardustextended.actions
 {
+import idv.cjcat.stardustextended.StardustElement;
 import idv.cjcat.stardustextended.emitters.Emitter;
 import idv.cjcat.stardustextended.particles.Particle;
 import idv.cjcat.stardustextended.xml.XMLBuilder;
@@ -63,9 +64,9 @@ public class Impulse extends Action
     //XML
     //------------------------------------------------------------------------------------------------
 
-    override public function getRelatedObjects() : Array
+    override public function getRelatedObjects() : Vector.<StardustElement>
     {
-        return [_field];
+        return new <StardustElement>[_field];
     }
 
     override public function getXMLTagName() : String

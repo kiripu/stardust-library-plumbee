@@ -77,8 +77,6 @@ public class Emitter extends StardustElement implements ActionCollector, Initial
      * The time since the simulation is running
      */
     public var currentTime : Number = 0;
-    /** @private */
-    public var needsSort : Boolean;
 
     /** @private */
     protected var factory : PooledParticleFactory = new PooledParticleFactory();
@@ -87,7 +85,6 @@ public class Emitter extends StardustElement implements ActionCollector, Initial
 
     public function Emitter(clock : Clock = null, particleHandler : ParticleHandler = null)
     {
-        needsSort = false;
         this.clock = clock;
         this.active = true;
         this.particleHandler = particleHandler;
@@ -197,8 +194,10 @@ public class Emitter extends StardustElement implements ActionCollector, Initial
 
     //actions & initializers
     //------------------------------------------------------------------------------------------------
-    /** @private */
-    public final function get actions() : Array
+    /**
+     * Returns every action for this emitter
+     */
+    public final function get actions() : Vector.<Action>
     {
         return _actionCollection.actions;
     }
@@ -228,16 +227,19 @@ public class Emitter extends StardustElement implements ActionCollector, Initial
      */
     public final function clearActions() : void
     {
-        var actions : Array = _actionCollection.actions;
-        for (var i : int = 0, len : int = actions.length; i < len; ++i) {
+        var actions : Vector.<Action> = _actionCollection.actions;
+        var len : int = actions.length;
+        for (var i : int = 0; i < len; ++i) {
             var action : Action = actions[i];
             action.dispatchRemoveEvent();
         }
         _actionCollection.clearActions();
     }
 
-    /** @private */
-    public final function get initializers() : Array
+    /**
+     * Returns all initializers of this emitter.
+     */
+    public final function get initializers() : Vector.<Initializer>
     {
         return factory.initializerCollection.initializers;
     }
@@ -267,10 +269,10 @@ public class Emitter extends StardustElement implements ActionCollector, Initial
      */
     public final function clearInitializers() : void
     {
-        var initializers : Array = factory.initializerCollection.initializers;
-        for (var i : int = 0, len : int = initializers.length; i < len; ++i) {
-            var initializer : Initializer = initializers[i];
-            initializer.dispatchRemoveEvent();
+        var initializers : Vector.<Initializer> = factory.initializerCollection.initializers;
+        var len : int = initializers.length;
+        for (var i : int = 0; i < len; ++i) {
+            initializers[i].dispatchRemoveEvent();
         }
         factory.clearInitializers();
     }
@@ -354,9 +356,14 @@ public class Emitter extends StardustElement implements ActionCollector, Initial
     //XML
     //------------------------------------------------------------------------------------------------
 
-    override public function getRelatedObjects() : Array
+    override public function getRelatedObjects() : Vector.<StardustElement>
     {
-        return [_clock].concat(initializers).concat(actions).concat([particleHandler]);
+        var allElems : Vector.<StardustElement> = new Vector.<StardustElement>();
+        allElems.push(_clock);
+        allElems.push(particleHandler);
+        allElems = allElems.concat(initializers);
+        allElems = allElems.concat(Vector.<StardustElement>(actions));
+        return allElems;
     }
 
     override public function getXMLTagName() : String
@@ -376,14 +383,14 @@ public class Emitter extends StardustElement implements ActionCollector, Initial
         xml.@clock = _clock.name;
         xml.@particleHandler = particleHandler.name;
 
-        if (actions.length) {
+        if (actions.length > 0) {
             xml.appendChild(<actions/>);
             for each (var action : Action in actions) {
                 xml.actions.appendChild(action.getXMLTag());
             }
         }
 
-        if (initializers.length) {
+        if (initializers.length > 0) {
             xml.appendChild(<initializers/>);
             for each (var initializer : Initializer in initializers) {
                 xml.initializers.appendChild(initializer.getXMLTag());

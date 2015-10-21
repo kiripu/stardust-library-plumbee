@@ -15,7 +15,7 @@ public class ZoneCollection
         var numZones : uint = zones.length;
         if (numZones > 1) {
             var sumArea : Number = 0;
-            var areas : Array = [];
+            var areas : Vector.<Number> = new Vector.<Number>();
             for (var i : int = 0; i < numZones; i++) {
                 sumArea += Zone(zones[i]).getArea();
                 areas.push(sumArea);
@@ -45,16 +45,6 @@ public class ZoneCollection
             }
         }
         return contains;
-    }
-
-    [Inline]
-    public final function toArray() : Array
-    {
-        const result : Array = [];
-        for (var i : int = 0; i < zones.length; i++) {
-            result[result.length] = zones[i];
-        }
-        return result;
     }
 
     [Inline]

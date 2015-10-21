@@ -143,11 +143,6 @@ public class Sector extends Zone
     //XML
     //------------------------------------------------------------------------------------------------
 
-    override public function getRelatedObjects() : Array
-    {
-        return [];
-    }
-
     override public function getXMLTagName() : String
     {
         return "Sector";

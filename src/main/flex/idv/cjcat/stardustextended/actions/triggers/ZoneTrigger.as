@@ -1,6 +1,7 @@
 ﻿package idv.cjcat.stardustextended.actions.triggers
 {
 
+import idv.cjcat.stardustextended.StardustElement;
 import idv.cjcat.stardustextended.particles.Particle;
 import idv.cjcat.stardustextended.emitters.Emitter;
 import idv.cjcat.stardustextended.xml.XMLBuilder;
@@ -46,9 +47,9 @@ public class ZoneTrigger extends Trigger implements IZoneContainer
     //XML
     //------------------------------------------------------------------------------------------------
 
-    override public function getRelatedObjects() : Array
+    override public function getRelatedObjects() : Vector.<StardustElement>
     {
-        return zoneCollection.toArray();
+        return Vector.<StardustElement>(zoneCollection.zones);
     }
 
     override public function getXMLTagName() : String

@@ -1,6 +1,7 @@
 ﻿package idv.cjcat.stardustextended.actions
 {
-import idv.cjcat.stardustextended.actions.Action;
+
+import idv.cjcat.stardustextended.StardustElement;
 import idv.cjcat.stardustextended.emitters.Emitter;
 import idv.cjcat.stardustextended.math.Random;
 import idv.cjcat.stardustextended.math.UniformRandom;
@@ -78,9 +79,9 @@ public class NormalDrift extends Action
     //XML
     //------------------------------------------------------------------------------------------------
 
-    override public function getRelatedObjects() : Array
+    override public function getRelatedObjects() : Vector.<StardustElement>
     {
-        return [_random];
+        return new <StardustElement>[_random];
     }
 
     override public function getXMLTagName() : String

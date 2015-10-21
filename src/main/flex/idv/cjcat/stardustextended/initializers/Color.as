@@ -1,6 +1,7 @@
 ﻿package idv.cjcat.stardustextended.initializers
 {
 
+import idv.cjcat.stardustextended.StardustElement;
 import idv.cjcat.stardustextended.math.UniformRandom;
 import idv.cjcat.stardustextended.particles.Particle;
 import idv.cjcat.stardustextended.xml.XMLBuilder;
@@ -55,9 +56,9 @@ public class Color extends Initializer
         return "Color";
     }
 
-    override public function getRelatedObjects() : Array
+    override public function getRelatedObjects() :  Vector.<StardustElement>
     {
-        return [colorR, colorB, colorG, endColorR, endColorG, endColorB];
+        return new <StardustElement>[colorR, colorB, colorG, endColorR, endColorG, endColorB];
     }
 
     override public function toXML() : XML

@@ -1,5 +1,6 @@
 ﻿package idv.cjcat.stardustextended.zones
 {
+import idv.cjcat.stardustextended.StardustElement;
 import idv.cjcat.stardustextended.math.Random;
 import idv.cjcat.stardustextended.math.UniformRandom;
 import idv.cjcat.stardustextended.xml.XMLBuilder;
@@ -104,9 +105,9 @@ public class RectZone extends Zone
     //XML
     //------------------------------------------------------------------------------------------------
 
-    override public function getRelatedObjects() : Array
+    override public function getRelatedObjects() : Vector.<StardustElement>
     {
-        return [_randomX, _randomY];
+        return new <StardustElement>[_randomX, _randomY];
     }
 
     override public function getXMLTagName() : String

@@ -1,7 +1,6 @@
 ﻿package idv.cjcat.stardustextended.actions
 {
 
-import idv.cjcat.stardustextended.actions.Action;
 import idv.cjcat.stardustextended.emitters.Emitter;
 import idv.cjcat.stardustextended.particles.Particle;
 import idv.cjcat.stardustextended.xml.XMLBuilder;

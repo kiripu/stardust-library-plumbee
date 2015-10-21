@@ -1,6 +1,7 @@
 ﻿package idv.cjcat.stardustextended.clocks
 {
 
+import idv.cjcat.stardustextended.StardustElement;
 import idv.cjcat.stardustextended.math.Random;
 import idv.cjcat.stardustextended.math.StardustMath;
 import idv.cjcat.stardustextended.math.UniformRandom;
@@ -136,9 +137,9 @@ public class ImpulseClock extends Clock
 
     //XML
     //------------------------------------------------------------------------------------------------
-    override public function getRelatedObjects() : Array
+    override public function getRelatedObjects() : Vector.<StardustElement>
     {
-        return [_impulseInterval, _impulseLength, _initialDelay];
+        return new <StardustElement>[_impulseInterval, _impulseLength, _initialDelay];
     }
 
     override public function getXMLTagName() : String

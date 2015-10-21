@@ -1,6 +1,7 @@
 ﻿package idv.cjcat.stardustextended.actions
 {
 
+import idv.cjcat.stardustextended.StardustElement;
 import idv.cjcat.stardustextended.emitters.Emitter;
 import idv.cjcat.stardustextended.particles.Particle;
 import idv.cjcat.stardustextended.xml.XMLBuilder;
@@ -83,13 +84,9 @@ public class Gravity extends Action implements IFieldContainer
     //XML
     //------------------------------------------------------------------------------------------------
 
-    override public function getRelatedObjects() : Array
+    override public function getRelatedObjects() : Vector.<StardustElement>
     {
-        const result : Array = [];
-        for (var i : int = 0; i < _fields.length; i++) {
-            result[result.length] = _fields[i];
-        }
-        return result;
+        return Vector.<StardustElement>(_fields);
     }
 
     override public function getXMLTagName() : String

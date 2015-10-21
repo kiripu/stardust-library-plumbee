@@ -8,20 +8,11 @@
  */
 public class ClassPackage
 {
-
-    private static var _instance : ClassPackage;
-
-    protected var classes : Array;
-
-    public static function getInstance() : ClassPackage
-    {
-        if (_instance) _instance = new ClassPackage();
-        return _instance;
-    }
+    protected var classes : Vector.<Class>;
 
     public function ClassPackage()
     {
-        classes = [];
+        classes = new Vector.<Class>();
         populateClasses();
     }
 
@@ -29,7 +20,7 @@ public class ClassPackage
      * Returns an array of classes.
      * @return
      */
-    public final function getClasses() : Array
+    public final function getClasses() : Vector.<Class>
     {
         return classes.concat();
     }

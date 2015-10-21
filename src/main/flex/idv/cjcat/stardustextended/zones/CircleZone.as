@@ -60,11 +60,6 @@ public class CircleZone extends Zone
     //XML
     //------------------------------------------------------------------------------------------------
 
-    override public function getRelatedObjects() : Array
-    {
-        return [];
-    }
-
     override public function getXMLTagName() : String
     {
         return "CircleZone";

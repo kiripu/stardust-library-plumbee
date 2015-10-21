@@ -8,11 +8,11 @@ import idv.cjcat.stardustextended.events.StardustInitializerEvent;
 public class InitializerCollection implements InitializerCollector
 {
 
-    private var _initializers : Array;
+    private var _initializers : Vector.<Initializer>;
 
     public function InitializerCollection()
     {
-        _initializers = [];
+        _initializers = new Vector.<Initializer>();
     }
 
     public final function addInitializer(initializer : Initializer) : void
@@ -32,9 +32,9 @@ public class InitializerCollection implements InitializerCollector
         }
     }
 
-    public final function sortInitializers(evt : * = null) : void
+    public final function sortInitializers(event : StardustInitializerEvent = null) : void
     {
-        _initializers.sortOn("priority", Array.NUMERIC | Array.DESCENDING);
+        _initializers.sort(prioritySort);
     }
 
     public final function clearInitializers() : void
@@ -42,9 +42,23 @@ public class InitializerCollection implements InitializerCollector
         for each (var initializer : Initializer in _initializers) removeInitializer(initializer);
     }
 
-    public function get initializers() : Array
+    public function get initializers() : Vector.<Initializer>
     {
         return _initializers;
+    }
+
+    // descending priority sort
+    private static function prioritySort(el1 : Initializer, el2 : Initializer) : Number
+    {
+        if (el1.priority > el2.priority)
+        {
+            return -1;
+        }
+        else if (el1.priority < el2.priority)
+        {
+            return 1;
+        }
+        return 0;
     }
 }
 }

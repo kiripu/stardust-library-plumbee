@@ -34,15 +34,6 @@ public class MotionData4DPool
 
         _vec[_position - 1] = obj;
         if (_position) _position--;
-
-        //if (_vec.length >= 16) {
-        //if (_position < (_vec.length >> 4)) {
-        //
-        //trace("MotionData4DPool contracted");
-        //
-        //_vec.length >>= 1;
-        //}
-        //}
     }
 }
 }

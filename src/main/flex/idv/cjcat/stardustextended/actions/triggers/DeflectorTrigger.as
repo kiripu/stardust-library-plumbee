@@ -1,6 +1,7 @@
 ﻿package idv.cjcat.stardustextended.actions.triggers
 {
 
+import idv.cjcat.stardustextended.StardustElement;
 import idv.cjcat.stardustextended.emitters.Emitter;
 import idv.cjcat.stardustextended.particles.Particle;
 import idv.cjcat.stardustextended.xml.XMLBuilder;
@@ -25,9 +26,9 @@ public class DeflectorTrigger extends Trigger
     //XML
     //------------------------------------------------------------------------------------------------
 
-    override public function getRelatedObjects() : Array
+    override public function getRelatedObjects() : Vector.<StardustElement>
     {
-        return [deflector];
+        return new <StardustElement>[deflector];
     }
 
     override public function getXMLTagName() : String

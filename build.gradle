@@ -8,7 +8,7 @@ mavenPassword=[password for your Maven repo]
 flashPlayerLocation=C:\\[path to flash player]\\flashplayer.exe
 
 (flashPlayerLocation is only needed if you want to run tests)
-(OSX only) make the gradlew file executable in the root directory
+(OSX only) make the gradlew file in the root directory executable
 
 Run gradlew build     to build the .swc and run tests
 Run gradlew assemble  to build the .swc
@@ -38,7 +38,7 @@ apply plugin: 'ideafx'
 apply plugin: 'maven'
 
 group = 'com.funkypandagame'
-version = '3.25'
+version = '3.26'
 type = 'swc'
 output = 'stardust-library'
 playerVersion = '15.0'

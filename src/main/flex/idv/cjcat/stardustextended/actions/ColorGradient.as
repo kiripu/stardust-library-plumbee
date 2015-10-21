@@ -44,10 +44,17 @@ public class ColorGradient extends Action
         return _alphas;
     }
 
-    public function ColorGradient() : void
+    /**
+     *
+     * @param setDefaultValues Set some default values to start with. Leave it false if you set value manually to
+     *        prevent parsing twice
+     */
+    public function ColorGradient(setDefaultValues : Boolean = false) : void
     {
         super();
-        setGradient([0x00FF00, 0xFF0000], [0, 255], [1, 1]);
+        if (setDefaultValues) {
+            setGradient([0x00FF00, 0xFF0000], [0, 255], [1, 1]);
+        }
     }
 
     /**

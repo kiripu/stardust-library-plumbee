@@ -1,6 +1,7 @@
 ﻿package idv.cjcat.stardustextended.initializers
 {
 
+import idv.cjcat.stardustextended.StardustElement;
 import idv.cjcat.stardustextended.particles.Particle;
 import idv.cjcat.stardustextended.xml.XMLBuilder;
 import idv.cjcat.stardustextended.actions.IZoneContainer;
@@ -57,9 +58,9 @@ public class Velocity extends Initializer implements IZoneContainer
     //XML
     //------------------------------------------------------------------------------------------------
 
-    override public function getRelatedObjects() : Array
+    override public function getRelatedObjects() :  Vector.<StardustElement>
     {
-        return zoneCollection.toArray();
+        return Vector.<StardustElement>(zoneCollection.zones);
     }
 
     override public function getXMLTagName() : String

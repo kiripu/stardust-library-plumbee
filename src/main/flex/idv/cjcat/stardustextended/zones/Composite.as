@@ -1,6 +1,7 @@
 ﻿package idv.cjcat.stardustextended.zones
 {
 
+import idv.cjcat.stardustextended.StardustElement;
 import idv.cjcat.stardustextended.xml.XMLBuilder;
 import idv.cjcat.stardustextended.geom.MotionData2D;
 
@@ -59,9 +60,9 @@ public class Composite extends Zone
     //XML
     //------------------------------------------------------------------------------------------------
 
-    override public function getRelatedObjects() : Array
+    override public function getRelatedObjects() : Vector.<StardustElement>
     {
-        return zoneCollection.toArray();
+        return Vector.<StardustElement>(zoneCollection.zones);
     }
 
     override public function getXMLTagName() : String

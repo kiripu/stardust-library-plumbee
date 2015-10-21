@@ -1,6 +1,7 @@
 ﻿package idv.cjcat.stardustextended.actions
 {
 
+import idv.cjcat.stardustextended.StardustElement;
 import idv.cjcat.stardustextended.emitters.Emitter;
 import idv.cjcat.stardustextended.particles.Particle;
 import idv.cjcat.stardustextended.xml.XMLBuilder;
@@ -107,13 +108,9 @@ public class Deflect extends Action
     //XML
     //------------------------------------------------------------------------------------------------
 
-    override public function getRelatedObjects() : Array
+    override public function getRelatedObjects() : Vector.<StardustElement>
     {
-        var result : Array = [];
-        for each (var elem : Deflector in deflectors) {
-            result.push(elem);
-        }
-        return result;
+        return Vector.<StardustElement>(_deflectors);
     }
 
     override public function getXMLTagName() : String

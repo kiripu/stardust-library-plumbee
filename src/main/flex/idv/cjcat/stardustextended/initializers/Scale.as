@@ -1,5 +1,6 @@
 ﻿package idv.cjcat.stardustextended.initializers
 {
+import idv.cjcat.stardustextended.StardustElement;
 import idv.cjcat.stardustextended.math.Random;
 import idv.cjcat.stardustextended.math.UniformRandom;
 import idv.cjcat.stardustextended.particles.Particle;
@@ -40,9 +41,9 @@ public class Scale extends Initializer
     //XML
     //------------------------------------------------------------------------------------------------
 
-    override public function getRelatedObjects() : Array
+    override public function getRelatedObjects() : Vector.<StardustElement>
     {
-        return [_random];
+        return new <StardustElement>[_random];
     }
 
     override public function getXMLTagName() : String

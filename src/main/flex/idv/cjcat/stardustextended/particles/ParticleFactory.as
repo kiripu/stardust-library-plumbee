@@ -32,16 +32,16 @@ public class ParticleFactory implements InitializerCollector
         var particles : Vector.<Particle> = new Vector.<Particle>();
         if (count > 0) {
             var i : int;
-            var len : int;
             for (i = 0; i < count; i++) {
                 var particle : Particle = createNewParticle();
                 particle.init();
                 particles.push(particle);
             }
 
-            var initializers : Array = _initializerCollection.initializers;
-            for (i = 0, len = initializers.length; i < len; ++i) {
-                Initializer(initializers[i]).doInitialize(particles, currentTime);
+            var initializers : Vector.<Initializer> = _initializerCollection.initializers;
+            var len : uint = initializers.length;
+            for (i = 0; i < len; ++i) {
+                initializers[i].doInitialize(particles, currentTime);
             }
         }
         return particles;

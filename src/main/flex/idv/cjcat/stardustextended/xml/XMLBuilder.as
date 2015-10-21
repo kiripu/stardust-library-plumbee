@@ -37,9 +37,9 @@ public class XMLBuilder
         const relatedElements : Dictionary = new Dictionary();
         traverseRelatedObjects(rootElement, relatedElements);
 
-        const relatedElementsArray : Array = [];
+        const relatedElementsArray : Vector.<StardustElement> = new Vector.<StardustElement>();
         var element : StardustElement;
-        for each(element in relatedElements) {
+        for each (element in relatedElements) {
             relatedElementsArray.push(element);
         }
         relatedElementsArray.sort(elementTypeSorter);
@@ -59,7 +59,6 @@ public class XMLBuilder
     {
         if (e1.getXMLTagName() > e2.getXMLTagName()) return 1;
         else if (e1.getXMLTagName() < e2.getXMLTagName())  return -1;
-
         if (e1.name > e2.name) return 1;
         return -1;
     }
@@ -99,28 +98,29 @@ public class XMLBuilder
      *
      * <p>
      * For example, if you register the <code>MyAction</code> class with XML tag name "HelloWorld",
-     * <code>XMLBuilder</code> knows you are refering to the <code>MyAction</code> class when a &ltHelloWorld&gt tag appears in the XML representation.
-     * All default classes in the Stardust engine are already registered,
+     * <code>XMLBuilder</code> knows you are referring to the <code>MyAction</code> class when a &ltHelloWorld&gt tag
+     * appears in the XML representation.
      * </p>
      * @param    elementClass
      */
     public function registerClass(elementClass : Class) : void
     {
-        var element : StardustElement = StardustElement(new elementClass());
+        var element : StardustElement = (new elementClass() as StardustElement);
         if (!element) {
-            throw new IllegalOperationError("The class is not a subclass of the StardustElement class.");
+            throw new IllegalOperationError(elementClass + " is not a subclass of the StardustElement class.");
         }
-        if (elementClasses[element.getXMLTagName()] != undefined) {
+        const tagName : String = element.getXMLTagName();
+        if (elementClasses[tagName] != undefined) {
             throw new IllegalOperationError("This element class name is already registered: " + element.getXMLTagName());
         }
-        elementClasses[element.getXMLTagName()] = elementClass;
+        elementClasses[tagName] = elementClass;
     }
 
     /**
      * Registers multiple classes.
      * @param    classes
      */
-    public function registerClasses(classes : Array) : void
+    public function registerClasses(classes : Vector.<Class>) : void
     {
         for each (var c : Class in classes) {
             registerClass(c);
@@ -152,7 +152,7 @@ public class XMLBuilder
      * <p>
      * Each Stardust element has a name; this name is used to identify elements.
      * </p>
-     * @param    name
+     * @param name
      * @return
      */
     public function getElementByName(name : String) : StardustElement

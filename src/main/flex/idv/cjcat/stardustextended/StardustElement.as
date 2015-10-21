@@ -37,9 +37,9 @@ public class StardustElement implements XMLConvertible
      * </p>
      * @return
      */
-    public function getRelatedObjects() : Array
+    public function getRelatedObjects() : Vector.<StardustElement>
     {
-        return [];
+        return new Vector.<StardustElement>();
     }
 
     /**

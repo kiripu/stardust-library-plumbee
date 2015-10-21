@@ -8,14 +8,14 @@ import idv.cjcat.stardustextended.events.StardustActionEvent;
 public class ActionCollection implements ActionCollector
 {
 
-    protected var _actions : Array;
+    protected var _actions : Vector.<Action>;
 
     public function ActionCollection()
     {
-        _actions = [];
+        _actions = new Vector.<Action>();
     }
 
-    public function get actions() : Array
+    public function get actions() : Vector.<Action>
     {
         return _actions;
     }
@@ -42,9 +42,23 @@ public class ActionCollection implements ActionCollector
         for each (var action : Action in _actions) removeAction(action);
     }
 
-    public final function sortActions(evt : * = null) : void
+    public final function sortActions(event : StardustActionEvent = null) : void
     {
-        _actions.sortOn("priority", Array.NUMERIC | Array.DESCENDING);
+        _actions.sort(prioritySort);
+    }
+
+    // descending priority sort
+    private static function prioritySort(el1 : Action, el2 : Action) : Number
+    {
+        if (el1.priority > el2.priority)
+        {
+            return -1;
+        }
+        else if (el1.priority < el2.priority)
+        {
+            return 1;
+        }
+        return 0;
     }
 }
 }

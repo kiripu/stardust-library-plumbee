@@ -1,7 +1,7 @@
 ﻿package idv.cjcat.stardustextended.actions
 {
 
-import idv.cjcat.stardustextended.actions.Action;
+import idv.cjcat.stardustextended.StardustElement;
 import idv.cjcat.stardustextended.emitters.Emitter;
 import idv.cjcat.stardustextended.particles.Particle;
 import idv.cjcat.stardustextended.xml.XMLBuilder;
@@ -68,10 +68,9 @@ public class VelocityField extends Action implements IFieldContainer
     //XML
     //------------------------------------------------------------------------------------------------
 
-    override public function getRelatedObjects() : Array
+    override public function getRelatedObjects() : Vector.<StardustElement>
     {
-        if (field != null) return [field];
-        else return [];
+        return new <StardustElement>[field];
     }
 
     override public function getXMLTagName() : String

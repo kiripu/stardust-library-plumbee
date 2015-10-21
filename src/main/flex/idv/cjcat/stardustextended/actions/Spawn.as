@@ -1,6 +1,7 @@
 ﻿package idv.cjcat.stardustextended.actions
 {
 
+import idv.cjcat.stardustextended.StardustElement;
 import idv.cjcat.stardustextended.actions.triggers.DeathTrigger;
 import idv.cjcat.stardustextended.actions.triggers.Trigger;
 import idv.cjcat.stardustextended.emitters.Emitter;
@@ -95,9 +96,9 @@ public class Spawn extends Action
         return "Spawn";
     }
 
-    override public function getRelatedObjects() : Array
+    override public function getRelatedObjects() : Vector.<StardustElement>
     {
-        return [_trigger];
+        return new <StardustElement>[_trigger];
     }
 
     override public function toXML() : XML
