@@ -25,11 +25,15 @@ public class ParticleFactory implements InitializerCollector
      * Creates particles with associated initializers.
      * @param count
      * @param currentTime
+     * @param toVector The vector the particles will be added to to prevent object allocation
      * @return the newly created particles
      */
-    public final function createParticles(count : int, currentTime : Number) : Vector.<Particle>
+    public final function createParticles(count : int, currentTime : Number, toVector : Vector.<Particle> = null) : Vector.<Particle>
     {
-        var particles : Vector.<Particle> = new Vector.<Particle>();
+        var particles : Vector.<Particle> = toVector;
+        if (particles == null) {
+            particles = new Vector.<Particle>();
+        }
         if (count > 0) {
             var i : int;
             for (i = 0; i < count; i++) {

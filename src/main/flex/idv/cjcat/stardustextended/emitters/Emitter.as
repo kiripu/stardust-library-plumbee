@@ -42,8 +42,7 @@ public class Emitter extends StardustElement implements ActionCollector, Initial
     }
 
 
-    //particle collections
-    //------------------------------------------------------------------------------------------------
+    private const newParticles : Vector.<Particle> = new Vector.<Particle>();
 
     private var _particles : Vector.<Particle> = new Vector.<Particle>();
     /**
@@ -56,8 +55,6 @@ public class Emitter extends StardustElement implements ActionCollector, Initial
         return _particles;
     }
 
-    //------------------------------------------------------------------------------------------------
-    //end of particle collections
     /**
      * Particle handler is used to render particles
      */
@@ -181,7 +178,9 @@ public class Emitter extends StardustElement implements ActionCollector, Initial
             activeActions[i].postUpdate(this, time);
         }
 
-        eventDispatcher.dispatchEvent(new StardustEmitterStepEndEvent(this));
+        if (eventDispatcher.hasEventListener(StardustEmitterStepEndEvent.TYPE)) {
+            eventDispatcher.dispatchEvent(new StardustEmitterStepEndEvent(this));
+        }
 
         particleHandler.stepEnd(this, _particles, time);
 
@@ -307,7 +306,8 @@ public class Emitter extends StardustElement implements ActionCollector, Initial
     public final function createParticles(time : uint) : Vector.<Particle>
     {
         var pCount : int = _clock.getTicks(time);
-        var newParticles : Vector.<Particle> = factory.createParticles(pCount, currentTime);
+        newParticles.length = 0;
+        factory.createParticles(pCount, currentTime, newParticles);
         addParticles(newParticles);
         return newParticles;
     }
