@@ -1,6 +1,7 @@
 ﻿package idv.cjcat.stardustextended.zones
 {
 
+import idv.cjcat.stardustextended.geom.MotionData2DPool;
 import idv.cjcat.stardustextended.math.Random;
 import idv.cjcat.stardustextended.math.StardustMath;
 import idv.cjcat.stardustextended.math.UniformRandom;
@@ -92,7 +93,7 @@ public class Line extends Contour
     {
         _random.setRange(0, 1);
         var rand : Number = _random.random();
-        return new MotionData2D(StardustMath.interpolate(0, 0, 1, _x2 - _x, rand), StardustMath.interpolate(0, 0, 1, _y2 - _y, rand));
+        return MotionData2DPool.get(StardustMath.interpolate(0, 0, 1, _x2 - _x, rand), StardustMath.interpolate(0, 0, 1, _y2 - _y, rand));
     }
 
     override public function contains(x : Number, y : Number) : Boolean

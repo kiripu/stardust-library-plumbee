@@ -1,6 +1,7 @@
 ﻿package idv.cjcat.stardustextended.zones
 {
 import idv.cjcat.stardustextended.StardustElement;
+import idv.cjcat.stardustextended.geom.MotionData2DPool;
 import idv.cjcat.stardustextended.math.Random;
 import idv.cjcat.stardustextended.math.UniformRandom;
 import idv.cjcat.stardustextended.xml.XMLBuilder;
@@ -85,7 +86,7 @@ public class RectZone extends Zone
     {
         _randomX.setRange(0, _width);
         _randomY.setRange(0, _height);
-        return new MotionData2D(_randomX.random(), _randomY.random());
+        return MotionData2DPool.get(_randomX.random(), _randomY.random());
     }
 
     override public function contains(xc : Number, yc : Number) : Boolean

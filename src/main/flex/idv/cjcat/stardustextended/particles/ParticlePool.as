@@ -43,7 +43,8 @@ public class ParticlePool
     {
         if (_position == _array.length) {
             _array.length <<= 1;
-            for (var i : int = _position; i < _array.length; i++) {
+            var len : uint = _array.length;
+            for (var i : int = _position; i < len; i++) {
                 _array[i] = createNewParticle();
             }
         }

@@ -1,6 +1,7 @@
 ﻿package idv.cjcat.stardustextended.zones
 {
 
+import idv.cjcat.stardustextended.geom.MotionData2DPool;
 import idv.cjcat.stardustextended.math.StardustMath;
 import idv.cjcat.stardustextended.xml.XMLBuilder;
 import idv.cjcat.stardustextended.geom.MotionData2D;
@@ -56,7 +57,7 @@ public class CircleContour extends Contour
     override public function calculateMotionData2D() : MotionData2D
     {
         var theta : Number = StardustMath.TWO_PI * Math.random();
-        return new MotionData2D(_radius * Math.cos(theta), _radius * Math.sin(theta));
+        return MotionData2DPool.get(_radius * Math.cos(theta), _radius * Math.sin(theta));
     }
 
 

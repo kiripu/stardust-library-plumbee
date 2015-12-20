@@ -1,6 +1,7 @@
 ﻿package idv.cjcat.stardustextended.zones
 {
 
+import idv.cjcat.stardustextended.geom.MotionData2DPool;
 import idv.cjcat.stardustextended.math.Random;
 import idv.cjcat.stardustextended.math.StardustMath;
 import idv.cjcat.stardustextended.math.UniformRandom;
@@ -93,13 +94,13 @@ public class Sector extends Zone
 
     override public function calculateMotionData2D() : MotionData2D
     {
-        if (_maxRadius == 0) return new MotionData2D(_x, _y);
+        if (_maxRadius == 0) return MotionData2DPool.get(_x, _y);
 
         _randomT.setRange(_minAngleRad, _maxAngleRad);
         var theta : Number = _randomT.random();
         var r : Number = StardustMath.interpolate(0, _minRadius, 1, _maxRadius, Math.sqrt(Math.random()));
 
-        return new MotionData2D(r * Math.cos(theta), r * Math.sin(theta));
+        return MotionData2DPool.get(r * Math.cos(theta), r * Math.sin(theta));
     }
 
     override protected function updateArea() : void

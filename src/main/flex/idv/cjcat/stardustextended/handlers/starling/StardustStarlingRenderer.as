@@ -28,6 +28,8 @@ public class StardustStarlingRenderer extends DisplayObject
     private static const DEGREES_TO_RADIANS : Number = Math.PI / 180;
     private static const sCosLUT : Vector.<Number> = new Vector.<Number>(0x800, true);
     private static const sSinLUT : Vector.<Number> = new Vector.<Number>(0x800, true);
+    private static const renderMatrix : Matrix3D = new Matrix3D();
+    private static const renderAlpha : Vector.<Number> = new Vector.<Number>(4);
     private static var numberOfVertexBuffers : int;
     private static var maxParticles : int;
     private static var initCalled : Boolean = false;
@@ -42,7 +44,6 @@ public class StardustStarlingRenderer extends DisplayObject
 
     public var mNumParticles : int = 0;
     public var texSmoothing : String;
-
     public var premultiplyAlpha : Boolean = true;
 
     public function StardustStarlingRenderer()
@@ -332,11 +333,9 @@ public class StardustStarlingRenderer extends DisplayObject
         var blendFactors : Array = BlendMode.getBlendFactors(blendMode, true);
         context.setBlendFactors(blendFactors[0], blendFactors[1]);
 
-        const renderAlpha : Vector.<Number> = new Vector.<Number>(4);
         renderAlpha[0] = renderAlpha[1] = renderAlpha[2] = premultiplyAlpha ? parentAlpha : 1;
         renderAlpha[3] = parentAlpha;
 
-        const renderMatrix : Matrix3D = new Matrix3D();
         MatrixUtil.convertTo3D(support.mvpMatrix, renderMatrix);
 
         context.setProgram(ParticleProgram.getProgram(mTexture != null, mTinted, mTexture.mipMapping, mTexture.repeat, mTexture.format, texSmoothing));

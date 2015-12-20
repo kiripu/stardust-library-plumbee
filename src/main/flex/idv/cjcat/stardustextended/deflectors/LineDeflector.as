@@ -36,7 +36,7 @@ public class LineDeflector extends Deflector
     {
         this.x = x;
         this.y = y;
-        _normal = new Vec2D(nx, ny);
+        _normal = Vec2DPool.get(nx, ny);
     }
 
     /**
