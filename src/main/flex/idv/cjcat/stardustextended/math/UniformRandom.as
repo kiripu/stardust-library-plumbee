@@ -3,7 +3,7 @@
 import idv.cjcat.stardustextended.xml.XMLBuilder;
 
 /**
- * This class generates uniformly distrubuted random numbers.
+ * This class generates uniformly distributed random numbers.
  */
 public class UniformRandom extends Random
 {
@@ -30,8 +30,14 @@ public class UniformRandom extends Random
     [Inline]
     override public final function random() : Number
     {
-        if (radius) return radius * 2 * (Math.random() - 0.5) + center;
-        else return center;
+        if (radius)
+        {
+            return radius * 2 * (Math.random() - 0.5) + center;
+        }
+        else
+        {
+            return center;
+        }
     }
 
     override public function setRange(lowerBound : Number, upperBound : Number) : void

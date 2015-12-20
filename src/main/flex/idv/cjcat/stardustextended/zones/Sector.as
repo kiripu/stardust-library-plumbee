@@ -123,11 +123,12 @@ public class Sector extends Zone
     {
         const dx : Number = this._x - x;
         const dy : Number = this._y - y;
-        const isInsideOuterCircle : Boolean = ((dx * dx + dy * dy) <= _maxRadius * _maxRadius);
+        var squaredDistance : Number = dx * dx + dy * dy;
+        const isInsideOuterCircle : Boolean = (squaredDistance <= _maxRadius * _maxRadius);
         if (!isInsideOuterCircle) {
             return false;
         }
-        const isInsideInnerCircle : Boolean = ((dx * dx + dy * dy) <= _minRadius * _minRadius);
+        const isInsideInnerCircle : Boolean = (squaredDistance <= _minRadius * _minRadius);
         if (isInsideInnerCircle) {
             return false;
         }

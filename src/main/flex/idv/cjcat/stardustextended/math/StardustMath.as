@@ -58,7 +58,7 @@ public class StardustMath
     public static function randomFloor(num : Number) : int
     {
         var floor : int = num | 0;
-        return floor + int(((num - floor) > Math.random()) ? (1) : (0));
+        return floor + (((num - floor) > Math.random()) ? 1 : 0);
     }
 }
 }

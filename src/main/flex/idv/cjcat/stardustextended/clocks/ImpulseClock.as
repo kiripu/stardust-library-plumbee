@@ -12,6 +12,20 @@ import idv.cjcat.stardustextended.xml.XMLBuilder;
  */
 public class ImpulseClock extends Clock
 {
+    protected var _impulseInterval : Random;
+
+    /**
+     * How many particles to create when an impulse is happening.
+     * If less than one, it's the probability of an emitter to create a single particle in each step.
+     */
+    public var ticksPerCall : Number;
+
+    protected var _initialDelay : Random;
+    protected var currentImpulseInterval : Number;
+    protected var currentImpulseLength : Number;
+    protected var currentInitialDelay : Number;
+    protected var _impulseLength : Random;
+    private var currentTime : Number;
 
     /**
      * The delay in steps until the first impulse happens
@@ -27,8 +41,6 @@ public class ImpulseClock extends Clock
         return _initialDelay;
     }
 
-    protected var _initialDelay : Random;
-
     /**
      * The length of a impulses in steps.
      */
@@ -42,8 +54,6 @@ public class ImpulseClock extends Clock
     {
         return _impulseLength;
     }
-
-    protected var _impulseLength : Random;
 
     /**
      * The time between a impulses in steps.
@@ -59,18 +69,6 @@ public class ImpulseClock extends Clock
         return _impulseInterval;
     }
 
-    protected var _impulseInterval : Random;
-
-    /**
-     * How many particles to create when an impulse is happening.
-     * If less than one, it's the probability of an emitter to create a single particle in each step.
-     */
-    public var ticksPerCall : Number;
-
-    protected var currentImpulseInterval : Number;
-    protected var currentImpulseLength : Number;
-    protected var currentInitialDelay : Number;
-
     public function ImpulseClock(_impulseInterval : Random = null,
                                  _impulseLength : Random = null,
                                  _initialDelay : Random = null,
@@ -82,8 +80,6 @@ public class ImpulseClock extends Clock
         ticksPerCall = _ticksPerCall;
         currentTime = 0;
     }
-
-    private var currentTime : Number;
 
     override public final function getTicks(time : Number) : int
     {
@@ -101,6 +97,15 @@ public class ImpulseClock extends Clock
             }
         }
         return ticks;
+    }
+
+    /**
+     * The emitter step after the <code>impulse()</code> call creates a burst of particles.
+     */
+    public function impulse():void
+    {
+        currentInitialDelay = -1;
+        currentTime = 0;
     }
 
     [Inline]

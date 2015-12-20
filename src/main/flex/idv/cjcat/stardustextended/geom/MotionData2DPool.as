@@ -26,7 +26,7 @@ public class MotionData2DPool
     [Inline]
     public static function recycle(obj : MotionData2D) : void
     {
-        if (_position > 0 && obj) {
+        if (_position > 0) {
             _vec[_position - 1] = obj;
             _position--;
         }

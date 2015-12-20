@@ -3,12 +3,11 @@
 import flash.utils.Dictionary;
 
 import idv.cjcat.stardustextended.xml.XMLBuilder;
-import idv.cjcat.stardustextended.xml.XMLConvertible;
 
 /**
  * All Stardust elements are subclasses of this class.
  */
-public class StardustElement implements XMLConvertible
+public class StardustElement
 {
 
     private static var elementCounter : Dictionary = new Dictionary();

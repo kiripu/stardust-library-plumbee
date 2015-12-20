@@ -5,7 +5,6 @@ import idv.cjcat.stardustextended.actions.Accelerate;
 import idv.cjcat.stardustextended.actions.AccelerationZone;
 import idv.cjcat.stardustextended.actions.Age;
 import idv.cjcat.stardustextended.actions.AlphaCurve;
-import idv.cjcat.stardustextended.actions.ColorCurve;
 import idv.cjcat.stardustextended.actions.ColorGradient;
 import idv.cjcat.stardustextended.actions.Damping;
 import idv.cjcat.stardustextended.actions.DeathLife;
@@ -36,7 +35,6 @@ import idv.cjcat.stardustextended.fields.BitmapField;
 import idv.cjcat.stardustextended.fields.RadialField;
 import idv.cjcat.stardustextended.fields.UniformField;
 import idv.cjcat.stardustextended.initializers.Alpha;
-import idv.cjcat.stardustextended.initializers.Color;
 import idv.cjcat.stardustextended.handlers.ParticleHandler;
 import idv.cjcat.stardustextended.initializers.Life;
 import idv.cjcat.stardustextended.initializers.Mass;
@@ -77,7 +75,6 @@ public class CommonClassPackage extends ClassPackage
         classes.push(DeathLife);
         classes.push(Die);
         classes.push(ScaleCurve);
-        classes.push(ColorCurve);
         classes.push(RandomDrift);
         classes.push(Accelerate);
         classes.push(Damping);
@@ -120,7 +117,6 @@ public class CommonClassPackage extends ClassPackage
         //initializers
         classes.push(Age);
         classes.push(Alpha);
-        classes.push(Color);
         classes.push(Life);
         classes.push(Mass);
         classes.push(Scale);

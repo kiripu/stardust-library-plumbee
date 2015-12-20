@@ -71,7 +71,8 @@ public class Gravity extends Action implements IFieldContainer
     override public function update(emitter : Emitter, particle : Particle, timeDelta : Number, currentTime : Number) : void
     {
         var md2D : MotionData2D;
-        for (var i : int = 0; i < _fields.length; i++) {
+        var len : uint = _fields.length;
+        for (var i : int = 0; i < len; i++) {
             md2D = _fields[i].getMotionData2D(particle);
             if (md2D) {
                 particle.vx += md2D.x * timeDelta;

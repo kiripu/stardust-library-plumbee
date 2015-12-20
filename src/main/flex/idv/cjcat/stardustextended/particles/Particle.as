@@ -19,7 +19,7 @@ public class Particle
     /**
      * The normal alpha value upon birth.
      */
-    [Deprecated(message="initColorG property will be soon removed")]
+    [Deprecated(message="initAlpha property will be soon removed, use ColorGradient")]
     public var initAlpha : Number;
 
     /**
@@ -75,36 +75,6 @@ public class Particle
     public var colorB : Number;
 
     /**
-     * initial Red color component; in the [0,1] range.
-     */
-    [Deprecated(message="initColorR property will be soon removed")]
-    public var initColorR : Number;
-    /**
-     * initial Green color component; in the [0,1] range.
-     */
-    [Deprecated(message="initColorG property will be soon removed")]
-    public var initColorG : Number;
-    /**
-     * initial Blue color component; in the [0,1] range.
-     */
-    [Deprecated(message="initColorB property will be soon removed")]
-    public var initColorB : Number;
-    /**
-     * Red color component; in the [0,1] range.
-     */
-    [Deprecated(message="endColorR property will be soon removed")]
-    public var endColorR : Number;
-    /**
-     * Green color component; in the [0,1] range.
-     */
-    [Deprecated(message="endColorG property will be soon removed")]
-    public var endColorG : Number;
-    /**
-     * Blue color component; in the [0,1] range.
-     */
-    [Deprecated(message="endColorB property will be soon removed")]
-    public var endColorB : Number;
-    /**
      * Dictionary for storing additional information.
      */
     public var dictionary : Dictionary;
@@ -138,17 +108,9 @@ public class Particle
         isDead = false;
         collisionRadius = 0;
 
-        initColorR = 1;
-        initColorB = 1;
-        initColorG = 1;
-
         colorR = 1;
         colorB = 1;
         colorG = 1;
-
-        endColorR = 0;
-        endColorB = 0;
-        endColorG = 0;
 
         x = 0;
         y = 0;
@@ -167,7 +129,8 @@ public class Particle
 
     public static function compareFunction(p1 : Particle, p2 : Particle) : Number
     {
-        if (p1.x < p2.x) {
+        if (p1.x < p2.x)
+        {
             return -1;
         }
         return 1;
