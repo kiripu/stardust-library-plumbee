@@ -25,6 +25,18 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
     private var _totalFrames : uint;
     private var _textures : Vector.<SubTexture>;
     private var _renderer : StardustStarlingRenderer;
+    private var timeSinceLastStep : Number;
+
+    public function StarlingHandler() : void
+    {
+        timeSinceLastStep = 0;
+    }
+
+    override public function reset() : void
+    {
+        timeSinceLastStep = 0;
+        _renderer.advanceTime(new Vector.<Particle>);
+    }
 
     public function set container(container : DisplayObjectContainer) : void
     {
@@ -45,15 +57,21 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
     override public function stepEnd(emitter : Emitter, particles : Vector.<Particle>, time : Number) : void
     {
         if (_isSpriteSheet && _spriteSheetAnimationSpeed > 0) {
-            var mNumParticles : uint = particles.length;
-            for (var i : int = 0; i < mNumParticles; ++i) {
-                var particle : Particle = particles[i];
-                var currFrame : int = particle.currentAnimationFrame;
-                currFrame++;
-                if (currFrame >= _totalFrames) {
-                    currFrame = 0;
+            timeSinceLastStep = timeSinceLastStep + time;
+            if (timeSinceLastStep > 1/_spriteSheetAnimationSpeed)
+            {
+                var stepSize : uint = Math.floor(timeSinceLastStep * _spriteSheetAnimationSpeed);
+                var mNumParticles : uint = particles.length;
+                for (var i : int = 0; i < mNumParticles; ++i) {
+                    var particle : Particle = particles[i];
+                    var currFrame : int = particle.currentAnimationFrame;
+                    currFrame = currFrame + stepSize;
+                    if (currFrame >= _totalFrames) {
+                        currFrame = 0;
+                    }
+                    particle.currentAnimationFrame = currFrame;
                 }
-                particle.currentAnimationFrame = currFrame;
+                timeSinceLastStep = 0;
             }
         }
         _renderer.advanceTime(particles);
@@ -174,13 +192,7 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
                     (texture.region.y + texture.region.height) / texture.root.height,
                     texture.width * 0.5,
                     texture.height * 0.5);
-            var numFrames : uint = _spriteSheetAnimationSpeed;
-            if (numFrames == 0) {
-                numFrames = 1; // if animation speed is 0, add each frame once
-            }
-            for (var k : int = 0; k < numFrames; k++) {
-                frames.push(frame);
-            }
+            frames.push(frame);
         }
         _totalFrames = frames.length;
         _renderer.setTextures(textures[0].root, frames);
@@ -211,7 +223,7 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
     override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
     {
         super.parseXML(xml, builder);
-        _spriteSheetAnimationSpeed = parseInt(xml.@spriteSheetAnimationSpeed);
+        _spriteSheetAnimationSpeed = parseFloat(xml.@spriteSheetAnimationSpeed);
         _spriteSheetStartAtRandomFrame = (xml.@spriteSheetStartAtRandomFrame == "true");
         smoothing = (xml.@smoothing == "true");
         blendMode = (xml.@blendMode);

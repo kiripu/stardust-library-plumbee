@@ -41,7 +41,7 @@ public class Oriented extends Action
 
     override public function preUpdate(emitter : Emitter, time : Number) : void
     {
-        f = Math.pow(factor, 1 / time);
+        f = Math.pow(factor, 0.1 / time);
         os = offset + 90;
     }
 

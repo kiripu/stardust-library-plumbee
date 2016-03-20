@@ -34,7 +34,7 @@ public class VelocityField extends Action implements IFieldContainer
             field = _field;
         }
         else {
-            field = new UniformField(0, 1);
+            field = new UniformField(100, 100);
         }
     }
 

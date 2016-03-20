@@ -26,6 +26,7 @@ public class FollowWaypoints extends Action
      */
     public var massless : Boolean;
     private var _waypoints : Vector.<Waypoint>;
+    protected var _timeDeltaOneSec : Number;
 
     public function FollowWaypoints(waypoints : Vector.<Waypoint> = null, loop : Boolean = false, massless : Boolean = true)
     {
@@ -70,6 +71,11 @@ public class FollowWaypoints extends Action
     public function clearWaypoints() : void
     {
         _waypoints = new Vector.<Waypoint>();
+    }
+
+    override public function preUpdate(emitter : Emitter, time : Number) : void
+    {
+        _timeDeltaOneSec = time * 60;
     }
 
     override public function update(emitter : Emitter, particle : Particle, timeDelta : Number, currentTime : Number) : void
@@ -117,8 +123,8 @@ public class FollowWaypoints extends Action
         if (!massless) r.length /= particle.mass;
         Vec2DPool.recycle(r);
 
-        particle.vx += r.x;
-        particle.vy += r.y;
+        particle.vx += r.x * _timeDeltaOneSec;
+        particle.vy += r.y * _timeDeltaOneSec;
     }
 
 

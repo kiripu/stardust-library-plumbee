@@ -18,11 +18,10 @@ public class DisplayObjectSpriteSheetHandler extends DisplayObjectHandler implem
 {
     private var _spriteSheetStartAtRandomFrame : Boolean;
     private var _smoothing : Boolean;
-    private var _spriteSheetAnimationSpeed : uint;
+    private var _spriteSheetAnimationSpeed : Number;
     private var _pool : DisplayObjectPool;
     private var _totalFrames : uint;
     private var _isSpriteSheet : Boolean;
-    private var _time : Number;
     private var _images : Vector.<BitmapData>;
 
     public function DisplayObjectSpriteSheetHandler(container : DisplayObjectContainer = null,
@@ -34,11 +33,6 @@ public class DisplayObjectSpriteSheetHandler extends DisplayObjectHandler implem
         _pool.reset(CenteredBitmap, null);
     }
 
-    override public function stepBegin(emitter : Emitter, particles : Vector.<Particle>, time : Number) : void
-    {
-        _time = time;
-    }
-
     override public function stepEnd(emitter : Emitter, particles : Vector.<Particle>, time : Number) : void
     {
         super.stepEnd(emitter, particles, time);
@@ -46,7 +40,7 @@ public class DisplayObjectSpriteSheetHandler extends DisplayObjectHandler implem
             var bmp : CenteredBitmap = CenteredBitmap(particle.target);
             if (_isSpriteSheet && _spriteSheetAnimationSpeed > 0) {
                 var currFrame : uint = particle.currentAnimationFrame;
-                var nextFrame : uint = (currFrame + _time) % _totalFrames;
+                var nextFrame : uint = (currFrame + time) % _totalFrames;
                 var nextImageIndex : uint = uint(nextFrame / _spriteSheetAnimationSpeed);
                 var currImageIndex : uint = uint(currFrame / _spriteSheetAnimationSpeed);
                 if (nextImageIndex != currImageIndex) {

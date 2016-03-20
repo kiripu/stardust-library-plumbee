@@ -23,6 +23,7 @@ public class Move extends Action
      * </p>
      */
     public var multiplier : Number;
+    private var factor : Number;
 
     public function Move(multiplier : Number = 1)
     {
@@ -31,7 +32,6 @@ public class Move extends Action
         this.multiplier = multiplier;
     }
 
-    private var factor : Number;
 
     override public function preUpdate(emitter : Emitter, time : Number) : void
     {

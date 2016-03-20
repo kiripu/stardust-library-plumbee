@@ -13,6 +13,10 @@ import idv.cjcat.stardustextended.StardustElement;
  */
 public class ParticleHandler extends StardustElement
 {
+    public function reset() : void
+    {
+
+    }
     /**
      * [Abstract Method] Invoked when each emitter step begins.
      * @param    emitter

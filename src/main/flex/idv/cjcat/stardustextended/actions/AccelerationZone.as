@@ -70,7 +70,7 @@ public class AccelerationZone extends Action implements IZoneContainer
         inverted = _inverted;
         acceleration = 1;
         useParticleDirection = true;
-        _direction = Vec2DPool.get(1, 0);
+        _direction = Vec2DPool.get(100, 0);
         zoneCollection = new ZoneCollection();
         if (zones) {
             zoneCollection.zones = zones;

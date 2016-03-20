@@ -27,8 +27,9 @@ public class RandomDrift extends Action
     protected var _maxY : Number;
     protected var _randomX : Random;
     protected var _randomY : Random;
+    protected var _timeDeltaOneSec : Number;
 
-    public function RandomDrift(maxX : Number = 0.2, maxY : Number = 0.2, randomX : Random = null, randomY : Random = null)
+    public function RandomDrift(maxX : Number = 100, maxY : Number = 100, randomX : Random = null, randomY : Random = null)
     {
         priority = -3;
 
@@ -44,12 +45,6 @@ public class RandomDrift extends Action
      * You don't have to set the random object's range. The range is automatically set each time before the random generation.
      */
     [Inline]
-    final public function get randomX() : Random
-    {
-        return _randomX;
-    }
-
-    [Inline]
     final public function set randomX(value : Random) : void
     {
         if (!value) value = new UniformRandom();
@@ -60,12 +55,6 @@ public class RandomDrift extends Action
      * The random object used to generate a random number for the acceleration's y component in the range [-maxX, maxX], uniform random by default.
      * You don't have to set the ranodm object's range. The range is automatically set each time before the random generation.
      */
-    [Inline]
-    final public function get randomY() : Random
-    {
-        return _randomY;
-    }
-
     [Inline]
     final public function set randomY(value : Random) : void
     {
@@ -105,9 +94,13 @@ public class RandomDrift extends Action
         _randomY.setRange(-_maxY, _maxY);
     }
 
+    override public function preUpdate(emitter : Emitter, time : Number) : void
+    {
+        _timeDeltaOneSec = time * 60;
+    }
+
     override public function update(emitter : Emitter, particle : Particle, timeDelta : Number, currentTime : Number) : void
     {
-
         var rx : Number = _randomX.random();
         var ry : Number = _randomY.random();
 
@@ -117,8 +110,8 @@ public class RandomDrift extends Action
             ry *= factor;
         }
 
-        particle.vx += rx * timeDelta;
-        particle.vy += ry * timeDelta;
+        particle.vx += rx * _timeDeltaOneSec;
+        particle.vy += ry * _timeDeltaOneSec;
     }
 
     //XML

@@ -72,6 +72,7 @@ public class Gravity extends Action implements IFieldContainer
     {
         var md2D : MotionData2D;
         var len : uint = _fields.length;
+        timeDelta = timeDelta * 100; // acceleration is in m/(s*s)
         for (var i : int = 0; i < len; i++) {
             md2D = _fields[i].getMotionData2D(particle);
             if (md2D) {

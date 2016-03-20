@@ -8,7 +8,7 @@ import idv.cjcat.stardustextended.particles.Particle;
 import idv.cjcat.stardustextended.xml.XMLBuilder;
 
 /**
- * Sets a particle's rotation value, in degrees, based on the <code>random</code> property.
+ * Sets a particle's initial rotation value, in degrees, based on the <code>random</code> property.
  */
 public class Rotation extends Initializer
 {

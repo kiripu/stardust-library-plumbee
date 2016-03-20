@@ -14,14 +14,14 @@ public class SteadyClock extends Clock
 {
 
     /**
-     * How many particles to create in each emitter step.
+     * How many particles to create in each second.
      *
-     * If less than one, it's the probability of an emitter to create a single particle in each step.
+     * If less than one, it's the probability of an emitter to create a single particle in each second.
      */
     public var ticksPerCall : Number;
 
     /**
-     * The delay in steps until the the clock starts
+     * The delay in seconds until the the clock starts
      */
     public function set initialDelay(value : Random) : void
     {
@@ -35,7 +35,6 @@ public class SteadyClock extends Clock
     }
 
     protected var _initialDelay : Random;
-
     protected var currentInitialDelay : Number;
     protected var currentTime : Number;
 

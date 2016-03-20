@@ -16,7 +16,6 @@ public class ImpulseClock extends Clock
 
     /**
      * How many particles to create when an impulse is happening.
-     * If less than one, it's the probability of an emitter to create a single particle in each step.
      */
     public var ticksPerCall : Number;
 
@@ -28,7 +27,7 @@ public class ImpulseClock extends Clock
     private var currentTime : Number;
 
     /**
-     * The delay in steps until the first impulse happens
+     * The delay in seconds until the first impulse happens
      */
     public function set initialDelay(value : Random) : void
     {
@@ -42,7 +41,7 @@ public class ImpulseClock extends Clock
     }
 
     /**
-     * The length of a impulses in steps.
+     * The length of a impulses in seconds.
      */
     public function set impulseLength(value : Random) : void
     {
@@ -56,7 +55,7 @@ public class ImpulseClock extends Clock
     }
 
     /**
-     * The time between a impulses in steps.
+     * The time between a impulses in seconds.
      */
     public function set impulseInterval(value : Random) : void
     {
@@ -89,6 +88,10 @@ public class ImpulseClock extends Clock
             currentTime = currentTime + time;
             if (currentTime <= currentImpulseLength) {
                 ticks = StardustMath.randomFloor(ticksPerCall * time);
+            }
+            else if (currentTime - time < currentImpulseLength) {
+                // timestep was too big and it overstepped this impulse. Calculate the ticks for the fraction time
+                ticks = StardustMath.randomFloor(ticksPerCall * (currentImpulseLength - currentTime + time));
             }
             if (currentTime >= currentImpulseInterval) {
                 setCurrentImpulseLength();

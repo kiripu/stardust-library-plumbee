@@ -75,16 +75,19 @@ public class Emitter extends StardustElement implements ActionCollector, Initial
      */
     public var currentTime : Number = 0;
 
-    /** @private */
     protected var factory : PooledParticleFactory = new PooledParticleFactory();
     protected const _actionCollection : ActionCollection = new ActionCollection();
     protected const activeActions : Vector.<Action> = new Vector.<Action>();
+    protected var _invFps : Number = 1 / 60 - 0.004;
+    protected var timeSinceLastStep : Number = 0;
+    protected var _fps : Number;
 
     public function Emitter(clock : Clock = null, particleHandler : ParticleHandler = null)
     {
         this.clock = clock;
         this.active = true;
         this.particleHandler = particleHandler;
+        fps = 60;
     }
 
     /**
@@ -101,6 +104,30 @@ public class Emitter extends StardustElement implements ActionCollector, Initial
         _clock = value;
     }
 
+    /**
+     * Sets the frame rate of the simulation. Lower framerates consume less CPU, but make your animations
+     * look choppy. Note that the simulation behaves slightly differently at different FPS settings
+     * (e.g. A clock produces the same amount of ticks on all FPSes, but it does it at a different times,
+     * resulting in particles emitted in batches instead smoothly)
+     */
+    public function set fps(val : Number) : void
+    {
+        if (val > 60)
+        {
+            val = 60;
+        }
+        _fps = val;
+        // while the max. fps in Flash is 60, the actual value fluctuates a few ms.
+        // Thus using the real value would cause lots of frame skips
+        // To take this into account Stardust uses internally a slightly smaller value to compensate.
+        _invFps = 1 / val - 0.004;
+    }
+
+    public function get fps() : Number
+    {
+        return _fps;
+    }
+
     //main loop
     //------------------------------------------------------------------------------------------------
 
@@ -111,24 +138,33 @@ public class Emitter extends StardustElement implements ActionCollector, Initial
      * In order to keep the simulation go on, this method should be called continuously.
      * It is recommended that you call this method through the <code>Event.ENTER_FRAME</code> event or the <code>TimerEvent.TIMER</code> event.
      * </p>
-     * @param    time The time interval of a single step of simulation. For instance, doubling this parameter causes the simulation to go twice as fast.
+     * @param time The time elapsed since the last step in seconds
      */
-    public final function step(time : Number = 1) : void
+    public final function step(time : Number) : void
     {
-        particleHandler.stepBegin(this, _particles, time);
+        if (time <= 0)
+        {
+            return;
+        }
+        timeSinceLastStep = timeSinceLastStep + time;
+        currentTime = currentTime + time;
+        if (timeSinceLastStep < _invFps)
+        {
+            return;
+        }
+
+        particleHandler.stepBegin(this, _particles, timeSinceLastStep);
 
         var i : int;
         var len : int;
-        var action : Action;
-        var p : Particle;
-        var sorted : Boolean = false;
 
         if (active) {
-            createParticles(time);
+            createParticles(timeSinceLastStep);
         }
 
         //filter out active actions
         activeActions.length = 0;
+        var action : Action;
         len = actions.length;
         for (i = 0; i < len; ++i) {
             action = actions[i];
@@ -142,24 +178,23 @@ public class Emitter extends StardustElement implements ActionCollector, Initial
         for (i = 0; i < len; ++i) {
             action = activeActions[i];
             if (action.needsSortedParticles) {
-                //sort particles
                 _particles.sort(Particle.compareFunction);
-                sorted = true;
                 break;
             }
         }
         //invoke action preupdates.
         for (i = 0; i < len; ++i) {
-            activeActions[i].preUpdate(this, time);
+            activeActions[i].preUpdate(this, timeSinceLastStep);
         }
 
         //update the remaining particles
+        var p : Particle;
         for (var m : int = 0; m < _particles.length; ++m) {
             p = _particles[m];
             for (i = 0; i < len; ++i) {
                 action = activeActions[i];
                 //update particle
-                action.update(this, p, time, currentTime);
+                action.update(this, p, timeSinceLastStep, currentTime);
             }
 
             if (p.isDead) {
@@ -175,16 +210,16 @@ public class Emitter extends StardustElement implements ActionCollector, Initial
 
         //postUpdate
         for (i = 0; i < len; ++i) {
-            activeActions[i].postUpdate(this, time);
+            activeActions[i].postUpdate(this, timeSinceLastStep);
         }
 
         if (eventDispatcher.hasEventListener(StardustEmitterStepEndEvent.TYPE)) {
             eventDispatcher.dispatchEvent(new StardustEmitterStepEndEvent(this));
         }
 
-        particleHandler.stepEnd(this, _particles, time);
+        particleHandler.stepEnd(this, _particles, timeSinceLastStep);
 
-        currentTime = currentTime + time;
+        timeSinceLastStep = 0;
     }
 
     //------------------------------------------------------------------------------------------------
@@ -287,6 +322,7 @@ public class Emitter extends StardustElement implements ActionCollector, Initial
         currentTime = 0;
         clearParticles();
         _clock.reset();
+        particleHandler.reset();
     }
 
     //particles
@@ -303,7 +339,7 @@ public class Emitter extends StardustElement implements ActionCollector, Initial
     /**
      * This method is called by the emitter to create new particles.
      */
-    public final function createParticles(time : uint) : Vector.<Particle>
+    public final function createParticles(time : Number) : Vector.<Particle>
     {
         var pCount : int = _clock.getTicks(time);
         newParticles.length = 0;
@@ -382,6 +418,7 @@ public class Emitter extends StardustElement implements ActionCollector, Initial
         xml.@active = active.toString();
         xml.@clock = _clock.name;
         xml.@particleHandler = particleHandler.name;
+        xml.@fps = fps.toString();
 
         if (actions.length > 0) {
             xml.appendChild(<actions/>);
@@ -410,6 +447,7 @@ public class Emitter extends StardustElement implements ActionCollector, Initial
         if (xml.@active.length()) active = (xml.@active == "true");
         if (xml.@clock.length()) clock = builder.getElementByName(xml.@clock) as Clock;
         if (xml.@particleHandler.length()) particleHandler = builder.getElementByName(xml.@particleHandler) as ParticleHandler;
+        if (xml.@fps.length()) fps = parseFloat(xml.@fps);
 
         var node : XML;
         for each (node in xml.actions.*) {

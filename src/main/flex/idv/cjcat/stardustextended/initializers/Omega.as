@@ -8,7 +8,7 @@ import idv.cjcat.stardustextended.particles.Particle;
 import idv.cjcat.stardustextended.xml.XMLBuilder;
 
 /**
- * Sets a particle's omega value (angular velocity), in degrees per emitter step, based on the <code>random</code> property.
+ * Sets a particle's omega value (rotation speed), in degrees per second, based on the <code>random</code> property.
  */
 public class Omega extends Initializer
 {

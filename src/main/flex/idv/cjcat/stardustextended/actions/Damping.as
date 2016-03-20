@@ -16,7 +16,7 @@ public class Damping extends Action
 {
 
     /**
-     * In each emitter step, each particle's velocity is multiplied by this value.
+     * In each emitter second, each particle's velocity is multiplied by this value.
      *
      * <p>
      * A value of 0 denotes no damping at all, and a value of 1 means all particles will not move at all.
@@ -35,7 +35,7 @@ public class Damping extends Action
     override public function preUpdate(emitter : Emitter, time : Number) : void
     {
         damp = 1;
-        if (damping) damp = Math.pow(1 - damping, time);
+        if (damping) damp = Math.pow(1 - damping, time * 60);
     }
 
     private var damp : Number;
