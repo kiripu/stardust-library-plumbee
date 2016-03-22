@@ -9,8 +9,7 @@ import flash.utils.ByteArray;
 
 import starling.core.Starling;
 import starling.errors.MissingContextError;
-
-import starling.utils.VertexData;
+import starling.rendering.VertexData;
 
 public class StarlingParticleBuffers
 {
@@ -20,7 +19,7 @@ public class StarlingParticleBuffers
     private static var indices : Vector.<uint>;
     protected static var sNumberOfVertexBuffers : int;
     protected static var _vertexBufferIdx : int = -1;
-
+    protected static const ELEMENTS_PER_VERTEX:int = 8;
     /** Creates buffers for the simulation.
      * numberOfBuffers is the amount of vertex buffers used by the particle system for multi buffering. Multi buffering
      * can avoid stalling of the GPU but will also increases it's memory consumption. */
@@ -45,17 +44,17 @@ public class StarlingParticleBuffers
         if (ApplicationDomain.currentDomain.hasDefinition("flash.display3D.Context3DBufferUsage")) {
             for (i = 0; i < sNumberOfVertexBuffers; ++i) {
                 // Context3DBufferUsage.DYNAMIC_DRAW; hardcoded for FP 11.x compatibility
-                vertexBuffers[i] = context.createVertexBuffer.call(context, numParticles * 4, VertexData.ELEMENTS_PER_VERTEX, "dynamicDraw");
+                vertexBuffers[i] = context.createVertexBuffer.call(context, numParticles * 4, ELEMENTS_PER_VERTEX, "dynamicDraw");
             }
         }
         else {
             for (i = 0; i < sNumberOfVertexBuffers; ++i) {
-                vertexBuffers[i] = context.createVertexBuffer(numParticles * 4, VertexData.ELEMENTS_PER_VERTEX);
+                vertexBuffers[i] = context.createVertexBuffer(numParticles * 4, ELEMENTS_PER_VERTEX);
             }
         }
 
         var zeroBytes : ByteArray = new ByteArray();
-        zeroBytes.length = numParticles * 16 * VertexData.ELEMENTS_PER_VERTEX;
+        zeroBytes.length = numParticles * 16 * ELEMENTS_PER_VERTEX;
         for (i = 0; i < sNumberOfVertexBuffers; ++i) {
             vertexBuffers[i].uploadFromByteArray(zeroBytes, 0, 0, numParticles * 4);
         }

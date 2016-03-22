@@ -64,7 +64,8 @@ repositories {
 dependencies {
     airSDK group: 'com.adobe', name: 'AIRSDK', version: '20.0', ext: Os.isFamily(Os.FAMILY_WINDOWS) ? 'zip' : 'tbz2'
 
-    external 'com.gamua:starling-framework:1.7.0'
+    //external 'com.gamua:starling-framework:1.7.0'
+    external 'com.gamua:starling-framework:2.0-beta-1'
 }
 
 additionalCompilerOptions = [

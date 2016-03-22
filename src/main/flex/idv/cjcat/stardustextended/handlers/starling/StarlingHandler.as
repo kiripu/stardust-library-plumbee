@@ -168,7 +168,7 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
     /** Sets the textures directly. Stardust can batch the simulations resulting multiple simulations using
      *  just one draw call. To have this working the following must be met:
      *  - The textures must come from the same sprite sheet. (= they must have the same base texture)
-     *  - The simulations must have the same render target, tinted, smoothing, blendMode, same filter
+     *  - The simulations must have the same render target, smoothing, blendMode, same filter
      *    and the same premultiplyAlpha values.
      **/
     public function setTextures(textures : Vector.<SubTexture>) : void

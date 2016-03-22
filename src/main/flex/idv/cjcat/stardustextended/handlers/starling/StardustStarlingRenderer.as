@@ -6,29 +6,32 @@ import flash.display3D.Context3DProgramType;
 import flash.display3D.Context3DVertexBufferFormat;
 import flash.display3D.textures.TextureBase;
 import flash.events.Event;
-import flash.geom.Matrix3D;
 import flash.geom.Rectangle;
 
 import idv.cjcat.stardustextended.particles.Particle;
 
-import starling.core.RenderSupport;
 import starling.core.Starling;
 import starling.display.BlendMode;
 
 import starling.display.DisplayObject;
 import starling.errors.MissingContextError;
 import starling.filters.FragmentFilter;
+import starling.rendering.Painter;
 import starling.textures.Texture;
-import starling.utils.MatrixUtil;
-import starling.utils.VertexData;
 
 public class StardustStarlingRenderer extends DisplayObject
 {
+    /** The offset of position data (x, y) within a vertex. */
+    private static const POSITION_OFFSET:int = 0;
+    /** The offset of color data (r, g, b, a) within a vertex. */
+    private static const COLOR_OFFSET:int = 2;
+    /** The offset of texture coordinates (u, v) within a vertex. */
+    private static const TEXCOORD_OFFSET:int = 6;
+
     public static const MAX_POSSIBLE_PARTICLES : int = 16383;
     private static const DEGREES_TO_RADIANS : Number = Math.PI / 180;
     private static const sCosLUT : Vector.<Number> = new Vector.<Number>(0x800, true);
     private static const sSinLUT : Vector.<Number> = new Vector.<Number>(0x800, true);
-    private static const renderMatrix : Matrix3D = new Matrix3D();
     private static const renderAlpha : Vector.<Number> = new Vector.<Number>(4);
     private static var numberOfVertexBuffers : int;
     private static var maxParticles : int;
@@ -36,7 +39,6 @@ public class StardustStarlingRenderer extends DisplayObject
     
     private var boundsRect : Rectangle;
     private var mFilter : FragmentFilter;
-    private var mTinted : Boolean = true;
     private var mTexture : Texture;
     private var mBatched : Boolean;
     private var vertexes : Vector.<Number>;
@@ -52,6 +54,7 @@ public class StardustStarlingRenderer extends DisplayObject
             init();
         }
         vertexes = new <Number>[];
+        updateSupportsRenderCache();
     }
 
     /** numberOfBuffers is the amount of vertex buffers used by the particle system for multi buffering.
@@ -85,13 +88,6 @@ public class StardustStarlingRenderer extends DisplayObject
     private static function onContextCreated(event : Event) : void
     {
         StarlingParticleBuffers.createBuffers(maxParticles, numberOfVertexBuffers);
-    }
-
-    /** Set to true if any of the rendered particles have alpha value. Default is true, setting it to false
-     *  decreases load on the GPU, but particles will be rendered with 1 alpha. */
-    public function set tinted(value : Boolean) : void
-    {
-        mTinted = value;
     }
 
     public function setTextures(texture : Texture, _frames : Vector.<Frame>) : void
@@ -246,9 +242,9 @@ public class StardustStarlingRenderer extends DisplayObject
         }
     }
 
-    protected function isStateChange(tinted : Boolean, parentAlpha : Number, texture : TextureBase,
-                                     textureRepeat : Boolean, smoothing : String, blendMode : String,
-                                     filter : FragmentFilter, premultiplyAlpha : Boolean, numParticles : uint) : Boolean
+    protected function isStateChange(texture : TextureBase,
+                                     smoothing : String, blendMode : String, filter : FragmentFilter,
+                                     premultiplyAlpha : Boolean, numParticles : uint) : Boolean
     {
         if (mNumParticles == 0) {
             return false;
@@ -257,19 +253,24 @@ public class StardustStarlingRenderer extends DisplayObject
             return true;
         }
         else if (mTexture != null && texture != null) {
-            return mTexture.base != texture || mTexture.repeat != textureRepeat ||
-                   texSmoothing != smoothing || this.blendMode != blendMode ||
-                   mTinted != (tinted || parentAlpha != 1.0) ||
+            return mTexture.base != texture || texSmoothing != smoothing || this.blendMode != blendMode ||
                    mFilter != filter || this.premultiplyAlpha != premultiplyAlpha;
         }
         return true;
     }
 
-    public override function render(support : RenderSupport, parentAlpha : Number) : void
+    // Would not make much sense to support Starling 2.0's render cache, since simulations do not share textures.
+    override protected function get supportsRenderCache():Boolean
+    {
+        return false;
+    }
+
+    public override function render(painter : Painter) : void
     {
         if (mNumParticles > 0 && !mBatched) {
             var mNumBatchedParticles : int = batchNeighbours();
-            renderCustom(support, mNumBatchedParticles, parentAlpha);
+            var parentAlpha : Number = parent ? parent.alpha : 1;
+            renderCustom(painter, mNumBatchedParticles, parentAlpha);
         }
         //reset filter
         super.filter = mFilter;
@@ -282,8 +283,7 @@ public class StardustStarlingRenderer extends DisplayObject
         var last : int = parent.getChildIndex(this);
         while (++last < parent.numChildren) {
             var nextPS : StardustStarlingRenderer = parent.getChildAt(last) as StardustStarlingRenderer;
-            if (nextPS && !nextPS.isStateChange(mTinted, alpha, mTexture.base, mTexture.repeat, texSmoothing,
-                            blendMode, mFilter, premultiplyAlpha, mNumParticles)) {
+            if (nextPS && !nextPS.isStateChange(mTexture.base, texSmoothing, blendMode, mFilter, premultiplyAlpha, mNumParticles)) {
                 if (nextPS.mNumParticles > 0) {
                     vertexes.fixed = false;
                     var targetIndex : int = (mNumParticles + mNumBatchedParticles) * 32; // 4 * 8
@@ -309,10 +309,8 @@ public class StardustStarlingRenderer extends DisplayObject
         return mNumBatchedParticles;
     }
 
-    private function renderCustom(support : RenderSupport, mNumBatchedParticles : int, parentAlpha : Number) : void
+    private function renderCustom(painter : Painter, mNumBatchedParticles : int, parentAlpha : Number) : void
     {
-        StarlingParticleBuffers.switchVertexBuffer();
-
         if (mNumParticles == 0 || StarlingParticleBuffers.buffersCreated == false) {
             return;
         }
@@ -320,41 +318,33 @@ public class StardustStarlingRenderer extends DisplayObject
             trace("Over " + maxParticles + " particles! Aborting rendering");
             return
         }
-        // always call this method when you write custom rendering code!
-        // it causes all previously batched quads/images to render.
-        support.finishQuadBatch();
-        support.raiseDrawCount();
+        StarlingParticleBuffers.switchVertexBuffer();
 
         var context : Context3D = Starling.context;
         if (context == null) {
             throw new MissingContextError();
         }
-
-        var blendFactors : Array = BlendMode.getBlendFactors(blendMode, true);
-        context.setBlendFactors(blendFactors[0], blendFactors[1]);
+        painter.drawCount++;
+        BlendMode.get(blendMode).activate();
 
         renderAlpha[0] = renderAlpha[1] = renderAlpha[2] = premultiplyAlpha ? parentAlpha : 1;
         renderAlpha[3] = parentAlpha;
 
-        MatrixUtil.convertTo3D(support.mvpMatrix, renderMatrix);
-
-        context.setProgram(ParticleProgram.getProgram(mTexture != null, mTinted, mTexture.mipMapping, mTexture.repeat, mTexture.format, texSmoothing));
+        ParticleProgram.getProgram(mTexture.mipMapping, mTexture.format, texSmoothing).activate(); // calls context.setProgram(_program3D);
         context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 0, renderAlpha, 1);
-        context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 1, renderMatrix, true);
+        context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 1, painter.state.mvpMatrix3D, true);
+
         context.setTextureAt(0, mTexture.base);
         StarlingParticleBuffers.vertexBuffer.uploadFromVector(vertexes, 0, Math.min(maxParticles * 4, vertexes.length / 8));
-        context.setVertexBufferAt(0, StarlingParticleBuffers.vertexBuffer, VertexData.POSITION_OFFSET, Context3DVertexBufferFormat.FLOAT_2);
-
-        if (mTinted) {
-            context.setVertexBufferAt(1, StarlingParticleBuffers.vertexBuffer, VertexData.COLOR_OFFSET, Context3DVertexBufferFormat.FLOAT_4);
-        }
-        context.setVertexBufferAt(2, StarlingParticleBuffers.vertexBuffer, VertexData.TEXCOORD_OFFSET, Context3DVertexBufferFormat.FLOAT_2);
+        context.setVertexBufferAt(0, StarlingParticleBuffers.vertexBuffer, POSITION_OFFSET, Context3DVertexBufferFormat.FLOAT_2);
+        context.setVertexBufferAt(1, StarlingParticleBuffers.vertexBuffer, COLOR_OFFSET, Context3DVertexBufferFormat.FLOAT_4);
+        context.setVertexBufferAt(2, StarlingParticleBuffers.vertexBuffer, TEXCOORD_OFFSET, Context3DVertexBufferFormat.FLOAT_2);
 
         context.drawTriangles(StarlingParticleBuffers.indexBuffer, 0, (Math.min(maxParticles, mNumParticles + mNumBatchedParticles)) * 2);
 
-        context.setVertexBufferAt(2, null);
-        context.setVertexBufferAt(1, null);
         context.setVertexBufferAt(0, null);
+        context.setVertexBufferAt(1, null);
+        context.setVertexBufferAt(2, null);
         context.setTextureAt(0, null);
     }
 
@@ -366,6 +356,10 @@ public class StardustStarlingRenderer extends DisplayObject
         super.filter = value;
     }
 
+    /**
+     * Stardust does not calculate the bounds of the simulation. In the future this would be possible, but
+     * will be a performance heavy operation.
+     */
     override public function getBounds(targetSpace : DisplayObject, resultRect : Rectangle = null) : Rectangle
     {
         if (boundsRect == null) {
