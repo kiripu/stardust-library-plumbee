@@ -11,17 +11,18 @@ public class StardustElement
 {
 
     private static var elementCounter : Dictionary = new Dictionary();
-
     public var name : String;
 
     public function StardustElement()
     {
         var str : String = getXMLTagName();
-
-        if (elementCounter[str] == undefined) elementCounter[str] = 0;
-        else elementCounter[str]++;
-
-        this.name = str + "_" + elementCounter[str];
+        if (elementCounter[str] == undefined) {
+            elementCounter[str] = 0;
+        }
+        else {
+            elementCounter[str]++;
+        }
+        name = str + "_" + elementCounter[str];
     }
 
     //XML

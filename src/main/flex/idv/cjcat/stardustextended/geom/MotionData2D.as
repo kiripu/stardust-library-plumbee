@@ -20,5 +20,13 @@ public class MotionData2D
         this.x = x;
         this.y = y;
     }
+
+    [Inline]
+    final public function setTo(xc : Number, yc : Number) : void
+    {
+        x = xc;
+        y = yc;
+    }
+
 }
 }

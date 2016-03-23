@@ -19,11 +19,11 @@ public class AlphaCurve extends Action
 {
 
     /**
-     * The initial alpha value of a particle, 0 by default.
+     * The initial alpha value of a particle.
      */
     public var inAlpha : Number;
     /**
-     * The final alpha value of a particle, 0 by default.
+     * The final alpha value of a particle.
      */
     public var outAlpha : Number;
 
@@ -41,7 +41,7 @@ public class AlphaCurve extends Action
     private var _inFunctionExtraParams : Array;
     private var _outFunctionExtraParams : Array;
 
-    public function AlphaCurve(inLifespan : Number = 0, outLifespan : Number = 0, inFunction : Function = null, outFunction : Function = null)
+    public function AlphaCurve(inLifespan : Number = 1, outLifespan : Number = 1, inFunction : Function = null, outFunction : Function = null)
     {
         this.inAlpha = 0;
         this.outAlpha = 0;

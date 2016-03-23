@@ -5,8 +5,6 @@ import flash.display.BitmapData;
 import flash.display.Sprite;
 import flash.geom.Matrix;
 
-import idv.cjcat.stardustextended.flashdisplay.bursters.Burster;
-
 import idv.cjcat.stardustextended.particles.Particle;
 
 /**

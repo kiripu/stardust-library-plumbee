@@ -16,17 +16,14 @@ public class Oriented extends Action
 {
 
     /**
-     * How fast the particles align to their velocities, 1 by default.
-     *
-     * <p>
-     * 1 means immediate alignment. 0 means no alignment at all.
-     * </p>
+     * How fast the particles align to their velocities, 0 means no alignment at all.
      */
     public var factor : Number;
     /**
      * The rotation angle offset in degrees.
      */
     public var offset : Number;
+    protected var _timeDeltaOneSec : Number;
 
     public function Oriented(factor : Number = 1, offset : Number = 0)
     {
@@ -43,12 +40,17 @@ public class Oriented extends Action
     {
         f = Math.pow(factor, 0.1 / time);
         os = offset + 90;
+        _timeDeltaOneSec = (time + Emitter.timeStepCorrectionOffset) * 60;
+        if (_timeDeltaOneSec > 1)
+        {
+            _timeDeltaOneSec = 1; // to prevent overalignment
+        }
     }
 
     override public function update(emitter : Emitter, particle : Particle, timeDelta : Number, currentTime : Number) : void
     {
         var displacement : Number = (Math.atan2(particle.vy, particle.vx) * StardustMath.RADIAN_TO_DEGREE + os) - particle.rotation;
-        particle.rotation += f * displacement;
+        particle.rotation += f * displacement * _timeDeltaOneSec;
     }
 
     //XML

@@ -24,7 +24,7 @@ public class Damping extends Action
      */
     public var damping : Number;
 
-    public function Damping(damping : Number = 0)
+    public function Damping(damping : Number = 0.05)
     {
         priority = -1;
 

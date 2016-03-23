@@ -64,7 +64,9 @@ public class CommonClassPackage extends ClassPackage
 
     public static function getInstance() : CommonClassPackage
     {
-        if (!_instance) _instance = new CommonClassPackage();
+        if (!_instance) {
+            _instance = new CommonClassPackage();
+        }
         return _instance;
     }
 
