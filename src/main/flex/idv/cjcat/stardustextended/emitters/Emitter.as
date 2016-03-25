@@ -75,10 +75,16 @@ public class Emitter extends StardustElement implements ActionCollector, Initial
      */
     public var currentTime : Number = 0;
 
+    /**
+     * While the max. fps in Flash is 60, the actual value fluctuates a few ms.
+     * Thus using the real value would cause lots of frame skips
+     * To take this into account Stardust uses internally a slightly smaller value to compensate.
+     */
+    public static var timeStepCorrectionOffset : Number = 0.004;
     protected var factory : PooledParticleFactory = new PooledParticleFactory();
     protected const _actionCollection : ActionCollection = new ActionCollection();
     protected const activeActions : Vector.<Action> = new Vector.<Action>();
-    protected var _invFps : Number = 1 / 60 - 0.004;
+    protected var _invFps : Number = 1 / 60 - timeStepCorrectionOffset;
     protected var timeSinceLastStep : Number = 0;
     protected var _fps : Number;
 
@@ -117,10 +123,8 @@ public class Emitter extends StardustElement implements ActionCollector, Initial
             val = 60;
         }
         _fps = val;
-        // while the max. fps in Flash is 60, the actual value fluctuates a few ms.
-        // Thus using the real value would cause lots of frame skips
-        // To take this into account Stardust uses internally a slightly smaller value to compensate.
-        _invFps = 1 / val - 0.004;
+
+        _invFps = 1 / val - timeStepCorrectionOffset;
     }
 
     public function get fps() : Number
@@ -159,7 +163,7 @@ public class Emitter extends StardustElement implements ActionCollector, Initial
         var len : int;
 
         if (active) {
-            createParticles(timeSinceLastStep);
+            createParticles(_clock.getTicks(timeSinceLastStep));
         }
 
         //filter out active actions
@@ -339,9 +343,8 @@ public class Emitter extends StardustElement implements ActionCollector, Initial
     /**
      * This method is called by the emitter to create new particles.
      */
-    public final function createParticles(time : Number) : Vector.<Particle>
+    public final function createParticles(pCount : uint) : Vector.<Particle>
     {
-        var pCount : int = _clock.getTicks(time);
         newParticles.length = 0;
         factory.createParticles(pCount, currentTime, newParticles);
         addParticles(newParticles);
@@ -350,10 +353,8 @@ public class Emitter extends StardustElement implements ActionCollector, Initial
 
     /**
      * This method is used to manually add existing particles to the emitter's simulation.
-     *
-     * <p>
-     * You should use the <code>particleFactory</code> class to manually create particles.
-     * </p>
+     * Note: you have to initialize the particles manually! To call all initializers in this emitter for the
+     * particle call <code>createParticles</code> instead.
      * @param    particles
      */
     public final function addParticles(particles : Vector.<Particle>) : void

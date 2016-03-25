@@ -2,11 +2,9 @@ package idv.cjcat.stardustextended.handlers.starling
 {
 
 import flash.display3D.Context3DTextureFormat;
-import flash.display3D.Program3D;
 import flash.utils.Dictionary;
 
 import starling.core.Starling;
-import starling.rendering.Painter;
 import starling.rendering.Program;
 import starling.textures.TextureSmoothing;
 import starling.utils.RenderUtil;

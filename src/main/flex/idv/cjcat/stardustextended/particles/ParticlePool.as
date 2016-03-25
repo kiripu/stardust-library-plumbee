@@ -11,54 +11,25 @@
 public class ParticlePool
 {
 
-    private static var _instance : ParticlePool;
+    protected static const _recycled : Vector.<Particle> = new <Particle>[];
 
-    /**
-     * Returns the singleton of the pool.
-     * @return
-     */
-    public static function getInstance() : ParticlePool
+    [Inline]
+    public static function get() : Particle
     {
-        if (!_instance) _instance = new ParticlePool();
-        return _instance;
-    }
-
-    protected var _array : Vector.<Particle>;
-    protected var _position : int;
-
-    public function ParticlePool()
-    {
-        _array = new <Particle>[createNewParticle()];
-        _position = 0;
-    }
-
-    /** @private */
-    protected function createNewParticle() : Particle
-    {
-        return new Particle();
+        if (_recycled.length > 0)
+        {
+            return _recycled.pop();
+        }
+        else
+        {
+            return new Particle();
+        }
     }
 
     [Inline]
-    public final function get() : Particle
+    public static function recycle(particle : Particle) : void
     {
-        if (_position == _array.length) {
-            _array.length <<= 1;
-            var len : uint = _array.length;
-            for (var i : int = _position; i < len; i++) {
-                _array[i] = createNewParticle();
-            }
-        }
-        _position++;
-        return _array[_position - 1];
-    }
-
-    [Inline]
-    public final function recycle(particle : Particle) : void
-    {
-        if (_position > 0 && particle) {
-            _array[_position - 1] = particle;
-            _position--;
-        }
+        _recycled.push(particle);
     }
 }
 }

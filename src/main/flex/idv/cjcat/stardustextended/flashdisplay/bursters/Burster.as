@@ -4,7 +4,7 @@ import idv.cjcat.stardustextended.emitters.Emitter;
 import idv.cjcat.stardustextended.initializers.Initializer;
 import idv.cjcat.stardustextended.initializers.InitializerCollector;
 import idv.cjcat.stardustextended.particles.Particle;
-import idv.cjcat.stardustextended.particles.ParticleFactory;
+import idv.cjcat.stardustextended.particles.PooledParticleFactory;
 
 /**
  * Allows users to create particles and fully customize their properties.
@@ -22,12 +22,7 @@ public class Burster implements InitializerCollector
      * Use its <code>createParticles()</code> method to create particles,
      * initialized by initializers added to the burster.
      */
-    protected var factory : ParticleFactory;
-
-    public function Burster()
-    {
-
-    }
+    protected var factory : PooledParticleFactory;
 
     /**
      * Adds particles created by the <code>createParticles()</code> method to an emitter.

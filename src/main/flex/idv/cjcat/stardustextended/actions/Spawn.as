@@ -71,7 +71,7 @@ public class Spawn extends Action
         }
         if (_trigger.testTrigger(emitter, particle, timeDelta)) {
             var p : Particle;
-            var newParticles : Vector.<Particle> = _spawnerEmitter.createParticles(timeDelta);
+            var newParticles : Vector.<Particle> = _spawnerEmitter.createParticles(_spawnerEmitter.clock.getTicks(timeDelta));
             var len : uint = newParticles.length;
             for (var m : int = 0; m < len; ++m) {
                 p = newParticles[m];

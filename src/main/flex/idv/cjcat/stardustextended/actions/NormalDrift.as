@@ -21,11 +21,11 @@ public class NormalDrift extends Action
      * When set to true, it simulates a gravity that applies equal acceleration on all particles.
      */
     public var massless : Boolean;
-
+    protected var _timeDeltaOneSec : Number;
     private var _random : Random;
     private var _max : Number;
 
-    public function NormalDrift(max : Number = 0.2, random : Random = null)
+    public function NormalDrift(max : Number = 1, random : Random = null)
     {
         this.massless = true;
         this.random = random;
@@ -66,13 +66,18 @@ public class NormalDrift extends Action
         }
     }
 
+    override public function preUpdate(emitter : Emitter, time : Number) : void
+    {
+        _timeDeltaOneSec = time * 60;
+    }
+
     override public function update(emitter : Emitter, particle : Particle, timeDelta : Number, currentTime : Number) : void
     {
         var v : Vec2D = Vec2DPool.get(particle.vy, particle.vx);
         v.length = _random.random();
         if (!massless) v.length /= particle.mass;
-        particle.vx += v.x * timeDelta;
-        particle.vy += v.y * timeDelta;
+        particle.vx += v.x * _timeDeltaOneSec;
+        particle.vy += v.y * _timeDeltaOneSec;
         Vec2DPool.recycle(v);
     }
 

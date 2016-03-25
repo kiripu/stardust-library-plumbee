@@ -2,8 +2,6 @@
 {
 import flash.display.BitmapData;
 
-import idv.cjcat.stardustextended.flashdisplay.bursters.Burster;
-
 import idv.cjcat.stardustextended.particles.Particle;
 import idv.cjcat.stardustextended.utils.ColorUtil;
 

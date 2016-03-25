@@ -28,7 +28,6 @@ public class AccelerationZone extends Action implements IZoneContainer
 
     /**
      * The acceleration applied in each step to particles inside the zone.
-     * Default is 1.
      */
     public var acceleration : Number;
     /**
@@ -68,7 +67,7 @@ public class AccelerationZone extends Action implements IZoneContainer
         priority = -6;
 
         inverted = _inverted;
-        acceleration = 1;
+        acceleration = 200;
         useParticleDirection = true;
         _direction = Vec2DPool.get(100, 0);
         zoneCollection = new ZoneCollection();
@@ -76,7 +75,7 @@ public class AccelerationZone extends Action implements IZoneContainer
             zoneCollection.zones = zones;
         }
         else {
-            zoneCollection.zones.push(new RectZone())
+            zoneCollection.zones.push(new RectZone());
         }
     }
 

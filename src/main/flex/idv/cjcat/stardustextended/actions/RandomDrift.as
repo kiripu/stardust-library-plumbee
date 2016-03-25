@@ -29,7 +29,7 @@ public class RandomDrift extends Action
     protected var _randomY : Random;
     protected var _timeDeltaOneSec : Number;
 
-    public function RandomDrift(maxX : Number = 100, maxY : Number = 100, randomX : Random = null, randomY : Random = null)
+    public function RandomDrift(maxX : Number = 10, maxY : Number = 10, randomX : Random = null, randomY : Random = null)
     {
         priority = -3;
 

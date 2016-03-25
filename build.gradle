@@ -38,7 +38,7 @@ apply plugin: 'ideafx'
 apply plugin: 'maven'
 
 group = 'com.funkypandagame'
-version = '3.27'
+version = '3.28'
 type = 'swc'
 output = 'stardust-library'
 playerVersion = '20.0'
@@ -69,7 +69,6 @@ dependencies {
 }
 
 additionalCompilerOptions = [
-//        '-swf-version=31', //FP20
         '-inline',
         // AS3 metadata
         '-keep-as3-metadata+=Inline,Embed,SWF,Transient'
