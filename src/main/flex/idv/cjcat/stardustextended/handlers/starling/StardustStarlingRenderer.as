@@ -54,7 +54,6 @@ public class StardustStarlingRenderer extends DisplayObject
             init();
         }
         vertexes = new <Number>[];
-        updateSupportsRenderCache();
     }
 
     /** numberOfBuffers is the amount of vertex buffers used by the particle system for multi buffering.
@@ -259,14 +258,9 @@ public class StardustStarlingRenderer extends DisplayObject
         return true;
     }
 
-    // Would not make much sense to support Starling 2.0's render cache, since simulations do not share textures.
-    override protected function get supportsRenderCache():Boolean
-    {
-        return false;
-    }
-
     public override function render(painter : Painter) : void
     {
+        painter.excludeFromCache(this); // for some reason it doesnt work if inside the if. Starling bug?
         if (mNumParticles > 0 && !mBatched) {
             var mNumBatchedParticles : int = batchNeighbours();
             var parentAlpha : Number = parent ? parent.alpha : 1;
