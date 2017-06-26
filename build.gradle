@@ -13,9 +13,9 @@ flashPlayerLocation=C:\\[path to flash player]\\flashplayer.exe
 
 (OSX only) make the gradlew file in the root directory executable
 
-Run gradlew build          to build the .swc and run tests
+Run gradlew buildFx        to build the .swc and run tests
 Run gradlew idea           to generate an IntelliJ IDEA module
-Run gradlew assemble       to just build the .swc
+Run gradlew compileFlex    to just build the .swc
 Run gradlew uploadArchives to upload the artifact to a local or remote Maven repo
 Run gradlew tasks          to list all other tasks, e.g. to make project files for Flash Builder or IntelliJ IDEA
 */
@@ -101,7 +101,7 @@ sdkAutoInstall {
 task wrapper(type: Wrapper) {
     group = 'Buildmaster'
     description = 'Generates gradlew and gradlew.bat bootstrap scripts.'
-    gradleVersion = '4.0'
+    gradleVersion = '3.2.1' // GradleFx does not support higher versions
     // place jar file and properties into a subdirectory to avoid root dir clutter
     jarFile = 'gradle/wrapper/gradle.jar'
 }
