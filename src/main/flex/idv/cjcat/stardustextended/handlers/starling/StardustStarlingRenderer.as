@@ -318,7 +318,10 @@ public class StardustStarlingRenderer extends DisplayObject
         if (context == null) {
             throw new MissingContextError();
         }
-        painter.drawCount++;
+        painter.finishMeshBatch();
+        painter.drawCount += 1;
+        painter.prepareToDraw();
+
         BlendMode.get(blendMode).activate();
 
         renderAlpha[0] = renderAlpha[1] = renderAlpha[2] = premultiplyAlpha ? parentAlpha : 1;

@@ -4,9 +4,6 @@ Have a local or a remote Maven repository which hosts the dependencies (only Sta
 
 (optional) Have a file called gradle.properties in the [Users]/[UserName]/.gradle directory with the following contents:
 
-mavenUsername=[the username to access your Maven repo]
-mavenPassword=[password for your Maven repo]
-repoManagerURL=[URL of your Maven repo]
 flashPlayerLocation=C:\\[path to flash player]\\flashplayer.exe
 
 (flashPlayerLocation is only needed if you want to run tests)
@@ -22,26 +19,9 @@ Run gradlew tasks          to list all other tasks, e.g. to make project files f
 import org.apache.tools.ant.taskdefs.condition.Os
 
 buildscript {
-    ext {
-        if (!project.hasProperty('repoManagerURL') ||
-            !project.hasProperty('mavenUsername') ||
-            !project.hasProperty('mavenPassword')) {
-            println("NOTE: custom Maven repository is not configured in gradle.properties")
-            repoManagerURL = "https://repo1.maven.org/maven2"
-            mavenUsername = ""
-            mavenPassword = ""
-        }
-    }
     repositories {
         mavenLocal()
 		mavenCentral()
-        maven {
-            url repoManagerURL + 'repo'
-            credentials {
-                username = mavenUsername
-                password = mavenPassword
-            }
-        }
     }
 
     dependencies {
@@ -66,13 +46,6 @@ repositories {
     maven {
         url "https://raw.githubusercontent.com/tconkling/maven-repo/master/"
     }
-    maven {
-        url repoManagerURL + 'repo'
-        credentials {
-            username = mavenUsername
-            password = mavenPassword
-        }
-    }
     ivy {
         name 'Adobe Air SDK'
         artifactPattern  Os.isFamily(Os.FAMILY_WINDOWS) ?
@@ -84,7 +57,7 @@ repositories {
 dependencies {
     airSDK group: 'com.adobe', name: 'AIRSDK', version: '20.0', ext: Os.isFamily(Os.FAMILY_WINDOWS) ? 'zip' : 'tbz2'
 
-    external 'com.gamua:starling-framework:2.0.1'
+    external 'com.gamua:starling-framework:2.1'
 }
 
 additionalCompilerOptions = [
@@ -114,8 +87,8 @@ uploadArchives {
         mavenDeployer {
             // invoke this with the -PdeployToRepoManager command line argument
             if (project.hasProperty('deployToRepoManager')) {
-                repository(url: repoManagerURL + 'funkypanda') {
-                    authentication(userName: mavenUsername, password: mavenPassword)
+                repository(url: 'TODO your repo URL') {
+                    authentication(userName: "TODO", password: "TODO")
                 }
             }
             else {
