@@ -4,13 +4,14 @@ package idv.cjcat.stardustextended.handlers
 import flash.display.BitmapData;
 
 import idv.cjcat.stardustextended.emitters.Emitter;
-import idv.cjcat.stardustextended.handlers.ParticleHandler;
 import idv.cjcat.stardustextended.particles.Particle;
 import idv.cjcat.stardustextended.utils.ColorUtil;
 
 /**
- * This handler draws pixels into a <code>BitmapData</code> object according to the <code>color</code> property of <code>Particle</code> objects.
+ * This handler draws pixels into a <code>BitmapData</code> object according to the <code>color</code> property of
+ * <code>Particle</code> objects.
  */
+[Deprecated(message="Since AS3 does not allow to store a BitmapData on the GPU this class is useless for Starling. Make a normal Sim where the graphic is a single white pixel instead")]
 public class PixelHandler extends ParticleHandler
 {
 

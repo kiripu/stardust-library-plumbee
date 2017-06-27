@@ -9,7 +9,6 @@ import flash.utils.ByteArray;
 
 import starling.core.Starling;
 import starling.errors.MissingContextError;
-import starling.rendering.VertexData;
 
 public class StarlingParticleBuffers
 {
