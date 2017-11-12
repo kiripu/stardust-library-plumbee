@@ -23,34 +23,15 @@ public class NormalDrift extends Action
     public var massless : Boolean;
     protected var _timeDeltaOneSec : Number;
     private var _random : Random;
-    private var _max : Number;
 
-    public function NormalDrift(max : Number = 1, random : Random = null)
+    public function NormalDrift(random : Random = null)
     {
         this.massless = true;
         this.random = random;
-        this.max = max;
     }
 
     /**
-     * The acceleration ranges from -max to max.
-     */
-    public function get max() : Number
-    {
-        return _max;
-    }
-
-    public function set max(value : Number) : void
-    {
-        _max = value;
-        if (_random && !isNaN(value)) {
-            _random.setRange(-_max, _max);
-        }
-    }
-
-    /**
-     * The random object used to generate a random number for the acceleration in the range [-max, max], uniform random by default.
-     * You don't have to set the random object's range. The range is automatically set each time before the random generation.
+     * The random object used to generate a random number for the acceleration, uniform random by default.
      */
     public function get random() : Random
     {
@@ -61,9 +42,6 @@ public class NormalDrift extends Action
     {
         if (!value) value = new UniformRandom();
         _random = value;
-        if (!isNaN(_max)) {
-            _random.setRange(-_max, _max);
-        }
     }
 
     override public function preUpdate(emitter : Emitter, time : Number) : void
@@ -99,7 +77,6 @@ public class NormalDrift extends Action
         var xml : XML = super.toXML();
 
         xml.@massless = massless;
-        xml.@max = _max;
         xml.@random = _random.name;
 
         return xml;
@@ -110,7 +87,6 @@ public class NormalDrift extends Action
         super.parseXML(xml, builder);
 
         if (xml.@massless.length()) massless = (xml.@massless == "true");
-        if (xml.@max.length()) max = parseFloat(xml.@max);
         if (xml.@random.length()) random = builder.getElementByName(xml.@random) as Random;
     }
 

@@ -1,6 +1,6 @@
 /*
 Gradle script for building the library. Usage:
-Have a local or a remote Maven repository which hosts the dependencies (only Starling 1.7.0 in this case)
+Have a local or a remote Maven repository which hosts the dependencies (only Starling in this case)
 
 (optional) Have a file called gradle.properties in the [Users]/[UserName]/.gradle directory with the following contents:
 
