@@ -2,7 +2,6 @@
 {
 
 import idv.cjcat.stardustextended.geom.MotionData2D;
-import idv.cjcat.stardustextended.xml.XMLBuilder;
 
 /**
  * Rectangular contour.
@@ -125,45 +124,5 @@ public class RectContour extends Composite
         }
     }
 
-    //XML
-    //------------------------------------------------------------------------------------------------
-
-    override public function getXMLTagName() : String
-    {
-        return "RectContour";
-    }
-
-    override public function toXML() : XML
-    {
-        var xml : XML = super.toXML();
-        delete xml.zones;
-        xml.@virtualThickness = virtualThickness;
-        xml.@x = _x;
-        xml.@y = _y;
-        xml.@width = width;
-        xml.@height = height;
-
-        return xml;
-    }
-
-    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
-    {
-        super.parseXML(xml, builder);
-        // parsing removes all zones, so we add them back
-        addZone(_line1);
-        addZone(_line2);
-        addZone(_line3);
-        addZone(_line4);
-
-        if (xml.@virtualThickness.length()) virtualThickness = parseFloat(xml.@virtualThickness);
-
-        if (xml.@x.length()) x = parseFloat(xml.@x);
-        if (xml.@y.length()) y = parseFloat(xml.@y);
-        if (xml.@width.length()) width = parseFloat(xml.@width);
-        if (xml.@height.length()) height = parseFloat(xml.@height);
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 }
 }

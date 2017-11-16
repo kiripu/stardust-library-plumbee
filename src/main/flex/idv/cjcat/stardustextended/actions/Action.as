@@ -2,13 +2,11 @@
 {
 
 import flash.events.EventDispatcher;
-import flash.utils.getQualifiedClassName;
 
+import idv.cjcat.stardustextended.StardustElement;
 import idv.cjcat.stardustextended.emitters.Emitter;
 import idv.cjcat.stardustextended.events.StardustActionEvent;
 import idv.cjcat.stardustextended.particles.Particle;
-import idv.cjcat.stardustextended.StardustElement;
-import idv.cjcat.stardustextended.xml.XMLBuilder;
 
 /**
  * An action is used to continuously update a particle's property.
@@ -150,33 +148,5 @@ public class Action extends StardustElement
         return false;
     }
 
-    //XML
-    //------------------------------------------------------------------------------------------------
-
-    override public function getXMLTagName() : String
-    {
-        return getQualifiedClassName(this);
-    }
-
-    override public function getElementTypeXMLTag() : XML
-    {
-        return <actions/>;
-    }
-
-    override public function toXML() : XML
-    {
-        var xml : XML = super.toXML();
-        xml.@active = active;
-        return xml;
-    }
-
-    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
-    {
-        super.parseXML(xml, builder);
-        if (xml.@active.length()) active = (xml.@active == "true");
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 }
 }

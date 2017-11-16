@@ -32,16 +32,5 @@ public class Clock extends StardustElement
         // override it if needed
     }
 
-
-    //XML
-    //------------------------------------------------------------------------------------------------
-
-    override public function getElementTypeXMLTag() : XML
-    {
-        return <clocks/>;
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 }
 }

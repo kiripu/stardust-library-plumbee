@@ -4,7 +4,6 @@
 import flash.display.BitmapData;
 import flash.utils.ByteArray;
 
-import idv.cjcat.stardustextended.xml.XMLBuilder;
 import idv.cjcat.stardustextended.geom.MotionData2D;
 import idv.cjcat.stardustextended.geom.MotionData2DPool;
 
@@ -83,35 +82,6 @@ public class BitmapZone extends Zone
     }
 
 
-    //XML
-    //------------------------------------------------------------------------------------------------
 
-    override public function getXMLTagName() : String
-    {
-        return "BitmapZone";
-    }
-
-    override public function toXML() : XML
-    {
-        var xml : XML = super.toXML();
-        xml.@x = _x;
-        xml.@y = _y;
-        xml.@scaleX = scaleX;
-        xml.@scaleY = scaleY;
-        return xml;
-    }
-
-    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
-    {
-        super.parseXML(xml, builder);
-
-        if (xml.@x.length()) _x = parseFloat(xml.@x);
-        if (xml.@y.length()) _y = parseFloat(xml.@y);
-        if (xml.@scaleX.length()) scaleX = parseFloat(xml.@scaleX);
-        if (xml.@scaleY.length()) scaleY = parseFloat(xml.@scaleY);
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 }
 }

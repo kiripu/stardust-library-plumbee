@@ -1,10 +1,9 @@
 ﻿package idv.cjcat.stardustextended.zones
 {
 
+import idv.cjcat.stardustextended.geom.MotionData2D;
 import idv.cjcat.stardustextended.geom.MotionData2DPool;
 import idv.cjcat.stardustextended.math.StardustMath;
-import idv.cjcat.stardustextended.xml.XMLBuilder;
-import idv.cjcat.stardustextended.geom.MotionData2D;
 
 /**
  * Circular contour zone.
@@ -60,34 +59,5 @@ public class CircleContour extends Contour
         return MotionData2DPool.get(_radius * Math.cos(theta), _radius * Math.sin(theta));
     }
 
-
-    //XML
-    //------------------------------------------------------------------------------------------------
-
-    override public function getXMLTagName() : String
-    {
-        return "CircleContour";
-    }
-
-    override public function toXML() : XML
-    {
-        var xml : XML = super.toXML();
-        xml.@x = x;
-        xml.@y = y;
-        xml.@radius = radius;
-        return xml;
-    }
-
-    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
-    {
-        super.parseXML(xml, builder);
-
-        if (xml.@x.length()) _x = parseFloat(xml.@x);
-        if (xml.@y.length()) _y = parseFloat(xml.@y);
-        if (xml.@radius.length()) radius = parseFloat(xml.@radius);
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 }
 }

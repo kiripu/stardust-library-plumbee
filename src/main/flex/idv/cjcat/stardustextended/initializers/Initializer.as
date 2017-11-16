@@ -3,11 +3,9 @@
 
 import flash.events.EventDispatcher;
 
-import idv.cjcat.stardustextended.emitters.Emitter;
+import idv.cjcat.stardustextended.StardustElement;
 import idv.cjcat.stardustextended.events.StardustInitializerEvent;
 import idv.cjcat.stardustextended.particles.Particle;
-import idv.cjcat.stardustextended.StardustElement;
-import idv.cjcat.stardustextended.xml.XMLBuilder;
 
 /**
  * An initializer is used to alter just once (i.e. initialize) a particle's properties upon the particle's birth.
@@ -111,33 +109,5 @@ public class Initializer extends StardustElement
         eventDispatcher.dispatchEvent(new StardustInitializerEvent(StardustInitializerEvent.PRIORITY_CHANGE, this));
     }
 
-    //XML
-    //------------------------------------------------------------------------------------------------
-
-    override public function getXMLTagName() : String
-    {
-        return "Initializer";
-    }
-
-    override public function getElementTypeXMLTag() : XML
-    {
-        return <initializers/>;
-    }
-
-    override public function toXML() : XML
-    {
-        var xml : XML = super.toXML();
-        xml.@active = active;
-        return xml;
-    }
-
-    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
-    {
-        super.parseXML(xml, builder);
-        if (xml.@active.length()) active = (xml.@active == "true");
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 }
 }

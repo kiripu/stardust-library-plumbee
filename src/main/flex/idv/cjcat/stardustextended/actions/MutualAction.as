@@ -3,7 +3,6 @@
 
 import idv.cjcat.stardustextended.emitters.Emitter;
 import idv.cjcat.stardustextended.particles.Particle;
-import idv.cjcat.stardustextended.xml.XMLBuilder;
 
 /**
  * TODO: get it working
@@ -60,31 +59,5 @@ public class MutualAction extends Action
         return active;
     }
 
-    //XML
-    //------------------------------------------------------------------------------------------------
-
-    override public function getXMLTagName() : String
-    {
-        return "MutualAction";
-    }
-
-    override public function toXML() : XML
-    {
-        var xml : XML = super.toXML();
-
-        xml.@maxDistance = maxDistance;
-
-        return xml;
-    }
-
-    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
-    {
-        super.parseXML(xml, builder);
-
-        if (xml.@maxDistance.length()) maxDistance = parseFloat(xml.@maxDistance);
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 }
 }

@@ -38,21 +38,5 @@ public class Random extends StardustElement
         return [0.5, 0.5];
     }
 
-
-    //XML
-    //------------------------------------------------------------------------------------------------
-
-    override public function getXMLTagName() : String
-    {
-        return "Random";
-    }
-
-    override public function getElementTypeXMLTag() : XML
-    {
-        return <randoms/>;
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 }
 }

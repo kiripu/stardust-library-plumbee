@@ -2,11 +2,10 @@
 {
 import flash.geom.Point;
 
-import idv.cjcat.stardustextended.math.StardustMath;
-import idv.cjcat.stardustextended.particles.Particle;
-import idv.cjcat.stardustextended.xml.XMLBuilder;
 import idv.cjcat.stardustextended.geom.MotionData4D;
 import idv.cjcat.stardustextended.geom.MotionData4DPool;
+import idv.cjcat.stardustextended.math.StardustMath;
+import idv.cjcat.stardustextended.particles.Particle;
 
 /**
  * Keeps particles inside a rectangular region.
@@ -83,39 +82,5 @@ public class WrappingBox extends Deflector
         return position;
     }
 
-    //XML
-    //------------------------------------------------------------------------------------------------
-
-    override public function getXMLTagName() : String
-    {
-        return "WrappingBox";
-    }
-
-    override public function toXML() : XML
-    {
-        var xml : XML = super.toXML();
-
-        delete xml.@bounce;
-
-        xml.@x = x;
-        xml.@y = y;
-        xml.@width = width;
-        xml.@height = height;
-
-        return xml;
-    }
-
-    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
-    {
-        super.parseXML(xml, builder);
-
-        if (xml.@x.length()) x = parseFloat(xml.@x);
-        if (xml.@y.length()) y = parseFloat(xml.@y);
-        if (xml.@width.length()) width = parseFloat(xml.@width);
-        if (xml.@height.length()) height = parseFloat(xml.@height);
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 }
 }

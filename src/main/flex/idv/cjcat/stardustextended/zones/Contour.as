@@ -1,7 +1,5 @@
 ﻿package idv.cjcat.stardustextended.zones
 {
-import idv.cjcat.stardustextended.xml.XMLBuilder;
-
 /**
  * Zone with no thickness.
  */
@@ -31,31 +29,5 @@ public class Contour extends Zone
         updateArea();
     }
 
-    //XML
-    //------------------------------------------------------------------------------------------------
-
-    override public function getXMLTagName() : String
-    {
-        return "Contour";
-    }
-
-    override public function toXML() : XML
-    {
-        var xml : XML = super.toXML();
-
-        xml.@virtualThickness = virtualThickness;
-
-        return xml;
-    }
-
-    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
-    {
-        super.parseXML(xml, builder);
-
-        if (xml.@virtualThickness.length()) virtualThickness = parseFloat(xml.@virtualThickness);
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 }
 }

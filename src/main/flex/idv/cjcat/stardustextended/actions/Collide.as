@@ -111,16 +111,5 @@ public class Collide extends MutualAction
         Vec2DPool.recycle(vTotal);
     }
 
-
-    //XML
-    //------------------------------------------------------------------------------------------------
-
-    override public function getXMLTagName() : String
-    {
-        return "Collide";
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 }
 }

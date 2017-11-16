@@ -4,7 +4,6 @@
 import idv.cjcat.stardustextended.actions.Accelerate;
 import idv.cjcat.stardustextended.actions.AccelerationZone;
 import idv.cjcat.stardustextended.actions.Age;
-import idv.cjcat.stardustextended.actions.AlphaCurve;
 import idv.cjcat.stardustextended.actions.ColorGradient;
 import idv.cjcat.stardustextended.actions.Damping;
 import idv.cjcat.stardustextended.actions.DeathLife;
@@ -20,7 +19,6 @@ import idv.cjcat.stardustextended.actions.NormalDrift;
 import idv.cjcat.stardustextended.actions.Oriented;
 import idv.cjcat.stardustextended.actions.RandomDrift;
 import idv.cjcat.stardustextended.actions.ScaleAnimated;
-import idv.cjcat.stardustextended.actions.ScaleCurve;
 import idv.cjcat.stardustextended.actions.Spawn;
 import idv.cjcat.stardustextended.actions.SpeedLimit;
 import idv.cjcat.stardustextended.actions.Spin;
@@ -46,7 +44,7 @@ import idv.cjcat.stardustextended.initializers.Scale;
 import idv.cjcat.stardustextended.emitters.Emitter;
 import idv.cjcat.stardustextended.initializers.Velocity;
 import idv.cjcat.stardustextended.math.UniformRandom;
-import idv.cjcat.stardustextended.xml.ClassPackage;
+import idv.cjcat.stardustextended.json.ClassPackage;
 import idv.cjcat.stardustextended.zones.CircleContour;
 import idv.cjcat.stardustextended.zones.CircleZone;
 import idv.cjcat.stardustextended.zones.Line;
@@ -74,10 +72,8 @@ public class CommonClassPackage extends ClassPackage
     override protected final function populateClasses() : void
     {
         //actions
-        classes.push(AlphaCurve);
         classes.push(DeathLife);
         classes.push(Die);
-        classes.push(ScaleCurve);
         classes.push(RandomDrift);
         classes.push(Accelerate);
         classes.push(Damping);

@@ -3,11 +3,10 @@
 import flash.display.BitmapData;
 import flash.geom.Point;
 
-import idv.cjcat.stardustextended.math.StardustMath;
-import idv.cjcat.stardustextended.particles.Particle;
-import idv.cjcat.stardustextended.xml.XMLBuilder;
 import idv.cjcat.stardustextended.geom.MotionData2D;
 import idv.cjcat.stardustextended.geom.MotionData2DPool;
+import idv.cjcat.stardustextended.math.StardustMath;
+import idv.cjcat.stardustextended.particles.Particle;
 
 /**
  * Vector field based on a BitmapData.
@@ -136,43 +135,5 @@ public class BitmapField extends Field
         return position;
     }
 
-    //XML
-    //------------------------------------------------------------------------------------------------
-
-    override public function getXMLTagName() : String
-    {
-        return "BitmapField";
-    }
-
-    override public function toXML() : XML
-    {
-        var xml : XML = super.toXML();
-
-        xml.@x = x;
-        xml.@y = y;
-        xml.@channelX = channelX;
-        xml.@channelY = channelY;
-        xml.@max = max;
-        xml.@scaleX = scaleX;
-        xml.@scaleY = scaleY;
-
-        return xml;
-    }
-
-    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
-    {
-        super.parseXML(xml, builder);
-
-        if (xml.@x.length()) x = parseFloat(xml.@x);
-        if (xml.@y.length()) y = parseFloat(xml.@y);
-        if (xml.@channelX.length()) channelX = parseFloat(xml.@channelX);
-        if (xml.@channelY.length()) channelY = parseFloat(xml.@channelY);
-        if (xml.@max.length()) max = parseFloat(xml.@max);
-        if (xml.@scaleX.length()) scaleX = parseFloat(xml.@scaleX);
-        if (xml.@scaleY.length()) scaleY = parseFloat(xml.@scaleY);
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 }
 }

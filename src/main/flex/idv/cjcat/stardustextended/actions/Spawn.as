@@ -1,12 +1,10 @@
 ﻿package idv.cjcat.stardustextended.actions
 {
 
-import idv.cjcat.stardustextended.StardustElement;
 import idv.cjcat.stardustextended.actions.triggers.DeathTrigger;
 import idv.cjcat.stardustextended.actions.triggers.Trigger;
 import idv.cjcat.stardustextended.emitters.Emitter;
 import idv.cjcat.stardustextended.particles.Particle;
-import idv.cjcat.stardustextended.xml.XMLBuilder;
 
 /**
  * Spawns new particles at the position of existing particles.
@@ -92,48 +90,6 @@ public class Spawn extends Action
             }
         }
     }
-
-    //XML
-    //------------------------------------------------------------------------------------------------
-
-    override public function getXMLTagName() : String
-    {
-        return "Spawn";
-    }
-
-    override public function getRelatedObjects() : Vector.<StardustElement>
-    {
-        return new <StardustElement>[_trigger];
-    }
-
-    override public function toXML() : XML
-    {
-        var xml : XML = super.toXML();
-
-        xml.@inheritDirection = inheritDirection;
-        xml.@inheritVelocity = inheritVelocity;
-        xml.@trigger = _trigger.name;
-
-        if (_spawnerEmitter) {
-            xml.@spawnerEmitter = _spawnerEmitter.name;
-        }
-
-        return xml;
-    }
-
-    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
-    {
-        super.parseXML(xml, builder);
-
-        inheritDirection = (xml.@inheritDirection == "true");
-        inheritVelocity = (xml.@inheritVelocity == "true");
-
-        if (xml.@spawnerEmitter) _spawnerEmitterId = xml.@spawnerEmitter;
-        _trigger = builder.getElementByName(xml.@trigger) as Trigger;
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 
 }
 }

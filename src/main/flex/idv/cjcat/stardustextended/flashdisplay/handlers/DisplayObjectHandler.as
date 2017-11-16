@@ -1,14 +1,12 @@
 package idv.cjcat.stardustextended.flashdisplay.handlers
 {
 
-import idv.cjcat.stardustextended.emitters.Emitter;
-
 import flash.display.DisplayObject;
 import flash.display.DisplayObjectContainer;
 
+import idv.cjcat.stardustextended.emitters.Emitter;
 import idv.cjcat.stardustextended.handlers.ParticleHandler;
 import idv.cjcat.stardustextended.particles.Particle;
-import idv.cjcat.stardustextended.xml.XMLBuilder;
 
 /**
  * This handler adds display object particles to the target container's display list,
@@ -94,35 +92,5 @@ public class DisplayObjectHandler extends ParticleHandler
         return _blendMode;
     }
 
-    //XML
-    //------------------------------------------------------------------------------------------------
-
-    override public function getXMLTagName() : String
-    {
-        return "DisplayObjectHandler";
-    }
-
-    override public function toXML() : XML
-    {
-        var xml : XML = super.toXML();
-
-        xml.@addChildMode = addChildMode;
-        xml.@forceParentChange = forceParentChange;
-        xml.@blendMode = _blendMode;
-
-        return xml;
-    }
-
-    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
-    {
-        super.parseXML(xml, builder);
-
-        if (xml.@addChildMode.length()) addChildMode = parseInt(xml.@addChildMode);
-        if (xml.@forceParentChange.length()) forceParentChange = (xml.@forceParentChange == "true");
-        if (xml.@blendMode.length()) blendMode = (xml.@blendMode);
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 }
 }

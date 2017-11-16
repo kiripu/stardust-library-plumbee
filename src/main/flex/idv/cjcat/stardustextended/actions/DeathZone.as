@@ -1,10 +1,8 @@
 ﻿package idv.cjcat.stardustextended.actions
 {
 
-import idv.cjcat.stardustextended.StardustElement;
 import idv.cjcat.stardustextended.emitters.Emitter;
 import idv.cjcat.stardustextended.particles.Particle;
-import idv.cjcat.stardustextended.xml.XMLBuilder;
 import idv.cjcat.stardustextended.zones.RectZone;
 import idv.cjcat.stardustextended.zones.Zone;
 import idv.cjcat.stardustextended.zones.ZoneCollection;
@@ -60,43 +58,5 @@ public class DeathZone extends Action implements IZoneContainer
         if (dead) particle.isDead = true;
     }
 
-    //XML
-    //------------------------------------------------------------------------------------------------
-
-    override public function getRelatedObjects() :  Vector.<StardustElement>
-    {
-        return Vector.<StardustElement>(zoneCollection.zones);
-    }
-
-    override public function getXMLTagName() : String
-    {
-        return "DeathZone";
-    }
-
-    override public function toXML() : XML
-    {
-        var xml : XML = super.toXML();
-        zoneCollection.addToStardustXML(xml);
-        xml.@inverted = inverted;
-        return xml;
-    }
-
-    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
-    {
-        super.parseXML(xml, builder);
-        if (xml.@zone.length()) {
-            trace("WARNING: the simulation contains a deprecated property 'zone' for " + getXMLTagName());
-            zoneCollection.zones = Vector.<Zone>([Zone(builder.getElementByName(xml.@zone))]);
-        }
-        else {
-            zoneCollection.parseFromStardustXML(xml, builder);
-        }
-        if (xml.@inverted.length()) {
-            inverted = (xml.@inverted == "true");
-        }
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 }
 }

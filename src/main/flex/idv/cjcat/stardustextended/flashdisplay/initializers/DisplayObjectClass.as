@@ -33,16 +33,5 @@ public class DisplayObjectClass extends Initializer
         p.target = construct(displayObjectClass, constructorParams);
     }
 
-
-    //XML
-    //------------------------------------------------------------------------------------------------
-
-    override public function getXMLTagName() : String
-    {
-        return "DisplayObjectClass";
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 }
 }

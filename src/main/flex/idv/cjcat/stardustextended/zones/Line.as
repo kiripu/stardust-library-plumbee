@@ -1,12 +1,11 @@
 ﻿package idv.cjcat.stardustextended.zones
 {
 
+import idv.cjcat.stardustextended.geom.MotionData2D;
 import idv.cjcat.stardustextended.geom.MotionData2DPool;
 import idv.cjcat.stardustextended.math.Random;
 import idv.cjcat.stardustextended.math.StardustMath;
 import idv.cjcat.stardustextended.math.UniformRandom;
-import idv.cjcat.stardustextended.xml.XMLBuilder;
-import idv.cjcat.stardustextended.geom.MotionData2D;
 
 /**
  * Line segment zone.
@@ -110,41 +109,6 @@ public class Line extends Contour
         var dy : Number = _y - _y2;
         area = Math.sqrt(dx * dx + dy * dy) * virtualThickness;
     }
-
-
-    //XML
-    //------------------------------------------------------------------------------------------------
-
-    override public function getXMLTagName() : String
-    {
-        return "Line";
-    }
-
-    override public function toXML() : XML
-    {
-        var xml : XML = super.toXML();
-
-        xml.@x1 = _x;
-        xml.@y1 = _y;
-        xml.@x2 = _x2;
-        xml.@y2 = _y2;
-
-        return xml;
-    }
-
-    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
-    {
-        super.parseXML(xml, builder);
-
-        if (xml.@x1.length()) _x = parseFloat(xml.@x1);
-        if (xml.@y1.length()) _y = parseFloat(xml.@y1);
-        if (xml.@x2.length()) _x2 = parseFloat(xml.@x2);
-        if (xml.@y2.length()) _y2 = parseFloat(xml.@y2);
-        updateArea();
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 
 }
 }

@@ -3,7 +3,6 @@
 
 import idv.cjcat.stardustextended.emitters.Emitter;
 import idv.cjcat.stardustextended.particles.Particle;
-import idv.cjcat.stardustextended.xml.XMLBuilder;
 
 /**
  * Causes a particle's rotation to change according to it's omega value (angular velocity).
@@ -41,28 +40,5 @@ public class Spin extends Action
         particle.rotation += particle.omega * factor;
     }
 
-    //XML
-    //------------------------------------------------------------------------------------------------
-
-    override public function getXMLTagName() : String
-    {
-        return "Spin";
-    }
-
-    override public function toXML() : XML
-    {
-        var xml : XML = super.toXML();
-        xml.@multiplier = multiplier;
-        return xml;
-    }
-
-    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
-    {
-        super.parseXML(xml, builder);
-        if (xml.@multiplier.length()) multiplier = parseFloat(xml.@multiplier);
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 }
 }

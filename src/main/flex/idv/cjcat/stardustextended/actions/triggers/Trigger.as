@@ -13,19 +13,6 @@ public class Trigger extends StardustElement
         throw new Error("This method must be overridden");
     }
 
-    //XML
-    //------------------------------------------------------------------------------------------------
-    override public function getXMLTagName() : String
-    {
-        throw new Error("This method must be overridden");
-    }
 
-    override public function getElementTypeXMLTag() : XML
-    {
-        return <triggers/>;
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 }
 }

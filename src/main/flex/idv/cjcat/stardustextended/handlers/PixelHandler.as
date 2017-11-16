@@ -41,16 +41,5 @@ public class PixelHandler extends ParticleHandler
         }
     }
 
-
-    //XML
-    //------------------------------------------------------------------------------------------------
-
-    override public function getXMLTagName() : String
-    {
-        return "PixelHandler";
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 }
 }

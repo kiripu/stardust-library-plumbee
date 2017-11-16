@@ -1,13 +1,11 @@
 ﻿package idv.cjcat.stardustextended.zones
 {
-import idv.cjcat.stardustextended.StardustElement;
-import idv.cjcat.stardustextended.geom.MotionData2DPool;
-import idv.cjcat.stardustextended.math.Random;
-import idv.cjcat.stardustextended.math.UniformRandom;
-import idv.cjcat.stardustextended.xml.XMLBuilder;
 import idv.cjcat.stardustextended.geom.MotionData2D;
+import idv.cjcat.stardustextended.geom.MotionData2DPool;
 import idv.cjcat.stardustextended.geom.Vec2D;
 import idv.cjcat.stardustextended.geom.Vec2DPool;
+import idv.cjcat.stardustextended.math.Random;
+import idv.cjcat.stardustextended.math.UniformRandom;
 
 /**
  * Rectangular zone.
@@ -103,46 +101,6 @@ public class RectZone extends Zone
         return true;
     }
 
-    //XML
-    //------------------------------------------------------------------------------------------------
 
-    override public function getRelatedObjects() : Vector.<StardustElement>
-    {
-        return new <StardustElement>[_randomX, _randomY];
-    }
-
-    override public function getXMLTagName() : String
-    {
-        return "RectZone";
-    }
-
-    override public function toXML() : XML
-    {
-        var xml : XML = super.toXML();
-
-        xml.@x = _x;
-        xml.@y = _y;
-        xml.@width = _width;
-        xml.@height = _height;
-        xml.@randomX = _randomX.name;
-        xml.@randomY = _randomY.name;
-
-        return xml;
-    }
-
-    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
-    {
-        super.parseXML(xml, builder);
-
-        if (xml.@x.length()) _x = parseFloat(xml.@x);
-        if (xml.@y.length()) _y = parseFloat(xml.@y);
-        if (xml.@width.length()) width = parseFloat(xml.@width);
-        if (xml.@height.length()) height = parseFloat(xml.@height);
-        if (xml.@randomX.length()) randomX = builder.getElementByName(xml.@randomX) as Random;
-        if (xml.@randomY.length()) randomY = builder.getElementByName(xml.@randomY) as Random;
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 }
 }

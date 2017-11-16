@@ -3,6 +3,7 @@
 
 import flash.events.EventDispatcher;
 
+import idv.cjcat.stardustextended.StardustElement;
 import idv.cjcat.stardustextended.actions.Action;
 import idv.cjcat.stardustextended.actions.ActionCollection;
 import idv.cjcat.stardustextended.actions.ActionCollector;
@@ -14,8 +15,6 @@ import idv.cjcat.stardustextended.initializers.Initializer;
 import idv.cjcat.stardustextended.initializers.InitializerCollector;
 import idv.cjcat.stardustextended.particles.Particle;
 import idv.cjcat.stardustextended.particles.PooledParticleFactory;
-import idv.cjcat.stardustextended.StardustElement;
-import idv.cjcat.stardustextended.xml.XMLBuilder;
 
 /**
  * This class takes charge of the actual particle simulation of the Stardust particle system.
@@ -242,7 +241,7 @@ public class Emitter extends StardustElement implements ActionCollector, Initial
         return _actionCollection.actions;
     }
 
-    public final function set actions(values : Vector.<Action>)
+    public final function set actions(values : Vector.<Action>) : void
     {
         for each (var action:Action in values)
         {
@@ -291,7 +290,7 @@ public class Emitter extends StardustElement implements ActionCollector, Initial
         return factory.initializerCollection.initializers;
     }
 
-    public final function set initializers(val : Vector.<Initializer>)
+    public final function set initializers(val : Vector.<Initializer>) : void
     {
         for each (var initializer:Initializer in val)
         {
@@ -406,78 +405,5 @@ public class Emitter extends StardustElement implements ActionCollector, Initial
 
     //------------------------------------------------------------------------------------------------
     //end of particles
-
-
-    //XML
-    //------------------------------------------------------------------------------------------------
-
-    override public function getRelatedObjects() : Vector.<StardustElement>
-    {
-        var allElems : Vector.<StardustElement> = new Vector.<StardustElement>();
-        allElems.push(_clock);
-        allElems.push(particleHandler);
-        allElems = allElems.concat(initializers);
-        allElems = allElems.concat(Vector.<StardustElement>(actions));
-        return allElems;
-    }
-
-    override public function getXMLTagName() : String
-    {
-        return "Emitter2D";
-    }
-
-    override public function getElementTypeXMLTag() : XML
-    {
-        return <emitters/>;
-    }
-
-    override public function toXML() : XML
-    {
-        var xml : XML = super.toXML();
-        xml.@active = active.toString();
-        xml.@clock = _clock.name;
-        xml.@particleHandler = particleHandler.name;
-        xml.@fps = fps.toString();
-
-        if (actions.length > 0) {
-            xml.appendChild(<actions/>);
-            for each (var action : Action in actions) {
-                xml.actions.appendChild(action.getXMLTag());
-            }
-        }
-
-        if (initializers.length > 0) {
-            xml.appendChild(<initializers/>);
-            for each (var initializer : Initializer in initializers) {
-                xml.initializers.appendChild(initializer.getXMLTag());
-            }
-        }
-
-        return xml;
-    }
-
-    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
-    {
-        super.parseXML(xml, builder);
-
-        _actionCollection.clearActions();
-        factory.clearInitializers();
-
-        if (xml.@active.length()) active = (xml.@active == "true");
-        if (xml.@clock.length()) clock = builder.getElementByName(xml.@clock) as Clock;
-        if (xml.@particleHandler.length()) particleHandler = builder.getElementByName(xml.@particleHandler) as ParticleHandler;
-        if (xml.@fps.length()) fps = parseFloat(xml.@fps);
-
-        var node : XML;
-        for each (node in xml.actions.*) {
-            addAction(builder.getElementByName(node.@name) as Action);
-        }
-        for each (node in xml.initializers.*) {
-            addInitializer(builder.getElementByName(node.@name) as Initializer);
-        }
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 }
 }

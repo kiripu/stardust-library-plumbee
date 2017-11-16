@@ -1,8 +1,5 @@
 ﻿package idv.cjcat.stardustextended.math
 {
-import idv.cjcat.stardustextended.StardustElement;
-import idv.cjcat.stardustextended.xml.XMLBuilder;
-
 /**
  * This class calls a <code>Random</code> object's <code>random()</code> method multiple times,
  * and averages the value.
@@ -33,39 +30,5 @@ public class AveragedRandom extends Random
         return sum / sampleCount;
     }
 
-
-    //XML
-    //------------------------------------------------------------------------------------------------
-
-    override public function getRelatedObjects() : Vector.<StardustElement>
-    {
-        return new <StardustElement>[randomObj];
-    }
-
-    override public function getXMLTagName() : String
-    {
-        return "AveragedRandom";
-    }
-
-    override public function toXML() : XML
-    {
-        var xml : XML = super.toXML();
-
-        xml.@randomObj = randomObj.name;
-        xml.@sampleCount = sampleCount;
-
-        return xml;
-    }
-
-    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
-    {
-        super.parseXML(xml, builder);
-
-        if (xml.@randomObj.length()) randomObj = builder.getElementByName(xml.@randomObj) as Random;
-        if (xml.@sampleCount.length()) sampleCount = parseInt(xml.@sampleCount);
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 }
 }

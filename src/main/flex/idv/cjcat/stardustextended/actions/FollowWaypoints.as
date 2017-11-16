@@ -3,10 +3,9 @@
 
 import idv.cjcat.stardustextended.actions.waypoints.Waypoint;
 import idv.cjcat.stardustextended.emitters.Emitter;
-import idv.cjcat.stardustextended.particles.Particle;
-import idv.cjcat.stardustextended.xml.XMLBuilder;
 import idv.cjcat.stardustextended.geom.Vec2D;
 import idv.cjcat.stardustextended.geom.Vec2DPool;
+import idv.cjcat.stardustextended.particles.Particle;
 
 /**
  * Causes particles to go through a series of waypoints.
@@ -127,57 +126,5 @@ public class FollowWaypoints extends Action
         particle.vy += r.y * _timeDeltaOneSec;
     }
 
-
-    //XML
-    //------------------------------------------------------------------------------------------------
-    override public function getXMLTagName() : String
-    {
-        return "FollowWaypoints";
-    }
-
-    override public function toXML() : XML
-    {
-        var xml : XML = super.toXML();
-
-        var waypointsXML : XML = <waypoints/>;
-        for each (var waypoint : Waypoint in _waypoints) {
-            var waypointXML : XML = <Waypoint/>;
-            waypointXML.@x = waypoint.x;
-            waypointXML.@y = waypoint.y;
-            waypointXML.@radius = waypoint.radius;
-            waypointXML.@strength = waypoint.strength;
-            waypointXML.@attenuationPower = waypoint.attenuationPower;
-            waypointXML.@epsilon = waypoint.epsilon;
-
-            waypointsXML.appendChild(waypointXML);
-        }
-        xml.appendChild(waypointsXML);
-        xml.@loop = loop;
-        xml.@massless = massless;
-        return xml;
-    }
-
-    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
-    {
-        super.parseXML(xml, builder);
-
-        clearWaypoints();
-        for each (var node : XML in xml.waypoints.Waypoint) {
-            var waypoint : Waypoint = new Waypoint();
-            waypoint.x = parseFloat(node.@x);
-            waypoint.y = parseFloat(node.@y);
-            waypoint.radius = parseFloat(node.@radius);
-            waypoint.strength = parseFloat(node.@strength);
-            waypoint.attenuationPower = parseFloat(node.@attenuationPower);
-            waypoint.epsilon = parseFloat(node.@epsilon);
-
-            addWaypoint(waypoint);
-        }
-        loop = (xml.@loop == "true");
-        massless = (xml.@massless == "true");
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //XML
 }
 }

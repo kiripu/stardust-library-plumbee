@@ -60,20 +60,5 @@ public class ParticleHandler extends StardustElement
 
     }
 
-    //XML
-    //------------------------------------------------------------------------------------------------
-
-    override public function getXMLTagName() : String
-    {
-        return "ParticleHandler";
-    }
-
-    override public function getElementTypeXMLTag() : XML
-    {
-        return <handlers/>;
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 }
 }

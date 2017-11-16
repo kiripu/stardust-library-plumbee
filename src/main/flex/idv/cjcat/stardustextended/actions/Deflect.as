@@ -1,14 +1,11 @@
 ﻿package idv.cjcat.stardustextended.actions
 {
 
-import idv.cjcat.stardustextended.StardustElement;
-import idv.cjcat.stardustextended.emitters.Emitter;
-import idv.cjcat.stardustextended.particles.Particle;
-import idv.cjcat.stardustextended.xml.XMLBuilder;
 import idv.cjcat.stardustextended.actions.triggers.DeflectorTrigger;
 import idv.cjcat.stardustextended.deflectors.Deflector;
+import idv.cjcat.stardustextended.emitters.Emitter;
 import idv.cjcat.stardustextended.geom.MotionData4D;
-
+import idv.cjcat.stardustextended.particles.Particle;
 
 /**
  * This action is useful to manipulate a particle's position and velocity as you like.
@@ -105,45 +102,5 @@ public class Deflect extends Action
         hasTrigger = false;
     }
 
-    //XML
-    //------------------------------------------------------------------------------------------------
-
-    override public function getRelatedObjects() : Vector.<StardustElement>
-    {
-        return Vector.<StardustElement>(_deflectors);
-    }
-
-    override public function getXMLTagName() : String
-    {
-        return "Deflect";
-    }
-
-    override public function toXML() : XML
-    {
-        var xml : XML = super.toXML();
-
-        if (_deflectors.length > 0) {
-            xml.appendChild(<deflectors/>);
-            var deflector : Deflector;
-            for each (deflector in _deflectors) {
-                xml.deflectors.appendChild(deflector.getXMLTag());
-            }
-        }
-
-        return xml;
-    }
-
-    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
-    {
-        super.parseXML(xml, builder);
-
-        clearDeflectors();
-        for each (var node : XML in xml.deflectors.*) {
-            addDeflector(builder.getElementByName(node.@name) as Deflector);
-        }
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 }
 }

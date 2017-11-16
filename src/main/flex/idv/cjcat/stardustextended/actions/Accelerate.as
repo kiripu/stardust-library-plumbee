@@ -2,10 +2,9 @@
 {
 
 import idv.cjcat.stardustextended.emitters.Emitter;
-import idv.cjcat.stardustextended.particles.Particle;
-import idv.cjcat.stardustextended.xml.XMLBuilder;
 import idv.cjcat.stardustextended.geom.Vec2D;
 import idv.cjcat.stardustextended.geom.Vec2DPool;
+import idv.cjcat.stardustextended.particles.Particle;
 
 /**
  * Accelerates particles along their velocity directions.
@@ -45,31 +44,5 @@ public class Accelerate extends Action
         Vec2DPool.recycle(v);
     }
 
-    //XML
-    //------------------------------------------------------------------------------------------------
-
-    override public function getXMLTagName() : String
-    {
-        return "Accelerate";
-    }
-
-    override public function toXML() : XML
-    {
-        var xml : XML = super.toXML();
-
-        xml.@acceleration = acceleration;
-
-        return xml;
-    }
-
-    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
-    {
-        super.parseXML(xml, builder);
-
-        if (xml.@acceleration.length()) acceleration = parseFloat(xml.@acceleration);
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 }
 }

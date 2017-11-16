@@ -9,7 +9,6 @@ import flash.geom.Matrix;
 import idv.cjcat.stardustextended.emitters.Emitter;
 import idv.cjcat.stardustextended.particles.Particle;
 import idv.cjcat.stardustextended.utils.ColorUtil;
-import idv.cjcat.stardustextended.xml.XMLBuilder;
 
 /**
  * Alters a particle's color during its lifetime based on a gradient.
@@ -50,13 +49,13 @@ public class ColorGradient extends Action
     // These are used in JSON serialization.
     // Getting trough numbers in cross platform way nicely is hard.
     public function get colorsStr() : String { return _colors.join(","); }
-    public function set colorsStr(value : String) { _colors = value.split(","); }
+    public function set colorsStr(value : String) : void { _colors = value.split(","); }
 
     public function get ratiosStr() : String  { return _ratios.join(","); }
-    public function set ratiosStr(value : String) { _ratios = value.split(","); }
+    public function set ratiosStr(value : String) : void { _ratios = value.split(","); }
 
     public function get alphasStr() : String { return _alphas.join(","); }
-    public function set alphasStr(value : String) { _alphas = value.split(","); }
+    public function set alphasStr(value : String) : void { _alphas = value.split(","); }
     /**
      *
      * @param setDefaultValues Set some default values to start with. Leave it false if you set value manually to
@@ -118,45 +117,9 @@ public class ColorGradient extends Action
         particle.alpha = colorAlphas[ratio];
     }
 
-    public override function onXMLInitComplete() : void
+    public override function OnDeserializationComplete() : void
     {
         setGradient(_colors, _ratios, _alphas);
     }
-
-    //XML
-    //------------------------------------------------------------------------------------------------
-    override public function getXMLTagName() : String
-    {
-        return "ColorGradient";
-    }
-
-    override public function toXML() : XML
-    {
-        var xml : XML = super.toXML();
-
-        var colorsStr : String = "";
-        var ratiosStr : String = "";
-        var alphasStr : String = "";
-        for (var i : int = 0; i < _colors.length; i++) {
-            colorsStr = colorsStr + _colors[i] + ",";
-            ratiosStr = ratiosStr + _ratios[i] + ",";
-            alphasStr = alphasStr + _alphas[i] + ",";
-        }
-        xml.@colors = colorsStr.substr(0, colorsStr.length - 1);
-        xml.@ratios = ratiosStr.substr(0, ratiosStr.length - 1);
-        xml.@alphas = alphasStr.substr(0, alphasStr.length - 1);
-
-        return xml;
-    }
-
-    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
-    {
-        super.parseXML(xml, builder);
-
-        setGradient((xml.@colors).split(","), (xml.@ratios).split(","), (xml.@alphas).split(","));
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 }
 }

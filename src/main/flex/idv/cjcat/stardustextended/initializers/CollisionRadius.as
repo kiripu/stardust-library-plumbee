@@ -1,7 +1,6 @@
 ﻿package idv.cjcat.stardustextended.initializers
 {
 import idv.cjcat.stardustextended.particles.Particle;
-import idv.cjcat.stardustextended.xml.XMLBuilder;
 
 /**
  * Particles are simulated as circles for collision simulation.
@@ -27,32 +26,5 @@ public class CollisionRadius extends Initializer
     {
         particle.collisionRadius = radius;
     }
-
-    //XML
-    //------------------------------------------------------------------------------------------------
-
-    override public function getXMLTagName() : String
-    {
-        return "CollisionRadius";
-    }
-
-    override public function toXML() : XML
-    {
-        var xml : XML = super.toXML();
-
-        xml.@radius = radius;
-
-        return xml;
-    }
-
-    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
-    {
-        super.parseXML(xml, builder);
-
-        if (xml.@radius.length()) radius = parseFloat(xml.@radius);
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 }
 }

@@ -1,14 +1,12 @@
 ﻿package idv.cjcat.stardustextended.actions
 {
 
-import idv.cjcat.stardustextended.StardustElement;
 import idv.cjcat.stardustextended.emitters.Emitter;
-import idv.cjcat.stardustextended.particles.Particle;
-import idv.cjcat.stardustextended.xml.XMLBuilder;
 import idv.cjcat.stardustextended.fields.Field;
 import idv.cjcat.stardustextended.fields.UniformField;
 import idv.cjcat.stardustextended.geom.MotionData2D;
 import idv.cjcat.stardustextended.geom.MotionData2DPool;
+import idv.cjcat.stardustextended.particles.Particle;
 
 /**
  * Alters a particle's velocity based on a vector field.
@@ -65,38 +63,5 @@ public class VelocityField extends Action implements IFieldContainer
         MotionData2DPool.recycle(md2D);
     }
 
-    //XML
-    //------------------------------------------------------------------------------------------------
-
-    override public function getRelatedObjects() : Vector.<StardustElement>
-    {
-        return new <StardustElement>[field];
-    }
-
-    override public function getXMLTagName() : String
-    {
-        return "VelocityField";
-    }
-
-    override public function toXML() : XML
-    {
-        var xml : XML = super.toXML();
-
-        if (!field) xml.@field = "null";
-        else xml.@field = field.name;
-
-        return xml;
-    }
-
-    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
-    {
-        super.parseXML(xml, builder);
-
-        if (xml.@field == "null") field = null;
-        else if (xml.@field.length()) field = builder.getElementByName(xml.@field) as Field;
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 }
 }

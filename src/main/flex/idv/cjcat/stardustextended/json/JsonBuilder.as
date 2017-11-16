@@ -12,7 +12,6 @@ import idv.cjcat.stardustextended.deflectors.Deflector;
 import idv.cjcat.stardustextended.emitters.Emitter;
 import idv.cjcat.stardustextended.fields.Field;
 import idv.cjcat.stardustextended.initializers.Initializer;
-import idv.cjcat.stardustextended.xml.ClassPackage;
 import idv.cjcat.stardustextended.zones.Zone;
 
 public class JsonBuilder {
@@ -106,7 +105,7 @@ public class JsonBuilder {
                     newInst[key] = parseSubTree(val);
                 }
             }
-            newInst.onXMLInitComplete();
+            newInst.OnDeserializationComplete();
             return newInst;
         }
         else
@@ -173,7 +172,7 @@ public class JsonBuilder {
         const tagName : String = getQualifiedClassName(element).split("::")[1];
         if (elementClasses[tagName] != undefined)
         {
-            throw new IllegalOperationError("This element class name is already registered: " + element.getXMLTagName());
+            throw new IllegalOperationError("This element class name is already registered: " + element);
         }
         elementClasses[tagName] = elementClass;
     }

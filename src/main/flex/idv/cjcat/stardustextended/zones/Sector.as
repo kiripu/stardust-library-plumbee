@@ -1,12 +1,11 @@
 ﻿package idv.cjcat.stardustextended.zones
 {
 
+import idv.cjcat.stardustextended.geom.MotionData2D;
 import idv.cjcat.stardustextended.geom.MotionData2DPool;
 import idv.cjcat.stardustextended.math.Random;
 import idv.cjcat.stardustextended.math.StardustMath;
 import idv.cjcat.stardustextended.math.UniformRandom;
-import idv.cjcat.stardustextended.xml.XMLBuilder;
-import idv.cjcat.stardustextended.geom.MotionData2D;
 
 /**
  * Sector-shaped zone.
@@ -141,40 +140,5 @@ public class Sector extends Zone
         return true;
     }
 
-
-    //XML
-    //------------------------------------------------------------------------------------------------
-
-    override public function getXMLTagName() : String
-    {
-        return "Sector";
-    }
-
-    override public function toXML() : XML
-    {
-        var xml : XML = super.toXML();
-        xml.@x = _x;
-        xml.@y = _y;
-        xml.@minRadius = minRadius;
-        xml.@maxRadius = maxRadius;
-        xml.@minAngle = minAngle;
-        xml.@maxAngle = maxAngle;
-        return xml;
-    }
-
-    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
-    {
-        super.parseXML(xml, builder);
-
-        if (xml.@x.length()) _x = parseFloat(xml.@x);
-        if (xml.@y.length()) _y = parseFloat(xml.@y);
-        if (xml.@minRadius.length()) minRadius = parseFloat(xml.@minRadius);
-        if (xml.@maxRadius.length()) maxRadius = parseFloat(xml.@maxRadius);
-        if (xml.@minAngle.length()) minAngle = parseFloat(xml.@minAngle);
-        if (xml.@maxAngle.length()) maxAngle = parseFloat(xml.@maxAngle);
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 }
 }

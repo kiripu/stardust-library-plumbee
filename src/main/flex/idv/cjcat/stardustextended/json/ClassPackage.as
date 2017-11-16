@@ -1,9 +1,9 @@
-﻿package idv.cjcat.stardustextended.xml
+﻿package idv.cjcat.stardustextended.json
 {
 
 /**
- * An <code>XMLBuilder</code> object needs to know the mapping between an XML tag's name and an actual class.
- * This class encapsulates multiple classes for the <code>XMLBuilder.registerClassesFromClassPackage()</code> method
+ * An <code>JsonBuilder</code> object needs to know the mapping between an XML tag's name and an actual class.
+ * This class encapsulates multiple classes for the <code>JsonBuilder.registerClassesFromClassPackage()</code> method
  * to register multiple classes (i.e. build the mapping relations).
  */
 public class ClassPackage

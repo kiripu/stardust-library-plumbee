@@ -3,7 +3,6 @@
 
 import idv.cjcat.stardustextended.emitters.Emitter;
 import idv.cjcat.stardustextended.particles.Particle;
-import idv.cjcat.stardustextended.xml.XMLBuilder;
 
 /**
  * Causes particles to decelerate.
@@ -46,32 +45,5 @@ public class Damping extends Action
         particle.vy *= damp;
     }
 
-
-    //XML
-    //------------------------------------------------------------------------------------------------
-
-    override public function getXMLTagName() : String
-    {
-        return "Damping";
-    }
-
-    override public function toXML() : XML
-    {
-        var xml : XML = super.toXML();
-
-        xml.@damping = damping;
-
-        return xml;
-    }
-
-    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
-    {
-        super.parseXML(xml, builder);
-
-        if (xml.@damping.length()) damping = parseFloat(xml.@damping);
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 }
 }

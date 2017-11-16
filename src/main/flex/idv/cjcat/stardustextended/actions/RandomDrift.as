@@ -1,12 +1,10 @@
 ﻿package idv.cjcat.stardustextended.actions
 {
 
-import idv.cjcat.stardustextended.StardustElement;
 import idv.cjcat.stardustextended.emitters.Emitter;
 import idv.cjcat.stardustextended.math.Random;
 import idv.cjcat.stardustextended.math.UniformRandom;
 import idv.cjcat.stardustextended.particles.Particle;
-import idv.cjcat.stardustextended.xml.XMLBuilder;
 
 /**
  * Applies random acceleration to particles.
@@ -114,44 +112,5 @@ public class RandomDrift extends Action
         particle.vy += ry * _timeDeltaOneSec;
     }
 
-    //XML
-    //------------------------------------------------------------------------------------------------
-
-    override public function getRelatedObjects() : Vector.<StardustElement>
-    {
-        return new <StardustElement>[_randomX, _randomY];
-    }
-
-    override public function getXMLTagName() : String
-    {
-        return "RandomDrift";
-    }
-
-    override public function toXML() : XML
-    {
-        var xml : XML = super.toXML();
-
-        xml.@massless = massless;
-        xml.@maxX = _maxX;
-        xml.@maxY = _maxY;
-        xml.@randomX = _randomX.name;
-        xml.@randomY = _randomY.name;
-
-        return xml;
-    }
-
-    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
-    {
-        super.parseXML(xml, builder);
-
-        if (xml.@massless.length()) massless = (xml.@massless == "true");
-        if (xml.@maxX.length()) _maxX = parseFloat(xml.@maxX);
-        if (xml.@maxY.length()) _maxY = parseFloat(xml.@maxY);
-        if (xml.@randomX.length()) randomX = builder.getElementByName(xml.@randomX) as Random;
-        if (xml.@randomY.length()) randomY = builder.getElementByName(xml.@randomY) as Random;
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 }
 }

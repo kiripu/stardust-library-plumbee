@@ -2,13 +2,11 @@ package idv.cjcat.stardustextended.handlers.starling
 {
 
 import idv.cjcat.stardustextended.emitters.Emitter;
+import idv.cjcat.stardustextended.handlers.ISpriteSheetHandler;
 import idv.cjcat.stardustextended.handlers.ParticleHandler;
 import idv.cjcat.stardustextended.particles.Particle;
-import idv.cjcat.stardustextended.xml.XMLBuilder;
-import idv.cjcat.stardustextended.handlers.ISpriteSheetHandler;
 
 import starling.display.BlendMode;
-
 import starling.display.DisplayObjectContainer;
 import starling.textures.SubTexture;
 import starling.textures.TextureSmoothing;
@@ -204,33 +202,6 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
     public function get textures() : Vector.<SubTexture>
     {
         return _textures;
-    }
-
-    //////////////////////////////////////////////////////// XML
-    override public function getXMLTagName() : String
-    {
-        return "StarlingHandler";
-    }
-
-    override public function toXML() : XML
-    {
-        var xml : XML = super.toXML();
-        xml.@spriteSheetAnimationSpeed = _spriteSheetAnimationSpeed;
-        xml.@spriteSheetStartAtRandomFrame = _spriteSheetStartAtRandomFrame;
-        xml.@smoothing = smoothing;
-        xml.@blendMode = _blendMode;
-        xml.@premultiplyAlpha = _premultiplyAlpha;
-        return xml;
-    }
-
-    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
-    {
-        super.parseXML(xml, builder);
-        _spriteSheetAnimationSpeed = parseFloat(xml.@spriteSheetAnimationSpeed);
-        _spriteSheetStartAtRandomFrame = (xml.@spriteSheetStartAtRandomFrame == "true");
-        smoothing = (xml.@smoothing == "true");
-        blendMode = (xml.@blendMode);
-        premultiplyAlpha = (xml.@premultiplyAlpha == "true");
     }
 
 }

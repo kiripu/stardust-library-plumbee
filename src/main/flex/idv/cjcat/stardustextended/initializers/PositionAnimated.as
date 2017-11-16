@@ -2,17 +2,11 @@ package idv.cjcat.stardustextended.initializers
 {
 
 import flash.geom.Point;
-import flash.net.registerClassAlias;
-import flash.utils.ByteArray;
 
-import idv.cjcat.stardustextended.StardustElement;
-
-import idv.cjcat.stardustextended.particles.Particle;
-import idv.cjcat.stardustextended.xml.XMLBuilder;
 import idv.cjcat.stardustextended.actions.IZoneContainer;
 import idv.cjcat.stardustextended.geom.MotionData2D;
 import idv.cjcat.stardustextended.geom.MotionData2DPool;
-import idv.cjcat.stardustextended.utils.Base64;
+import idv.cjcat.stardustextended.particles.Particle;
 import idv.cjcat.stardustextended.zones.RectZone;
 import idv.cjcat.stardustextended.zones.Zone;
 import idv.cjcat.stardustextended.zones.ZoneCollection;
@@ -94,57 +88,5 @@ public class PositionAnimated extends Initializer implements IZoneContainer
         return null;
     }
 
-
-    //XML
-    //------------------------------------------------------------------------------------------------
-    override public function getRelatedObjects() : Vector.<StardustElement>
-    {
-        return Vector.<StardustElement>(zoneCollection.zones);
-    }
-
-    override public function getXMLTagName() : String
-    {
-        return "PositionAnimated";
-    }
-
-    override public function toXML() : XML
-    {
-        var xml : XML = super.toXML();
-        zoneCollection.addToStardustXML(xml);
-        xml.@inheritVelocity = inheritVelocity;
-        if (positions && positions.length > 0) {
-            registerClassAlias("String", String);
-            registerClassAlias("Point", Point);
-            registerClassAlias("VecPoint", Vector.<Point> as Class);
-            var ba : ByteArray = new ByteArray();
-            ba.writeObject(positions);
-            xml.@positions = Base64.encode(ba);
-        }
-        return xml;
-    }
-
-    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
-    {
-        super.parseXML(xml, builder);
-
-        if (xml.@zone.length()) {
-            trace("WARNING: the simulation contains a deprecated property 'zone' for " + getXMLTagName());
-            zoneCollection.zones = Vector.<Zone>([Zone(builder.getElementByName(xml.@zone))]);
-        }
-        else {
-            zoneCollection.parseFromStardustXML(xml, builder);
-        }
-        if (xml.@positions.length()) {
-            registerClassAlias("String", String);
-            registerClassAlias("Point", Point);
-            registerClassAlias("VecPoint", Vector.<Point> as Class);
-            const ba : ByteArray = Base64.decode(xml.@positions);
-            ba.position = 0;
-            positions = ba.readObject();
-        }
-        if (xml.@inheritVelocity.length()) {
-            inheritVelocity = (xml.@inheritVelocity == "true");
-        }
-    }
 }
 }

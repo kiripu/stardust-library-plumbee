@@ -18,16 +18,5 @@ public class Die extends Action
     {
         particle.isDead = true;
     }
-
-    //XML
-    //------------------------------------------------------------------------------------------------
-
-    override public function getXMLTagName() : String
-    {
-        return "Die";
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 }
 }

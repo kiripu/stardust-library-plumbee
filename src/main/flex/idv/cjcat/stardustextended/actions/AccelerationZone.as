@@ -1,12 +1,10 @@
 ﻿package idv.cjcat.stardustextended.actions
 {
 
-import idv.cjcat.stardustextended.StardustElement;
 import idv.cjcat.stardustextended.emitters.Emitter;
-import idv.cjcat.stardustextended.particles.Particle;
-import idv.cjcat.stardustextended.xml.XMLBuilder;
 import idv.cjcat.stardustextended.geom.Vec2D;
 import idv.cjcat.stardustextended.geom.Vec2DPool;
+import idv.cjcat.stardustextended.particles.Particle;
 import idv.cjcat.stardustextended.zones.RectZone;
 import idv.cjcat.stardustextended.zones.Zone;
 import idv.cjcat.stardustextended.zones.ZoneCollection;
@@ -109,48 +107,5 @@ public class AccelerationZone extends Action implements IZoneContainer
         }
     }
 
-    //XML
-    //------------------------------------------------------------------------------------------------
-    override public function getRelatedObjects() : Vector.<StardustElement>
-    {
-        return Vector.<StardustElement>(zoneCollection.zones);
-    }
-
-    override public function getXMLTagName() : String
-    {
-        return "AccelerationZone";
-    }
-
-    override public function toXML() : XML
-    {
-        var xml : XML = super.toXML();
-        zoneCollection.addToStardustXML(xml);
-        xml.@inverted = inverted;
-        xml.@acceleration = acceleration;
-        xml.@useParticleDirection = useParticleDirection;
-        xml.@directionX = _direction.x;
-        xml.@directionY = _direction.y;
-        return xml;
-    }
-
-    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
-    {
-        super.parseXML(xml, builder);
-        if (xml.@zone.length()) {
-            trace("WARNING: the simulation contains a deprecated property 'zone' for " + getXMLTagName());
-            zoneCollection.zones = Vector.<Zone>([Zone(builder.getElementByName(xml.@zone))]);
-        }
-        else {
-            zoneCollection.parseFromStardustXML(xml, builder);
-        }
-        inverted = (xml.@inverted == "true");
-        acceleration = parseFloat(xml.@acceleration);
-        useParticleDirection = (xml.@useParticleDirection == "true");
-        _direction.x = parseFloat(xml.@directionX);
-        _direction.y = parseFloat(xml.@directionY);
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 }
 }

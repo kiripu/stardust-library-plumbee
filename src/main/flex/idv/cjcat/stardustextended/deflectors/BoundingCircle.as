@@ -2,12 +2,11 @@
 {
 import flash.geom.Point;
 
-import idv.cjcat.stardustextended.particles.Particle;
-import idv.cjcat.stardustextended.xml.XMLBuilder;
 import idv.cjcat.stardustextended.geom.MotionData4D;
 import idv.cjcat.stardustextended.geom.MotionData4DPool;
 import idv.cjcat.stardustextended.geom.Vec2D;
 import idv.cjcat.stardustextended.geom.Vec2DPool;
+import idv.cjcat.stardustextended.particles.Particle;
 
 /**
  * Causes particles to be bounded within a circular region.
@@ -80,37 +79,6 @@ public class BoundingCircle extends Deflector
         position.setTo(x, y);
         return position;
     }
-
-    //XML
-    //------------------------------------------------------------------------------------------------
-
-    override public function getXMLTagName() : String
-    {
-        return "BoundingCircle";
-    }
-
-    override public function toXML() : XML
-    {
-        var xml : XML = super.toXML();
-
-        xml.@x = x;
-        xml.@y = y;
-        xml.@radius = radius;
-
-        return xml;
-    }
-
-    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
-    {
-        super.parseXML(xml, builder);
-
-        if (xml.@x.length()) x = parseFloat(xml.@x);
-        if (xml.@y.length()) y = parseFloat(xml.@y);
-        if (xml.@radius.length()) radius = parseFloat(xml.@radius);
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 }
 
 }

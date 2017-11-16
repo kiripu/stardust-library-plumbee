@@ -1,10 +1,9 @@
 ﻿package idv.cjcat.stardustextended.actions
 {
 import idv.cjcat.stardustextended.emitters.Emitter;
-import idv.cjcat.stardustextended.particles.Particle;
-import idv.cjcat.stardustextended.xml.XMLBuilder;
 import idv.cjcat.stardustextended.geom.Vec2D;
 import idv.cjcat.stardustextended.geom.Vec2DPool;
+import idv.cjcat.stardustextended.particles.Particle;
 
 /**
  * Creates a shock wave that spreads out from a single point, applying acceleration to particles along the way of propagation.
@@ -97,44 +96,5 @@ public class Explode extends Action
         if (_currentInnerRadius > maxDistance) discharged = true;
     }
 
-
-    //XML
-    //------------------------------------------------------------------------------------------------
-
-    override public function getXMLTagName() : String
-    {
-        return "Explode";
-    }
-
-    override public function toXML() : XML
-    {
-        var xml : XML = super.toXML();
-
-        xml.@x = x;
-        xml.@y = y;
-        xml.@strength = strength;
-        xml.@growSpeed = growSpeed;
-        xml.@maxDistance = maxDistance;
-        xml.@attenuationPower = attenuationPower;
-        xml.@epsilon = epsilon;
-
-        return xml;
-    }
-
-    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
-    {
-        super.parseXML(xml, builder);
-
-        if (xml.@x.length()) x = parseFloat(xml.@x);
-        if (xml.@y.length()) y = parseFloat(xml.@y);
-        if (xml.@strength.length()) strength = parseFloat(xml.@strength);
-        if (xml.@growSpeed.length()) growSpeed = parseFloat(xml.@growSpeed);
-        if (xml.@maxDistance.length()) maxDistance = parseFloat(xml.@maxDistance);
-        if (xml.@attenuationPower.length()) attenuationPower = parseFloat(xml.@attenuationPower);
-        if (xml.@epsilon.length()) epsilon = parseFloat(xml.@epsilon);
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 }
 }

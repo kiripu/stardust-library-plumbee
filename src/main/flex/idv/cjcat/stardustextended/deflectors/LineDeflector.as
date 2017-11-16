@@ -2,12 +2,11 @@
 {
 import flash.geom.Point;
 
-import idv.cjcat.stardustextended.particles.Particle;
-import idv.cjcat.stardustextended.xml.XMLBuilder;
 import idv.cjcat.stardustextended.geom.MotionData4D;
 import idv.cjcat.stardustextended.geom.MotionData4DPool;
 import idv.cjcat.stardustextended.geom.Vec2D;
 import idv.cjcat.stardustextended.geom.Vec2DPool;
+import idv.cjcat.stardustextended.particles.Particle;
 
 /**
  * Infinitely long line-shaped obstacle.
@@ -39,10 +38,10 @@ public class LineDeflector extends Deflector
         _normal = Vec2DPool.get(nx, ny);
     }
 
-    public function set normalX(value : Number) { _normal.x = value; }
+    public function set normalX(value : Number) : void { _normal.x = value; }
     public function get normalX() : Number { return _normal.x; }
 
-    public function set normalY(value : Number) { _normal.y = value; }
+    public function set normalY(value : Number) : void { _normal.y = value; }
     public function get normalY() : Number { return _normal.y; }
 
     /**
@@ -107,34 +106,5 @@ public class LineDeflector extends Deflector
         return position;
     }
 
-    //XML
-    //------------------------------------------------------------------------------------------------
-
-    override public function getXMLTagName() : String
-    {
-        return "LineDeflector";
-    }
-
-    override public function toXML() : XML
-    {
-        var xml : XML = super.toXML();
-        xml.@x = x;
-        xml.@y = y;
-        xml.@normalX = _normal.x;
-        xml.@normalY = _normal.y;
-        return xml;
-    }
-
-    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
-    {
-        super.parseXML(xml, builder);
-        if (xml.@x.length()) x = parseFloat(xml.@x);
-        if (xml.@y.length()) y = parseFloat(xml.@y);
-        if (xml.@normalX.length()) _normal.x = parseFloat(xml.@normalX);
-        if (xml.@normalY.length()) _normal.y = parseFloat(xml.@normalY);
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 }
 }

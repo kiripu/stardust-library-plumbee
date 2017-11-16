@@ -9,7 +9,6 @@ import idv.cjcat.stardustextended.emitters.Emitter;
 import idv.cjcat.stardustextended.handlers.ParticleHandler;
 import idv.cjcat.stardustextended.math.StardustMath;
 import idv.cjcat.stardustextended.particles.Particle;
-import idv.cjcat.stardustextended.xml.XMLBuilder;
 
 /**
  * Similar to the <code>BitmapHandler</code>, but uses only one display object for drawing the target bitmap.
@@ -47,31 +46,5 @@ public class SingularBitmapHandler extends ParticleHandler
         }
     }
 
-    //XML
-    //------------------------------------------------------------------------------------------------
-
-    override public function getXMLTagName() : String
-    {
-        return "SingularBitmapHandler";
-    }
-
-    override public function toXML() : XML
-    {
-        var xml : XML = super.toXML();
-
-        xml.@blendMode = blendMode;
-
-        return xml;
-    }
-
-    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
-    {
-        super.parseXML(xml, builder);
-
-        if (xml.@blendMode.length()) blendMode = xml.@blendMode;
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 }
 }

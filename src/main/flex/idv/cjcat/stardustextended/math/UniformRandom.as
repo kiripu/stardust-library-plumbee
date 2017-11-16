@@ -1,7 +1,5 @@
 ﻿package idv.cjcat.stardustextended.math
 {
-import idv.cjcat.stardustextended.xml.XMLBuilder;
-
 /**
  * This class generates uniformly distributed random numbers.
  */
@@ -52,34 +50,5 @@ public class UniformRandom extends Random
         return [center - radius, center + radius];
     }
 
-
-    //XML
-    //------------------------------------------------------------------------------------------------
-
-    override public function getXMLTagName() : String
-    {
-        return "UniformRandom";
-    }
-
-    override public function toXML() : XML
-    {
-        var xml : XML = super.toXML();
-
-        xml.@center = center;
-        xml.@radius = radius;
-
-        return xml;
-    }
-
-    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
-    {
-        super.parseXML(xml, builder);
-
-        if (xml.@center.length()) center = parseFloat(xml.@center);
-        if (xml.@radius.length()) radius = parseFloat(xml.@radius);
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 }
 }

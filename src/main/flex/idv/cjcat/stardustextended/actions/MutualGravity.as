@@ -1,9 +1,8 @@
 ﻿package idv.cjcat.stardustextended.actions
 {
-import idv.cjcat.stardustextended.particles.Particle;
-import idv.cjcat.stardustextended.xml.XMLBuilder;
 import idv.cjcat.stardustextended.geom.Vec2D;
 import idv.cjcat.stardustextended.geom.Vec2DPool;
+import idv.cjcat.stardustextended.particles.Particle;
 
 /**
  * Causes particles to attract each other.
@@ -76,37 +75,5 @@ public class MutualGravity extends MutualAction
         Vec2DPool.recycle(r);
     }
 
-    //XML
-    //------------------------------------------------------------------------------------------------
-
-    override public function getXMLTagName() : String
-    {
-        return "MutualGravity";
-    }
-
-    override public function toXML() : XML
-    {
-        var xml : XML = super.toXML();
-
-        xml.@strength = strength;
-        xml.@epsilon = epsilon;
-        xml.@attenuationPower = attenuationPower;
-        xml.@massless = massless;
-
-        return xml;
-    }
-
-    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
-    {
-        super.parseXML(xml, builder);
-
-        if (xml.@strength.length()) strength = parseFloat(xml.@strength);
-        if (xml.@epsilon.length()) epsilon = parseFloat(xml.@epsilon);
-        if (xml.@attenuationPower.length()) attenuationPower = parseFloat(xml.@attenuationPower);
-        if (xml.@massless.length()) massless = (xml.@massless == "true");
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 }
 }

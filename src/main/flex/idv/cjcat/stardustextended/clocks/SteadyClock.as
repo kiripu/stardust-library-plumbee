@@ -1,11 +1,9 @@
 ﻿package idv.cjcat.stardustextended.clocks
 {
 
-import idv.cjcat.stardustextended.StardustElement;
 import idv.cjcat.stardustextended.math.Random;
 import idv.cjcat.stardustextended.math.StardustMath;
 import idv.cjcat.stardustextended.math.UniformRandom;
-import idv.cjcat.stardustextended.xml.XMLBuilder;
 
 /**
  * Causes the emitter to create particles at a steady rate.
@@ -70,39 +68,10 @@ public class SteadyClock extends Clock
         currentInitialDelay = val > 0 ? val : 0;
     }
 
-    //XML
-    //------------------------------------------------------------------------------------------------
-    override public function getXMLTagName() : String
-    {
-        return "SteadyClock";
-    }
-
-    override public function getRelatedObjects() : Vector.<StardustElement>
-    {
-        return new <StardustElement>[_initialDelay];
-    }
-
-    override public function toXML() : XML
-    {
-        var xml : XML = super.toXML();
-        xml.@ticksPerCall = ticksPerCall;
-        xml.@initialDelay = _initialDelay.name;
-        return xml;
-    }
-
-    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
-    {
-        super.parseXML(xml, builder);
-        ticksPerCall = parseFloat(xml.@ticksPerCall);
-        if (xml.@initialDelay.length()) _initialDelay = builder.getElementByName(xml.@initialDelay) as Random;
-    }
-
-    override public function onXMLInitComplete() : void
+    override public function OnDeserializationComplete() : void
     {
         setCurrentInitialDelay();
     }
 
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 }
 }

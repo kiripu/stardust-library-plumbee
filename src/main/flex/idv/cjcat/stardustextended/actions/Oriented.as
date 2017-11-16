@@ -3,7 +3,6 @@
 import idv.cjcat.stardustextended.emitters.Emitter;
 import idv.cjcat.stardustextended.math.StardustMath;
 import idv.cjcat.stardustextended.particles.Particle;
-import idv.cjcat.stardustextended.xml.XMLBuilder;
 
 /**
  * Causes particles' rotation to align to their velocities.
@@ -52,34 +51,5 @@ public class Oriented extends Action
         var displacement : Number = (Math.atan2(particle.vy, particle.vx) * StardustMath.RADIAN_TO_DEGREE + os) - particle.rotation;
         particle.rotation += f * displacement * _timeDeltaOneSec;
     }
-
-    //XML
-    //------------------------------------------------------------------------------------------------
-
-    override public function getXMLTagName() : String
-    {
-        return "Oriented";
-    }
-
-    override public function toXML() : XML
-    {
-        var xml : XML = super.toXML();
-
-        xml.@factor = factor;
-        xml.@offset = offset;
-
-        return xml;
-    }
-
-    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
-    {
-        super.parseXML(xml, builder);
-
-        if (xml.@factor.length()) factor = parseFloat(xml.@factor);
-        if (xml.@offset.length()) offset = parseFloat(xml.@offset);
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 }
 }

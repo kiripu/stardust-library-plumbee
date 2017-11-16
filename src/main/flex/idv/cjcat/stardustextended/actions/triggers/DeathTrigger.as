@@ -14,15 +14,5 @@ public class DeathTrigger extends Trigger
         return particle.isDead;
     }
 
-    //XML
-    //------------------------------------------------------------------------------------------------
-
-    override public function getXMLTagName() : String
-    {
-        return "DeathTrigger";
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 }
 }

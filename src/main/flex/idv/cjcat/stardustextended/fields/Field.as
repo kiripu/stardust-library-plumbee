@@ -3,11 +3,10 @@
 import flash.geom.Point;
 
 import idv.cjcat.stardustextended.StardustElement;
-import idv.cjcat.stardustextended.particles.Particle;
-import idv.cjcat.stardustextended.xml.XMLBuilder;
-import idv.cjcat.stardustextended.interfaces.IPosition;
 import idv.cjcat.stardustextended.geom.MotionData2D;
 import idv.cjcat.stardustextended.geom.MotionData2DPool;
+import idv.cjcat.stardustextended.interfaces.IPosition;
+import idv.cjcat.stardustextended.particles.Particle;
 
 /**
  * 2D vector field.
@@ -62,38 +61,5 @@ public class Field extends StardustElement implements IPosition
     {
         throw new Error("This method must be overridden by subclasses");
     }
-
-    //XML
-    //------------------------------------------------------------------------------------------------
-
-    override public function getXMLTagName() : String
-    {
-        return "Field";
-    }
-
-    override public function getElementTypeXMLTag() : XML
-    {
-        return <fields/>;
-    }
-
-    override public function toXML() : XML
-    {
-        var xml : XML = super.toXML();
-
-        xml.@active = active;
-        xml.@massless = massless;
-
-        return xml;
-    }
-
-    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
-    {
-        super.parseXML(xml, builder);
-        if (xml.@active.length()) active = (xml.@active == "true");
-        if (xml.@massless.length()) massless = (xml.@massless == "true");
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 }
 }

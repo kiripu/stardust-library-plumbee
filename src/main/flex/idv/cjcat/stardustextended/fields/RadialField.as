@@ -2,12 +2,11 @@
 {
 import flash.geom.Point;
 
-import idv.cjcat.stardustextended.particles.Particle;
-import idv.cjcat.stardustextended.xml.XMLBuilder;
 import idv.cjcat.stardustextended.geom.MotionData2D;
 import idv.cjcat.stardustextended.geom.MotionData2DPool;
 import idv.cjcat.stardustextended.geom.Vec2D;
 import idv.cjcat.stardustextended.geom.Vec2DPool;
+import idv.cjcat.stardustextended.particles.Particle;
 
 /**
  * Radial field.
@@ -69,40 +68,5 @@ public class RadialField extends Field
         position.setTo(x, y);
         return position;
     }
-
-    //XML
-    //------------------------------------------------------------------------------------------------
-
-    override public function getXMLTagName() : String
-    {
-        return "RadialField";
-    }
-
-    override public function toXML() : XML
-    {
-        var xml : XML = super.toXML();
-
-        xml.@x = x;
-        xml.@y = y;
-        xml.@strength = strength;
-        xml.@attenuationPower = attenuationPower;
-        xml.@epsilon = epsilon;
-
-        return xml;
-    }
-
-    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
-    {
-        super.parseXML(xml, builder);
-
-        if (xml.@x.length()) x = parseFloat(xml.@x);
-        if (xml.@y.length()) y = parseFloat(xml.@y);
-        if (xml.@strength.length()) strength = parseFloat(xml.@strength);
-        if (xml.@attenuationPower.length()) attenuationPower = parseFloat(xml.@attenuationPower);
-        if (xml.@epsilon.length()) epsilon = parseFloat(xml.@epsilon);
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 }
 }

@@ -1,10 +1,9 @@
 ﻿package idv.cjcat.stardustextended.zones
 {
 
-import idv.cjcat.stardustextended.math.StardustMath;
-import idv.cjcat.stardustextended.xml.XMLBuilder;
 import idv.cjcat.stardustextended.geom.MotionData2D;
 import idv.cjcat.stardustextended.geom.MotionData2DPool;
+import idv.cjcat.stardustextended.math.StardustMath;
 
 /**
  * Circular zone.
@@ -56,34 +55,5 @@ public class CircleZone extends Zone
         area = _radiusSQ * Math.PI;
     }
 
-
-    //XML
-    //------------------------------------------------------------------------------------------------
-
-    override public function getXMLTagName() : String
-    {
-        return "CircleZone";
-    }
-
-    override public function toXML() : XML
-    {
-        var xml : XML = super.toXML();
-        xml.@x = _x;
-        xml.@y = _y;
-        xml.@radius = radius;
-        return xml;
-    }
-
-    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
-    {
-        super.parseXML(xml, builder);
-
-        if (xml.@x.length()) _x = parseFloat(xml.@x);
-        if (xml.@y.length()) _y = parseFloat(xml.@y);
-        if (xml.@radius.length()) radius = parseFloat(xml.@radius);
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 }
 }

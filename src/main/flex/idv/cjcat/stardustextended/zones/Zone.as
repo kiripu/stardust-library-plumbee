@@ -4,10 +4,9 @@
 import flash.geom.Point;
 
 import idv.cjcat.stardustextended.StardustElement;
-import idv.cjcat.stardustextended.math.StardustMath;
-import idv.cjcat.stardustextended.xml.XMLBuilder;
-import idv.cjcat.stardustextended.interfaces.IPosition;
 import idv.cjcat.stardustextended.geom.MotionData2D;
+import idv.cjcat.stardustextended.interfaces.IPosition;
+import idv.cjcat.stardustextended.math.StardustMath;
 
 /**
  * This class defines a 2D zone.
@@ -142,34 +141,5 @@ public class Zone extends StardustElement implements IPosition
         return position;
     }
 
-    //XML
-    //------------------------------------------------------------------------------------------------
-
-    override public function getXMLTagName() : String
-    {
-        return "Zone";
-    }
-
-    override public function getElementTypeXMLTag() : XML
-    {
-        return <zones/>;
-    }
-
-    override public function toXML() : XML
-    {
-        var xml : XML = super.toXML();
-        xml.@rotation = _rotation;
-        return xml;
-    }
-
-    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
-    {
-        super.parseXML(xml, builder);
-
-        rotation = parseFloat(xml.@rotation);
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 }
 }

@@ -3,10 +3,9 @@
 import flash.geom.Point;
 
 import idv.cjcat.stardustextended.StardustElement;
-import idv.cjcat.stardustextended.particles.Particle;
-import idv.cjcat.stardustextended.xml.XMLBuilder;
-import idv.cjcat.stardustextended.interfaces.IPosition;
 import idv.cjcat.stardustextended.geom.MotionData4D;
+import idv.cjcat.stardustextended.interfaces.IPosition;
+import idv.cjcat.stardustextended.particles.Particle;
 
 /**
  * Used along with the <code>Deflect</code> action.
@@ -69,38 +68,5 @@ public class Deflector extends StardustElement implements IPosition
         throw new Error("This method must be overridden by subclasses");
     }
 
-    //XML
-    //------------------------------------------------------------------------------------------------
-
-    override public function getXMLTagName() : String
-    {
-        return "Deflector";
-    }
-
-    override public function getElementTypeXMLTag() : XML
-    {
-        return <deflectors/>;
-    }
-
-    override public function toXML() : XML
-    {
-        var xml : XML = super.toXML();
-        xml.@active = active;
-        xml.@bounce = bounce;
-        xml.@slipperiness = slipperiness;
-        return xml;
-    }
-
-    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
-    {
-        super.parseXML(xml, builder);
-
-        if (xml.@active.length()) active = (xml.@active == "true");
-        if (xml.@bounce.length()) bounce = parseFloat(xml.@bounce);
-        if (xml.@slipperiness.length()) slipperiness = parseFloat(xml.@slipperiness);
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 }
 }

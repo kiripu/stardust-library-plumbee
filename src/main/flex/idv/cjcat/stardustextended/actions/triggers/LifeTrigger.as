@@ -3,7 +3,6 @@
 
 import idv.cjcat.stardustextended.emitters.Emitter;
 import idv.cjcat.stardustextended.particles.Particle;
-import idv.cjcat.stardustextended.xml.XMLBuilder;
 
 /**
  * This trigger will be triggered when a particle is alive.
@@ -69,34 +68,5 @@ public class LifeTrigger extends Trigger
         _upperBound = value;
     }
 
-
-    //XML
-    //------------------------------------------------------------------------------------------------
-
-    override public function getXMLTagName() : String
-    {
-        return "LifeTrigger";
-    }
-
-    override public function toXML() : XML
-    {
-        var xml : XML = super.toXML();
-        xml.@triggerWithinBounds = triggerWithinBounds;
-        xml.@lowerBound = _lowerBound;
-        xml.@upperBound = _upperBound;
-        return xml;
-    }
-
-    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
-    {
-        super.parseXML(xml, builder);
-
-        triggerWithinBounds = (xml.@triggerWithinBounds == "true");
-        lowerBound = parseFloat(xml.@lowerBound);
-        upperBound = parseFloat(xml.@upperBound);
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 }
 }

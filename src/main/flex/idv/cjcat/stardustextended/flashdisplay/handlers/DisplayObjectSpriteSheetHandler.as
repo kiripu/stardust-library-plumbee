@@ -7,12 +7,10 @@ import flash.display.DisplayObjectContainer;
 import flash.geom.ColorTransform;
 
 import idv.cjcat.stardustextended.emitters.Emitter;
-
-import idv.cjcat.stardustextended.particles.Particle;
-import idv.cjcat.stardustextended.xml.XMLBuilder;
 import idv.cjcat.stardustextended.flashdisplay.particletargets.CenteredBitmap;
 import idv.cjcat.stardustextended.flashdisplay.utils.DisplayObjectPool;
 import idv.cjcat.stardustextended.handlers.ISpriteSheetHandler;
+import idv.cjcat.stardustextended.particles.Particle;
 
 public class DisplayObjectSpriteSheetHandler extends DisplayObjectHandler implements ISpriteSheetHandler
 {
@@ -147,32 +145,5 @@ public class DisplayObjectSpriteSheetHandler extends DisplayObjectHandler implem
         _totalFrames = numStates * _images.length;
     }
 
-    //XML
-    //------------------------------------------------------------------------------------------------
-
-    override public function getXMLTagName() : String
-    {
-        return "DisplayObjectSpriteSheetHandler";
-    }
-
-    override public function toXML() : XML
-    {
-        var xml : XML = super.toXML();
-        xml.@spriteSheetAnimationSpeed = _spriteSheetAnimationSpeed;
-        xml.@spriteSheetStartAtRandomFrame = _spriteSheetStartAtRandomFrame;
-        xml.@smoothing = _smoothing;
-        return xml;
-    }
-
-    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
-    {
-        super.parseXML(xml, builder);
-        _spriteSheetAnimationSpeed = xml.@spriteSheetAnimationSpeed;
-        _spriteSheetStartAtRandomFrame = (xml.@spriteSheetStartAtRandomFrame == "true");
-        _smoothing = (xml.@smoothing == "true");
-        makeSpriteSheetCache();
-    }
-
-    //------------------------------------------------------------------------------------------------
 }
 }

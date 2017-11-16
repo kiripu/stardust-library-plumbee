@@ -1,14 +1,12 @@
 ﻿package idv.cjcat.stardustextended.actions
 {
 
-import idv.cjcat.stardustextended.StardustElement;
 import idv.cjcat.stardustextended.emitters.Emitter;
-import idv.cjcat.stardustextended.particles.Particle;
-import idv.cjcat.stardustextended.xml.XMLBuilder;
 import idv.cjcat.stardustextended.fields.Field;
 import idv.cjcat.stardustextended.fields.UniformField;
 import idv.cjcat.stardustextended.geom.MotionData2D;
 import idv.cjcat.stardustextended.geom.MotionData2DPool;
+import idv.cjcat.stardustextended.particles.Particle;
 
 /**
  * Applies accelerations to particles according to the associated gravity fields, in pixels.
@@ -83,45 +81,5 @@ public class Gravity extends Action implements IFieldContainer
         }
     }
 
-    //XML
-    //------------------------------------------------------------------------------------------------
-
-    override public function getRelatedObjects() : Vector.<StardustElement>
-    {
-        return Vector.<StardustElement>(_fields);
-    }
-
-    override public function getXMLTagName() : String
-    {
-        return "Gravity";
-    }
-
-    override public function toXML() : XML
-    {
-        var xml : XML = super.toXML();
-
-        if (_fields.length > 0) {
-            xml.appendChild(<fields/>);
-            var field : Field;
-            for each (field in _fields) {
-                xml.fields.appendChild(field.getXMLTag());
-            }
-        }
-
-        return xml;
-    }
-
-    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
-    {
-        super.parseXML(xml, builder);
-
-        clearFields();
-        for each (var node : XML in xml.fields.*) {
-            addField(builder.getElementByName(node.@name) as Field);
-        }
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 }
 }

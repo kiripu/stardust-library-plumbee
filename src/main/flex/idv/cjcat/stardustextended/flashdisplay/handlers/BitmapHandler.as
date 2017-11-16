@@ -1,17 +1,14 @@
 package idv.cjcat.stardustextended.flashdisplay.handlers
 {
+import flash.display.BitmapData;
 import flash.display.DisplayObject;
 import flash.geom.ColorTransform;
 import flash.geom.Matrix;
 
 import idv.cjcat.stardustextended.emitters.Emitter;
-import idv.cjcat.stardustextended.math.StardustMath;
-
-import flash.display.BitmapData;
-
 import idv.cjcat.stardustextended.handlers.ParticleHandler;
+import idv.cjcat.stardustextended.math.StardustMath;
 import idv.cjcat.stardustextended.particles.Particle;
-import idv.cjcat.stardustextended.xml.XMLBuilder;
 
 /**
  * This handler draws display object particles into a bitmap.
@@ -54,32 +51,5 @@ public class BitmapHandler extends ParticleHandler
         }
     }
 
-
-    //XML
-    //------------------------------------------------------------------------------------------------
-
-    override public function getXMLTagName() : String
-    {
-        return "BitmapHandler";
-    }
-
-    override public function toXML() : XML
-    {
-        var xml : XML = super.toXML();
-
-        xml.@blendMode = blendMode;
-
-        return xml;
-    }
-
-    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
-    {
-        super.parseXML(xml, builder);
-
-        if (xml.@blendMode.length()) blendMode = xml.@blendMode;
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 }
 }

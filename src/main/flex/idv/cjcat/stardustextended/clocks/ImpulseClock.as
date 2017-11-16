@@ -1,11 +1,9 @@
 ﻿package idv.cjcat.stardustextended.clocks
 {
 
-import idv.cjcat.stardustextended.StardustElement;
 import idv.cjcat.stardustextended.math.Random;
 import idv.cjcat.stardustextended.math.StardustMath;
 import idv.cjcat.stardustextended.math.UniformRandom;
-import idv.cjcat.stardustextended.xml.XMLBuilder;
 
 /**
  * This clock can be used to create randomized impulses and has more parameters than ImpulseClock
@@ -143,51 +141,10 @@ public class ImpulseClock extends Clock
         currentTime = 0;
     }
 
-    //XML
-    //------------------------------------------------------------------------------------------------
-    override public function getRelatedObjects() : Vector.<StardustElement>
-    {
-        return new <StardustElement>[_impulseInterval, _impulseLength, _initialDelay];
-    }
-
-    override public function getXMLTagName() : String
-    {
-        return "ImpulseClock";
-    }
-
-    override public function toXML() : XML
-    {
-        var xml : XML = super.toXML();
-        xml.@ticksPerCall = ticksPerCall;
-        xml.@impulseInterval = _impulseInterval.name;
-        xml.@impulseLength = _impulseLength.name;
-        xml.@initialDelay = _initialDelay.name;
-        return xml;
-    }
-
-    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
-    {
-        super.parseXML(xml, builder);
-
-        // The randoms its using might not be initialized yet
-        if (xml.@ticksPerCall.length()) ticksPerCall = parseFloat(xml.@ticksPerCall);
-        if (xml.@impulseLength.length()) _impulseLength = builder.getElementByName(xml.@impulseLength) as Random;
-        if (xml.@impulseInterval.length()) impulseInterval = builder.getElementByName(xml.@impulseInterval) as Random;
-
-        if (xml.@initialDelay.length()) _initialDelay = builder.getElementByName(xml.@initialDelay) as Random;
-
-        // Legacy names, for simulations created with old versions
-        if (xml.@impulseCount.length()) ticksPerCall = parseFloat(xml.@impulseCount);
-        if (xml.@repeatCount.length()) impulseLength = new UniformRandom(parseInt(xml.@repeatCount), 0);
-        if (xml.@burstInterval.length()) impulseInterval = new UniformRandom(parseInt(xml.@burstInterval), 0);
-    }
-
-    override public function onXMLInitComplete() : void
+    override public function OnDeserializationComplete() : void
     {
         reset();
     }
 
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 }
 }

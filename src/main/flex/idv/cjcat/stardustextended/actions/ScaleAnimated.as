@@ -1,7 +1,6 @@
 package idv.cjcat.stardustextended.actions {
 import idv.cjcat.stardustextended.emitters.Emitter;
 import idv.cjcat.stardustextended.particles.Particle;
-import idv.cjcat.stardustextended.xml.XMLBuilder;
 
 /**
  * Alters a particle's scale during its lifetime
@@ -12,7 +11,7 @@ public class ScaleAnimated extends Action
     /// <summary>
     /// Number of gradient steps. Higher values result in smoother transition, but more memory usage.
     /// </summary>
-    public var numSteps : int = 500;
+    public var numSteps : int = 50;
 
     private var _interpolatedValues : Vector.<Number>;
     private var _ratios : Array;
@@ -34,10 +33,10 @@ public class ScaleAnimated extends Action
     // Getting trough numbers in cross platform way nicely is hard.
 
     public function get ratiosStr() : String  { return _ratios.join(","); }
-    public function set ratiosStr(value : String) { _ratios = value.split(","); }
+    public function set ratiosStr(value : String) : void { _ratios = value.split(","); }
 
     public function get scalesStr() : String { return _scales.join(","); }
-    public function set scalesStr(value : String) { _scales = value.split(","); }
+    public function set scalesStr(value : String) : void { _scales = value.split(","); }
 
     public function ScaleAnimated(setDefaultValues : Boolean = false) {
         super();
@@ -78,42 +77,10 @@ public class ScaleAnimated extends Action
         particle.scale = _interpolatedValues[ratio];
     }
 
-    public override function onXMLInitComplete() : void
+    public override function OnDeserializationComplete() : void
     {
         setGradient(_ratios, _scales);
     }
 
-    //XML
-    //------------------------------------------------------------------------------------------------
-    override public function getXMLTagName() : String
-    {
-        return "ScaleAnimated";
-    }
-
-    override public function toXML() : XML
-    {
-        var xml : XML = super.toXML();
-
-        var ratiosStr : String = "";
-        var scalesStr : String = "";
-        for (var i : int = 0; i < _ratios.length; i++) {
-            ratiosStr = ratiosStr + _ratios[i] + ",";
-            scalesStr = scalesStr + _scales[i] + ",";
-        }
-        xml.@ratios = ratiosStr.substr(0, ratiosStr.length - 1);
-        xml.@scales = scalesStr.substr(0, scalesStr.length - 1);
-
-        return xml;
-    }
-
-    override public function parseXML(xml : XML, builder : XMLBuilder = null) : void
-    {
-        super.parseXML(xml, builder);
-
-        setGradient((xml.@ratios).split(","), (xml.@scales).split(","));
-    }
-
-    //------------------------------------------------------------------------------------------------
-    //end of XML
 }
 }

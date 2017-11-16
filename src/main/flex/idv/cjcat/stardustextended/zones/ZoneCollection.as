@@ -1,7 +1,6 @@
 package idv.cjcat.stardustextended.zones
 {
 
-import idv.cjcat.stardustextended.xml.XMLBuilder;
 import idv.cjcat.stardustextended.geom.MotionData2D;
 
 public class ZoneCollection
@@ -47,25 +46,5 @@ public class ZoneCollection
         return contains;
     }
 
-    [Inline]
-    public final function addToStardustXML(stardustXML : XML) : void
-    {
-        if (zones.length > 0) {
-            stardustXML.appendChild(<zones/>);
-            var zone : Zone;
-            for each (zone in zones) {
-                stardustXML.zones.appendChild(zone.getXMLTag());
-            }
-        }
-    }
-
-    [Inline]
-    public final function parseFromStardustXML(stardustXML : XML, builder : XMLBuilder) : void
-    {
-        zones = new Vector.<Zone>();
-        for each (var node : XML in stardustXML.zones.*) {
-            zones.push(Zone(builder.getElementByName(node.@name)));
-        }
-    }
 }
 }
