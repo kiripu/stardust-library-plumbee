@@ -50,6 +50,7 @@ public class Emitter extends StardustElement implements ActionCollector, Initial
      * The returned Vector is not a copy.
      * @return
      */
+    [Transient]
     public function get particles() : Vector.<Particle>
     {
         return _particles;
@@ -73,6 +74,7 @@ public class Emitter extends StardustElement implements ActionCollector, Initial
     /**
      * The time since the simulation is running
      */
+    [Transient]
     public var currentTime : Number = 0;
 
     /**
@@ -240,6 +242,13 @@ public class Emitter extends StardustElement implements ActionCollector, Initial
         return _actionCollection.actions;
     }
 
+    public final function set actions(values : Vector.<Action>)
+    {
+        for each (var action:Action in values)
+        {
+            addAction(action);
+        }
+    }
     /**
      * Adds an action to the emitter.
      * @param    action
@@ -280,6 +289,14 @@ public class Emitter extends StardustElement implements ActionCollector, Initial
     public final function get initializers() : Vector.<Initializer>
     {
         return factory.initializerCollection.initializers;
+    }
+
+    public final function set initializers(val : Vector.<Initializer>)
+    {
+        for each (var initializer:Initializer in val)
+        {
+            addInitializer(initializer);
+        }
     }
 
     /**
@@ -335,6 +352,7 @@ public class Emitter extends StardustElement implements ActionCollector, Initial
     /**
      * The number of particles in the emitter.
      */
+    [Transient]
     public final function get numParticles() : int
     {
         return _particles.length;

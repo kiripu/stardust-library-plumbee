@@ -39,9 +39,16 @@ public class LineDeflector extends Deflector
         _normal = Vec2DPool.get(nx, ny);
     }
 
+    public function set normalX(value : Number) { _normal.x = value; }
+    public function get normalX() : Number { return _normal.x; }
+
+    public function set normalY(value : Number) { _normal.y = value; }
+    public function get normalY() : Number { return _normal.y; }
+
     /**
      * The normal of the border, pointing to the free space side.
      */
+    [Transient]
     public function get normal() : Vec2D
     {
         return _normal;

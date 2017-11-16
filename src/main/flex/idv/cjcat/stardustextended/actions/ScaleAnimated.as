@@ -18,21 +18,33 @@ public class ScaleAnimated extends Action
     private var _ratios : Array;
     private var _scales : Array;
 
+    [Transient]
     public function get ratios() : Array
     {
         return _ratios;
     }
 
+    [Transient]
     public function get scales() : Array
     {
         return _scales;
     }
 
+    // These are used in JSON serialization.
+    // Getting trough numbers in cross platform way nicely is hard.
+
+    public function get ratiosStr() : String  { return _ratios.join(","); }
+    public function set ratiosStr(value : String) { _ratios = value.split(","); }
+
+    public function get scalesStr() : String { return _scales.join(","); }
+    public function set scalesStr(value : String) { _scales = value.split(","); }
+
     public function ScaleAnimated(setDefaultValues : Boolean = false) {
         super();
         _interpolatedValues = new <Number>[];
-        if (setDefaultValues) {
-            setGradient([1, 2], [0, 255]);
+        if (setDefaultValues)
+        {
+            setGradient([0, 255], [1, 2]);
         }
     }
 
@@ -41,7 +53,8 @@ public class ScaleAnimated extends Action
      * @param ratios Array of uint ratios ordered, in increasing order. First value should be 0, last 255.
      * @param scales Array of Number scales
      */
-    public function setGradient(ratios : Array, scales : Array) {
+    public function setGradient(ratios : Array, scales : Array) : void
+    {
         _ratios = ratios;
         _scales = scales;
         _interpolatedValues = new Vector.<Number>(numSteps);
@@ -63,6 +76,11 @@ public class ScaleAnimated extends Action
     {
         var ratio : uint = (numSteps - 1) * particle.life / particle.initLife;
         particle.scale = _interpolatedValues[ratio];
+    }
+
+    public override function onXMLInitComplete() : void
+    {
+        setGradient(_ratios, _scales);
     }
 
     //XML

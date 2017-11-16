@@ -91,6 +91,7 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
         }
     }
 
+    [Transient]
     public function get renderer() : StardustStarlingRenderer
     {
         return _renderer;
@@ -119,6 +120,7 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
         return _spriteSheetStartAtRandomFrame;
     }
 
+    [Transient]
     public function get isSpriteSheet() : Boolean
     {
         return _isSpriteSheet;
@@ -198,6 +200,7 @@ public class StarlingHandler extends ParticleHandler implements ISpriteSheetHand
         _renderer.setTextures(textures[0].root, frames);
     }
 
+    [Transient]
     public function get textures() : Vector.<SubTexture>
     {
         return _textures;

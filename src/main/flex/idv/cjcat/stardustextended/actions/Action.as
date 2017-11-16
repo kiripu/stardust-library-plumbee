@@ -144,6 +144,7 @@ public class Action extends StardustElement
      * For instance, the <code>Collide</code> action needs all particles to be sorted in X positions.
      * </p>
      */
+    [Transient]
     public function get needsSortedParticles() : Boolean
     {
         return false;

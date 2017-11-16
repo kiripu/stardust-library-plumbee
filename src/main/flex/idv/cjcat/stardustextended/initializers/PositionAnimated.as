@@ -85,6 +85,7 @@ public class PositionAnimated extends Initializer implements IZoneContainer
         }
     }
 
+    [Transient]
     public function get currentPosition() : Point
     {
         if (positions) {

@@ -1,5 +1,7 @@
 ﻿package idv.cjcat.stardustextended
 {
+import avmplus.getQualifiedClassName;
+
 import flash.utils.Dictionary;
 
 import idv.cjcat.stardustextended.xml.XMLBuilder;
@@ -11,6 +13,7 @@ public class StardustElement
 {
 
     private static var elementCounter : Dictionary = new Dictionary();
+    public var $type : String = getQualifiedClassName(this).split("::")[1];
     public var name : String;
 
     public function StardustElement()

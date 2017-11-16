@@ -47,7 +47,7 @@ public class Deflect extends Action
      */
     public function addDeflector(deflector : Deflector) : void
     {
-        if (_deflectors.indexOf(deflector) < 0) _deflectors.push(deflector);
+        _deflectors.push(deflector);
     }
 
     /**
@@ -57,7 +57,7 @@ public class Deflect extends Action
     public function removeDeflector(deflector : Deflector) : void
     {
         var index : int = _deflectors.indexOf(deflector);
-        if (_deflectors.indexOf(deflector) >= 0) _deflectors.splice(index, 1);
+        _deflectors.splice(index, 1);
     }
 
     /**

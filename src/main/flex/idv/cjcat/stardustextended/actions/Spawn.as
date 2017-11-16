@@ -51,6 +51,11 @@ public class Spawn extends Action
         return _spawnerEmitterId;
     }
 
+    public function set spawnerEmitterId(val : String) : void
+    {
+        _spawnerEmitterId = val;
+    }
+
     public function get trigger() : Trigger
     {
         return _trigger;

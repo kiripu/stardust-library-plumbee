@@ -29,21 +29,34 @@ public class ColorGradient extends Action
     protected var colorGs : Vector.<Number>;
     protected var colorAlphas : Vector.<Number>;
 
+    [Transient]
     public function get colors() : Array
     {
         return _colors;
     }
 
+    [Transient]
     public function get ratios() : Array
     {
         return _ratios;
     }
 
+    [Transient]
     public function get alphas() : Array
     {
         return _alphas;
     }
 
+    // These are used in JSON serialization.
+    // Getting trough numbers in cross platform way nicely is hard.
+    public function get colorsStr() : String { return _colors.join(","); }
+    public function set colorsStr(value : String) { _colors = value.split(","); }
+
+    public function get ratiosStr() : String  { return _ratios.join(","); }
+    public function set ratiosStr(value : String) { _ratios = value.split(","); }
+
+    public function get alphasStr() : String { return _alphas.join(","); }
+    public function set alphasStr(value : String) { _alphas = value.split(","); }
     /**
      *
      * @param setDefaultValues Set some default values to start with. Leave it false if you set value manually to
@@ -103,6 +116,11 @@ public class ColorGradient extends Action
         particle.colorB = colorBs[ratio];
         particle.colorG = colorGs[ratio];
         particle.alpha = colorAlphas[ratio];
+    }
+
+    public override function onXMLInitComplete() : void
+    {
+        setGradient(_colors, _ratios, _alphas);
     }
 
     //XML
