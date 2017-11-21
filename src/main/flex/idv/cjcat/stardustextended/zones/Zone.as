@@ -62,18 +62,6 @@ public class Zone extends StardustElement implements IPosition
     }
 
     /**
-     * [Abstract Method] Determines if a point is contained in the zone, true if contained.
-     * @param    x
-     * @param    y
-     * @return
-     */
-    public function contains(x : Number, y : Number) : Boolean
-    {
-        //abstract method
-        return false;
-    }
-
-    /**
      * Returns a random point in the zone.
      * @return
      */
@@ -108,7 +96,7 @@ public class Zone extends StardustElement implements IPosition
      * without rotation and translation
      * @return
      */
-    public function calculateMotionData2D() : MotionData2D
+    protected function calculateMotionData2D() : MotionData2D
     {
         throw new Error("calculateMotionData2D() must be overridden in the subclasses");
     }
@@ -133,7 +121,7 @@ public class Zone extends StardustElement implements IPosition
     }
 
     /**
-     * Gets the position of this Deflector.
+     * Gets the position of this Zone.
      */
     public function getPosition() : Point
     {

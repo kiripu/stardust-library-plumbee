@@ -33,6 +33,7 @@ public class Spawn extends Action
         this.trigger = trigger;
     }
 
+    [Transient]
     public function set spawnerEmitter(em : Emitter) : void
     {
         _spawnerEmitter = em;

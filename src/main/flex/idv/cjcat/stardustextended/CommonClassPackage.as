@@ -1,13 +1,11 @@
 ﻿package idv.cjcat.stardustextended
 {
 
-import idv.cjcat.stardustextended.actions.Accelerate;
-import idv.cjcat.stardustextended.actions.AccelerationZone;
+import idv.cjcat.stardustextended.actions.AccelerationArea;
 import idv.cjcat.stardustextended.actions.Age;
 import idv.cjcat.stardustextended.actions.ColorGradient;
-import idv.cjcat.stardustextended.actions.Damping;
 import idv.cjcat.stardustextended.actions.DeathLife;
-import idv.cjcat.stardustextended.actions.DeathZone;
+import idv.cjcat.stardustextended.actions.DeathArea;
 import idv.cjcat.stardustextended.actions.Deflect;
 import idv.cjcat.stardustextended.actions.Die;
 import idv.cjcat.stardustextended.actions.Explode;
@@ -23,8 +21,13 @@ import idv.cjcat.stardustextended.actions.Spawn;
 import idv.cjcat.stardustextended.actions.SpeedLimit;
 import idv.cjcat.stardustextended.actions.Spin;
 import idv.cjcat.stardustextended.actions.VelocityField;
+import idv.cjcat.stardustextended.actions.areas.CircleArea;
+import idv.cjcat.stardustextended.actions.areas.EverythingArea;
+import idv.cjcat.stardustextended.actions.areas.RectArea;
+import idv.cjcat.stardustextended.actions.areas.SectorArea;
 import idv.cjcat.stardustextended.actions.triggers.DeathTrigger;
 import idv.cjcat.stardustextended.actions.triggers.LifeTrigger;
+import idv.cjcat.stardustextended.actions.waypoints.Waypoint;
 import idv.cjcat.stardustextended.clocks.ImpulseClock;
 import idv.cjcat.stardustextended.clocks.SteadyClock;
 import idv.cjcat.stardustextended.deflectors.CircleDeflector;
@@ -75,9 +78,7 @@ public class CommonClassPackage extends ClassPackage
         classes.push(DeathLife);
         classes.push(Die);
         classes.push(RandomDrift);
-        classes.push(Accelerate);
-        classes.push(Damping);
-        classes.push(DeathZone);
+        classes.push(DeathArea);
         classes.push(Deflect);
         classes.push(Explode);
         classes.push(Gravity);
@@ -89,9 +90,10 @@ public class CommonClassPackage extends ClassPackage
         classes.push(SpeedLimit);
         classes.push(Spin);
         classes.push(VelocityField);
-        classes.push(AccelerationZone);
+        classes.push(AccelerationArea);
         classes.push(ColorGradient);
         classes.push(ScaleAnimated);
+        classes.push(FollowWaypoints);
 
         //action triggers
         classes.push(DeathTrigger);
@@ -137,9 +139,15 @@ public class CommonClassPackage extends ClassPackage
         classes.push(Sector);
         classes.push(SinglePoint);
 
-        classes.push(FollowWaypoints);
+        // areas
+        classes.push(CircleArea);
+        classes.push(EverythingArea);
+        classes.push(RectArea);
+        classes.push(SectorArea);
 
         classes.push(ParticleHandler);
+        
+        classes.push(Waypoint);
     }
 }
 }

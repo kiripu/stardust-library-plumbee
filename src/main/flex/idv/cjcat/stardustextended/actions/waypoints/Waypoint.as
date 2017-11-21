@@ -2,6 +2,8 @@
 {
 import flash.geom.Point;
 
+import idv.cjcat.stardustextended.StardustElement;
+
 import idv.cjcat.stardustextended.interfaces.IPosition;
 
 /**
@@ -9,7 +11,7 @@ import idv.cjcat.stardustextended.interfaces.IPosition;
  *
  * @see idv.cjcat.stardustextended.actions.FollowWaypoints
  */
-public class Waypoint implements IPosition
+public class Waypoint extends StardustElement implements IPosition
 {
 
     /**

@@ -14,18 +14,21 @@ public class StardustElement
 
     // needed for JSON serialization
     public var $type : String = getQualifiedClassName(this).split("::")[1];
+
+    /**
+     * Unique name
+     */
     public var name : String;
 
     public function StardustElement()
     {
-        var str : String = $type;
-        if (elementCounter[str] == undefined) {
-            elementCounter[str] = 0;
+        if (elementCounter[$type] == undefined) {
+            elementCounter[$type] = 0;
         }
         else {
-            elementCounter[str]++;
+            elementCounter[$type]++;
         }
-        name = str + "_" + elementCounter[str];
+        name = $type + "_" + elementCounter[$type];
     }
 
     /**
@@ -33,7 +36,6 @@ public class StardustElement
      */
     public function OnDeserializationComplete() : void
     {
-
     }
 
 }

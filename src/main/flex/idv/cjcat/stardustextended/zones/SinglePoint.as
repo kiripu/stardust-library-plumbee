@@ -17,13 +17,7 @@ public class SinglePoint extends Contour
         updateArea();
     }
 
-    override public function contains(x : Number, y : Number) : Boolean
-    {
-        if ((_x == x) && (_y == y)) return true;
-        return false;
-    }
-
-    override public function calculateMotionData2D() : MotionData2D
+    override protected function calculateMotionData2D() : MotionData2D
     {
         return MotionData2DPool.get(0, 0);
     }

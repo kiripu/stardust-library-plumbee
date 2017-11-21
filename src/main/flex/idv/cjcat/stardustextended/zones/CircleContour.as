@@ -45,15 +45,7 @@ public class CircleContour extends Contour
         area = (_r1SQ - _r2SQ) * Math.PI * virtualThickness;
     }
 
-    override public function contains(xc : Number, yc : Number) : Boolean
-    {
-        var dx : Number = _x - xc;
-        var dy : Number = _y - yc;
-        var dSQ : Number = dx * dx + dy * dy;
-        return !((dSQ > _r1SQ) || (dSQ < _r2SQ));
-    }
-
-    override public function calculateMotionData2D() : MotionData2D
+    override protected function calculateMotionData2D() : MotionData2D
     {
         var theta : Number = StardustMath.TWO_PI * Math.random();
         return MotionData2DPool.get(_radius * Math.cos(theta), _radius * Math.sin(theta));

@@ -19,11 +19,13 @@ public class FollowWaypoints extends Action
      * Whether the particles head for the first waypoint after passing through the last waypoint.
      */
     public var loop : Boolean;
+
     /**
      * Whether the particles' mass is taken into account.
      * If true, the acceleration applied to a particle is divided by the particle's mass.
      */
     public var massless : Boolean;
+
     private var _waypoints : Vector.<Waypoint>;
     protected var _timeDeltaOneSec : Number;
 
@@ -32,18 +34,12 @@ public class FollowWaypoints extends Action
         this.loop = loop;
         this.massless = massless;
         this.waypoints = waypoints;
-        if (waypoints) {
-            _waypoints = waypoints;
-        }
-        else {
-            _waypoints = new Vector.<Waypoint>();
+        if (_waypoints.length == 0)
+        {
             _waypoints.push(new Waypoint(0, 0));
         }
     }
 
-    /**
-     * An array of waypoints.
-     */
     public function get waypoints() : Vector.<Waypoint>
     {
         return _waypoints;
@@ -53,23 +49,6 @@ public class FollowWaypoints extends Action
     {
         if (!value) value = new Vector.<Waypoint>();
         _waypoints = value;
-    }
-
-    /**
-     * Adds a waypoint to the waypoint array.
-     * @param    waypoint
-     */
-    public function addWaypoint(waypoint : Waypoint) : void
-    {
-        _waypoints.push(waypoint);
-    }
-
-    /**
-     * Removes all waypoints from the waypoint array.
-     */
-    public function clearWaypoints() : void
-    {
-        _waypoints = new Vector.<Waypoint>();
     }
 
     override public function preUpdate(emitter : Emitter, time : Number) : void

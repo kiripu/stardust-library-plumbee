@@ -23,7 +23,7 @@ public class Life extends Initializer
     }
 
     /**
-     * A partilce's life is set according to this property.
+     * A particle's life is set according to this property.
      */
     public function get random() : Random
     {

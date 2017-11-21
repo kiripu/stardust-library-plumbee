@@ -36,18 +36,11 @@ public class CircleZone extends Zone
         updateArea();
     }
 
-    override public function calculateMotionData2D() : MotionData2D
+    override protected function calculateMotionData2D() : MotionData2D
     {
         var theta : Number = StardustMath.TWO_PI * Math.random();
         var r : Number = _radius * Math.sqrt(Math.random());
         return MotionData2DPool.get(r * Math.cos(theta), r * Math.sin(theta));
-    }
-
-    override public function contains(x : Number, y : Number) : Boolean
-    {
-        var dx : Number = this._x - x;
-        var dy : Number = this._y - y;
-        return ((dx * dx + dy * dy) <= _radiusSQ) ? (true) : (false);
     }
 
     override protected function updateArea() : void

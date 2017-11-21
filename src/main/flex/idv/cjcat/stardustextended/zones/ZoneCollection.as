@@ -12,39 +12,33 @@ public class ZoneCollection
     {
         var md2D : MotionData2D;
         var numZones : uint = zones.length;
-        if (numZones > 1) {
+        if (numZones > 1)
+        {
             var sumArea : Number = 0;
             var areas : Vector.<Number> = new Vector.<Number>();
-            for (var i : int = 0; i < numZones; i++) {
+            for (var i : int = 0; i < numZones; i++)
+            {
                 sumArea += Zone(zones[i]).getArea();
                 areas.push(sumArea);
             }
             var position : Number = Math.random() * sumArea;
-            for (i = 0; i < areas.length; i++) {
-                if (position <= areas[i]) {
+            for (i = 0; i < areas.length; i++)
+            {
+                if (position <= areas[i])
+                {
                     md2D = zones[i].getPoint();
                     break;
                 }
             }
         }
-        else if (numZones == 1) {
+        else if (numZones == 1)
+        {
             md2D = zones[0].getPoint();
         }
         return md2D; // returns null if there are no zones
     }
 
-    [Inline]
-    public final function contains(xc : Number, yc : Number) : Boolean
-    {
-        var contains : Boolean = false;
-        for each (var zone : Zone in zones) {
-            if (zone.contains(xc, yc)) {
-                contains = true;
-                break;
-            }
-        }
-        return contains;
-    }
+
 
 }
 }

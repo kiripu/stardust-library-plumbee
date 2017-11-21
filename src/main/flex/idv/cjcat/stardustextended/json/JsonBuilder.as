@@ -7,6 +7,7 @@ import flash.utils.Dictionary;
 
 import idv.cjcat.stardustextended.StardustElement;
 import idv.cjcat.stardustextended.actions.Action;
+import idv.cjcat.stardustextended.actions.areas.Area;
 import idv.cjcat.stardustextended.actions.waypoints.Waypoint;
 import idv.cjcat.stardustextended.deflectors.Deflector;
 import idv.cjcat.stardustextended.emitters.Emitter;
@@ -24,6 +25,7 @@ public class JsonBuilder {
     private static const ARRAY_FIELD : String = "Array.Field";
     private static const ARRAY_WAYPOINT : String = "Array.Waypoint";
     private static const ARRAY_DEFLECTOR : String = "Array.Deflector";
+    private static const ARRAY_AREA : String = "Array.Area";
 
     private static const TYPE_VAR : String = "$type";
     private static const VALUES_VAR : String = "$values";
@@ -66,6 +68,10 @@ public class JsonBuilder {
             else if (val is Vector.<Deflector>)
             {
                 return {$type:ARRAY_DEFLECTOR, $values:val};
+            }
+            else if (val is Vector.<Area>)
+            {
+                return {$type:ARRAY_AREA, $values:val};
             }
             else if (val is Array)
             {
@@ -136,6 +142,10 @@ public class JsonBuilder {
             else if (typeVar == ARRAY_DEFLECTOR)
             {
                 newArr = new Vector.<Deflector>();
+            }
+            else if (typeVar == ARRAY_AREA)
+            {
+                newArr = new Vector.<Area>();
             }
             else
             {

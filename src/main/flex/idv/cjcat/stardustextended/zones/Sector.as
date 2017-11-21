@@ -21,7 +21,8 @@ public class Sector extends Zone
     private var _minAngleRad : Number;
     private var _maxAngleRad : Number;
 
-    public function Sector(x : Number = 0, y : Number = 0, minRadius : Number = 0, maxRadius : Number = 100, minAngle : Number = 0, maxAngle : Number = 360)
+    public function Sector(x : Number = 0, y : Number = 0, minRadius : Number = 0, maxRadius : Number = 100,
+                           minAngle : Number = 0, maxAngle : Number = 360)
     {
         _randomT = new UniformRandom();
 
@@ -91,7 +92,7 @@ public class Sector extends Zone
         updateArea();
     }
 
-    override public function calculateMotionData2D() : MotionData2D
+    override protected function calculateMotionData2D() : MotionData2D
     {
         if (_maxRadius == 0) return MotionData2DPool.get(_x, _y);
 
@@ -106,10 +107,12 @@ public class Sector extends Zone
     {
         _minAngleRad = _minAngle * StardustMath.DEGREE_TO_RADIAN;
         _maxAngleRad = _maxAngle * StardustMath.DEGREE_TO_RADIAN;
-        if (Math.abs(_minAngleRad) > StardustMath.TWO_PI) {
+        if (Math.abs(_minAngleRad) > StardustMath.TWO_PI)
+        {
             _minAngleRad = _minAngleRad % StardustMath.TWO_PI;
         }
-        if (Math.abs(_maxAngleRad) > StardustMath.TWO_PI) {
+        if (Math.abs(_maxAngleRad) > StardustMath.TWO_PI)
+        {
             _maxAngleRad = _maxAngleRad % StardustMath.TWO_PI;
         }
         var dT : Number = _maxAngleRad - _minAngleRad;
@@ -117,27 +120,6 @@ public class Sector extends Zone
         var dRSQ : Number = _minRadius * _minRadius - _maxRadius * _maxRadius;
 
         area = Math.abs(dRSQ * dT);
-    }
-
-    override public function contains(x : Number, y : Number) : Boolean
-    {
-        const dx : Number = this._x - x;
-        const dy : Number = this._y - y;
-        var squaredDistance : Number = dx * dx + dy * dy;
-        const isInsideOuterCircle : Boolean = (squaredDistance <= _maxRadius * _maxRadius);
-        if (!isInsideOuterCircle) {
-            return false;
-        }
-        const isInsideInnerCircle : Boolean = (squaredDistance <= _minRadius * _minRadius);
-        if (isInsideInnerCircle) {
-            return false;
-        }
-        const angle : Number = Math.atan2(dy, dx) + Math.PI;
-        // TODO: does not work for edge cases, e.g. when minAngle = -20 and maxAngle = 20
-        if (angle > _maxAngleRad || angle < _minAngleRad) {
-            return false;
-        }
-        return true;
     }
 
 }

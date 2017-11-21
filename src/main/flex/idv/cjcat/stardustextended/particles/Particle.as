@@ -19,7 +19,6 @@ public class Particle
     /**
      * The normal alpha value upon birth.
      */
-    [Deprecated(message="initAlpha property will be soon removed, use ColorGradient")]
     public var initAlpha : Number;
 
     /**

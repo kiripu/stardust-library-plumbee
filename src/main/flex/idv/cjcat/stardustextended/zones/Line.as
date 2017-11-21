@@ -88,19 +88,11 @@ public class Line extends Contour
         _random = value;
     }
 
-    override public function calculateMotionData2D() : MotionData2D
+    override protected function calculateMotionData2D() : MotionData2D
     {
         _random.setRange(0, 1);
         var rand : Number = _random.random();
         return MotionData2DPool.get(StardustMath.interpolate(0, 0, 1, _x2 - _x, rand), StardustMath.interpolate(0, 0, 1, _y2 - _y, rand));
-    }
-
-    override public function contains(x : Number, y : Number) : Boolean
-    {
-        if ((x < _x) && (x < _x2)) return false;
-        if ((x > _x) && (x > _x2)) return false;
-        if (((x - _x) / (_x2 - _x)) == ((y - _y) / (_y2 - _y))) return true;
-        return false;
     }
 
     override protected function updateArea() : void
