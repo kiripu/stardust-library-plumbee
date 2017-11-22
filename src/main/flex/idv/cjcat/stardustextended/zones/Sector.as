@@ -13,7 +13,7 @@ import idv.cjcat.stardustextended.math.UniformRandom;
 public class Sector extends Zone
 {
 
-    private var _randomT : Random;
+    private static var _randomT : Random = new UniformRandom();
     private var _minRadius : Number;
     private var _maxRadius : Number;
     private var _minAngle : Number;
@@ -24,8 +24,6 @@ public class Sector extends Zone
     public function Sector(x : Number = 0, y : Number = 0, minRadius : Number = 0, maxRadius : Number = 100,
                            minAngle : Number = 0, maxAngle : Number = 360)
     {
-        _randomT = new UniformRandom();
-
         this._x = x;
         this._y = y;
         this._minRadius = minRadius;

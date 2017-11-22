@@ -79,6 +79,10 @@ public class Particle
     public var dictionary : Dictionary;
 
     /**
+     * Whether the particle is currently deflected by a deflector. Used by Spawn to check
+     */
+    public var isDeflected : Boolean;
+    /**
      * Particle handlers use this property to determine which frame to display if the particle is animated
      */
     public var currentAnimationFrame : int = 0;

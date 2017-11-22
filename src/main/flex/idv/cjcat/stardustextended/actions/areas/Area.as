@@ -8,8 +8,8 @@ import idv.cjcat.stardustextended.math.StardustMath;
 public class Area extends StardustElement implements IPosition
 {
 
-    public var x : Number;
-    public var y : Number;
+    public var x : Number = 0;
+    public var y : Number = 0;
     protected var _rotation : Number;
     protected var angleCos : Number;
     protected var angleSin : Number;

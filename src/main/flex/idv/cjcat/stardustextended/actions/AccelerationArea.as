@@ -45,7 +45,7 @@ public class AccelerationArea extends Action implements IAreaContainer
     private var _directionY : Number;
 
     /**
-     * the direction of the acceleration. Only used if useParticleDirection is false
+     * The direction of the acceleration. Only used if useParticleDirection is false
      */
     public function get direction() : Number
     {
@@ -71,7 +71,7 @@ public class AccelerationArea extends Action implements IAreaContainer
 
     public function AccelerationArea(areas : Vector.<Area> = null, _inverted : Boolean = false)
     {
-        priority = -6;
+        _priority = -6;
         inverted = _inverted;
         acceleration = 3;
         useParticleDirection = true;
@@ -112,8 +112,7 @@ public class AccelerationArea extends Action implements IAreaContainer
                     const vecLength : Number = v.length;
                     if (vecLength > 0)
                     {
-                        var finalVal : Number;
-                        finalVal = vecLength + acceleration;
+                        var finalVal : Number = vecLength + acceleration;
                         if (finalVal < 0)
                         {
                             finalVal = 0;

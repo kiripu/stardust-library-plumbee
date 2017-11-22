@@ -39,33 +39,6 @@ public class Gravity extends Action implements IFieldContainer
         _fields = value;
     }
 
-    /**
-     * Adds a gravity field to the simulation.
-     * @param field
-     */
-    public function addField(field : Field) : void
-    {
-        if (_fields.indexOf(field) < 0) _fields.push(field);
-    }
-
-    /**
-     * Removes a gravity field from the simulation.
-     * @param field
-     */
-    public function removeField(field : Field) : void
-    {
-        var index : int = _fields.indexOf(field);
-        if (index >= 0) _fields.splice(index, 1);
-    }
-
-    /**
-     * Removes all gravity fields from the simulation.
-     */
-    public function clearFields() : void
-    {
-        _fields = new Vector.<Field>();
-    }
-
     override public function update(emitter : Emitter, particle : Particle, timeDelta : Number, currentTime : Number) : void
     {
         var md2D : MotionData2D;

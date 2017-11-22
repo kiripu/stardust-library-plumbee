@@ -23,17 +23,16 @@ public class Oriented extends Action
      */
     public var offset : Number;
     protected var _timeDeltaOneSec : Number;
+    private var f : Number;
+    private var os : Number;
 
     public function Oriented(factor : Number = 1, offset : Number = 0)
     {
-        priority = -6;
+        _priority = -6;
 
         this.factor = factor;
         this.offset = offset;
     }
-
-    private var f : Number;
-    private var os : Number;
 
     override public function preUpdate(emitter : Emitter, time : Number) : void
     {

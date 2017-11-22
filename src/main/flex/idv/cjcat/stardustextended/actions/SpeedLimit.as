@@ -13,8 +13,11 @@ public class SpeedLimit extends Action
      * The speed limit.
      */
     public var limit : Number;
+    private var speedSQ : Number;
+    private var limitSQ : Number;
+    private var factor : Number;
 
-    public function SpeedLimit(limit : Number = Number.MAX_VALUE)
+    public function SpeedLimit(limit : Number = 100)
     {
         this.limit = limit;
     }
@@ -23,10 +26,6 @@ public class SpeedLimit extends Action
     {
         limitSQ = limit * limit;
     }
-
-    private var speedSQ : Number;
-    private var limitSQ : Number;
-    private var factor : Number;
 
     override public function update(emitter : Emitter, particle : Particle, timeDelta : Number, currentTime : Number) : void
     {

@@ -8,7 +8,8 @@ public class RectArea extends Area
     public var width : Number;
     public var height : Number;
 
-    public function RectArea(x : Number = 0, y : Number = 0, width : Number = 150, height : Number = 50)
+    public function RectArea(x : Number = 0, y : Number = 0,
+                             width : Number = 150, height : Number = 50)
     {
         this.x = x;
         this.y = y;

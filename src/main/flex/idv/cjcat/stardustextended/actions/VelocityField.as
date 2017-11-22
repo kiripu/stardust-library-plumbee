@@ -27,7 +27,7 @@ public class VelocityField extends Action implements IFieldContainer
 
     public function VelocityField(_field : Field = null)
     {
-        priority = -2;
+        _priority = -2;
         if (field) {
             field = _field;
         }
