@@ -19,7 +19,6 @@ import idv.cjcat.stardustextended.actions.Move;
 import idv.cjcat.stardustextended.actions.NormalDrift;
 import idv.cjcat.stardustextended.actions.Oriented;
 import idv.cjcat.stardustextended.actions.RandomDrift;
-import idv.cjcat.stardustextended.actions.ScaleAnimated;
 import idv.cjcat.stardustextended.actions.ScaleCurve;
 import idv.cjcat.stardustextended.actions.Spawn;
 import idv.cjcat.stardustextended.actions.SpeedLimit;
@@ -95,7 +94,6 @@ public class CommonClassPackage extends ClassPackage
         classes.push(VelocityField);
         classes.push(AccelerationZone);
         classes.push(ColorGradient);
-        classes.push(ScaleAnimated);
 
         //action triggers
         classes.push(DeathTrigger);

@@ -12,7 +12,7 @@ import idv.cjcat.stardustextended.zones.Zone;
 import idv.cjcat.stardustextended.zones.ZoneCollection;
 
 /**
- * Sets a particle's velocity based on the <code>zones</code> property.
+ * Sets a particle's velocity based on the <code>zone</code> property.
  *
  * <p>
  * A particle's velocity is determined by a random point in the zone.

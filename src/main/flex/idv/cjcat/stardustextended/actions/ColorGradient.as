@@ -63,7 +63,7 @@ public class ColorGradient extends Action
      * @param ratios Array of uint ratios ordered, in increasing order. First value should be 0, last 255.
      * @param alphas Array of Number alphas in the 0-1 range.
      */
-    public final function setGradient(colors : Array, ratios : Array, alphas : Array) : void
+    public final function setGradient(colors : Array, ratios : Array, alphas : Array):void
     {
         _colors = colors;
         _ratios = ratios;
@@ -96,13 +96,17 @@ public class ColorGradient extends Action
         bd.dispose();
     }
 
-    override public final function update(emitter : Emitter, particle : Particle, timeDelta : Number, currentTime : Number) : void
+	private var _ratio:uint;
+
+	[Inline]
+    override public final function update(emitter:Emitter, particle:Particle, timeDelta:Number, currentTime:Number):void
     {
-        var ratio : uint = (numSteps - 1) * particle.life / particle.initLife;
-        particle.colorR = colorRs[ratio];
-        particle.colorB = colorBs[ratio];
-        particle.colorG = colorGs[ratio];
-        particle.alpha = colorAlphas[ratio];
+		_ratio = (numSteps - 1) * particle.life / particle.initLife;
+
+        particle.colorR = colorRs[_ratio];
+        particle.colorB = colorBs[_ratio];
+        particle.colorG = colorGs[_ratio];
+        particle.alpha = colorAlphas[_ratio];
     }
 
     //XML

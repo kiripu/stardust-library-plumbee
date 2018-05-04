@@ -22,7 +22,9 @@ public class ParticleProgram
         var programName : String = getImageProgramName(texMipmap, texFormat, texSmoothing);
 
         var program : Program = target.painter.getProgram(programName);
-        if (!program) {
+
+        if (!program)
+		{
             // this is the input data we'll pass to the shaders:
             //
             // va0 -> position
@@ -31,6 +33,7 @@ public class ParticleProgram
             // vc0 -> alpha
             // vc1 -> mvpMatrix
             // fs0 -> texture
+
             var vertexShader : String = "m44 op, va0, vc1 \n" + // 4x4 matrix transform to output clipspace
                                         "mul v0, va1, vc0 \n" + // multiply alpha (vc0) with color (va1)
                                         "mov v1, va2      \n"; // pass texture coordinates to fragment program
@@ -42,6 +45,7 @@ public class ParticleProgram
             program = Program.fromSource(vertexShader, fragmentShader);
             target.painter.registerProgram(programName, program);
         }
+
         return program;
     }
 
@@ -64,10 +68,12 @@ public class ParticleProgram
 
         var name : String = sProgramNameCache[bitField];
 
-        if (name == null) {
+        if (name == null)
+		{
             name = "__STARDUST_RENDERER." + bitField.toString(16);
             sProgramNameCache[bitField] = name;
         }
+
         return name;
     }
 }
