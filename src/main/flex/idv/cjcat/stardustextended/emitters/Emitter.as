@@ -3,6 +3,7 @@
 
 import flash.events.EventDispatcher;
 
+import idv.cjcat.stardustextended.StardustElement;
 import idv.cjcat.stardustextended.actions.Action;
 import idv.cjcat.stardustextended.actions.ActionCollection;
 import idv.cjcat.stardustextended.actions.ActionCollector;
@@ -14,7 +15,6 @@ import idv.cjcat.stardustextended.initializers.Initializer;
 import idv.cjcat.stardustextended.initializers.InitializerCollector;
 import idv.cjcat.stardustextended.particles.Particle;
 import idv.cjcat.stardustextended.particles.PooledParticleFactory;
-import idv.cjcat.stardustextended.StardustElement;
 import idv.cjcat.stardustextended.xml.XMLBuilder;
 
 /**
@@ -176,12 +176,11 @@ public class Emitter extends StardustElement implements ActionCollector, Initial
         //filter out active actions
         activeActions.length = 0;
         var action : Action;
-        len = actions.length;
-		
-        for (i = 0; i < len; ++i)
+        i = actions.length;
+		while (--i > -1)
 		{
             action = actions[i];
-			
+
             if(action.active)
 			{
                 activeActions.push(action);
@@ -190,32 +189,34 @@ public class Emitter extends StardustElement implements ActionCollector, Initial
 
         //sorting
         len = activeActions.length;
+		i = len;
 
-        for(i = 0; i < len; ++i)
+		while (--i > -1)
 		{
-            action = activeActions[i];
-
-            if(action.needsSortedParticles)
+			action = activeActions[i];
+			if(action.needsSortedParticles)
 			{
-                _particles.sort(Particle.compareFunction);
-                break;
-            }
-        }
+				_particles.sort(Particle.compareFunction);
+				break;
+			}
+		}
 
-        //invoke action preupdates.
-        for (i = 0; i < len; ++i)
+		//invoke action preupdates.
+		i = len;
+		while (--i > -1)
 		{
             activeActions[i].preUpdate(this, timeSinceLastStep);
         }
 
         //update the remaining particles
         var p : Particle;
-		
-        for(var m : int = 0; m < _particles.length; ++m)
+		var m:int = _particles.length;
+		while (--m > -1)
 		{
             p = _particles[m];
-			
-            for (i = 0; i < len; ++i)
+
+			i = len;
+			while (--i > -1)
 			{
                 action = activeActions[i];
                 //update particle
@@ -230,12 +231,12 @@ public class Emitter extends StardustElement implements ActionCollector, Initial
                 factory.recycle(p);
 
                 _particles.removeAt(m);
-                m--;
             }
         }
 
         //postUpdate
-        for(i = 0; i < len; ++i)
+		i = len;
+		while (--i > -1)
 		{
             activeActions[i].postUpdate(this, timeSinceLastStep);
         }
