@@ -1,25 +1,25 @@
 package idv.cjcat.stardustextended.handlers.starling
 {
-	import flash.display3D.Context3D;
-	import flash.display3D.Context3DProgramType;
-	import flash.display3D.Context3DVertexBufferFormat;
-	import flash.display3D.textures.TextureBase;
-	import flash.geom.Rectangle;
-	import flash.utils.ByteArray;
-	import flash.utils.Endian;
-	
-	import idv.cjcat.stardustextended.particles.Particle;
-	
-	import starling.core.Starling;
-	import starling.display.BlendMode;
-	import starling.display.DisplayObject;
-	import starling.errors.MissingContextError;
-	import starling.events.Event;
-	import starling.filters.FragmentFilter;
-	import starling.rendering.Painter;
-	import starling.textures.Texture;
-	
-	public class StardustStarlingRenderer extends DisplayObject
+import flash.display3D.Context3D;
+import flash.display3D.Context3DProgramType;
+import flash.display3D.Context3DVertexBufferFormat;
+import flash.display3D.textures.TextureBase;
+import flash.geom.Rectangle;
+import flash.utils.ByteArray;
+import flash.utils.Endian;
+
+import idv.cjcat.stardustextended.particles.Particle;
+
+import starling.core.Starling;
+import starling.display.BlendMode;
+import starling.display.DisplayObject;
+import starling.errors.MissingContextError;
+import starling.events.Event;
+import starling.filters.FragmentFilter;
+import starling.rendering.Painter;
+import starling.textures.Texture;
+
+public class StardustStarlingRenderer extends DisplayObject
 	{
 	    /** The offset of position data (x, y) within a vertex. */
 	    private static const POSITION_OFFSET:int = 0;
@@ -43,8 +43,11 @@ package idv.cjcat.stardustextended.handlers.starling
 	    private static const renderAlpha:Vector.<Number> = new Vector.<Number>(4);
 
 	    private static var initCalled:Boolean = false;
-	    
-	    private var boundsRect:Rectangle;
+
+		private static var numBatchedParticles:uint = 0;
+		private static var batchedVertexesBa:ByteArray;
+
+		private var boundsRect:Rectangle;
 	    private var mFilter:FragmentFilter;
 	    private var mTexture:Texture;
 	    private var mBatched:Boolean;
@@ -69,6 +72,12 @@ package idv.cjcat.stardustextended.handlers.starling
 
 			vertexesBa = new ByteArray();
 			vertexesBa.endian = Endian.LITTLE_ENDIAN;
+
+			if (!batchedVertexesBa)
+			{
+				batchedVertexesBa = new ByteArray();
+				batchedVertexesBa.endian = Endian.LITTLE_ENDIAN;
+			}
 	    }
 	
 	    /** 
@@ -321,6 +330,11 @@ package idv.cjcat.stardustextended.handlers.starling
 			
 	        if (mNumParticles > 0 && !mBatched)
 			{
+				numBatchedParticles = mNumParticles;
+				batchedVertexesBa.position = 0;
+				batchedVertexesBa.length = vertexesBa.length;
+				batchedVertexesBa.writeBytes(vertexesBa, 0, vertexesBa.length);
+
 				batchNeighbours();
 
 				_parentAlpha = parent ? parent.alpha : 1;
@@ -353,17 +367,18 @@ package idv.cjcat.stardustextended.handlers.starling
 					blendMode,
 					mFilter,
 					premultiplyAlpha,
-					mNumParticles
+					numBatchedParticles
 				);
 				
 	            if(_batchNextPS && !_batchIsStateChange)
 				{
 	                if(_batchNextPS.mNumParticles > 0)
-					{	
-						vertexesBa.position = vertexesBa.length;						
+					{
+						numBatchedParticles += _batchNextPS.mNumParticles
+						batchedVertexesBa.position = batchedVertexesBa.length;
 						_batchNextPS.vertexesBa.position = 0;
 
-	                    vertexesBa.writeBytes(_batchNextPS.vertexesBa, 0, _batchNextPS.vertexesBa.length);
+						batchedVertexesBa.writeBytes(_batchNextPS.vertexesBa, 0, _batchNextPS.vertexesBa.length);
 	
 						_batchNextPS.mBatched = true;
 
@@ -416,17 +431,17 @@ package idv.cjcat.stardustextended.handlers.starling
 			_renderContext.setTextureAt(0, mTexture.base);
 	
 			StarlingParticleBuffers.vertexBuffer.uploadFromByteArray(
-				vertexesBa,
+				batchedVertexesBa,
 				0,
 				0,
-				vertexesBa.length / 32
+				batchedVertexesBa.length / 32
 			);
 
 			_renderContext.setVertexBufferAt(0, StarlingParticleBuffers.vertexBuffer, POSITION_OFFSET, Context3DVertexBufferFormat.FLOAT_2);
 			_renderContext.setVertexBufferAt(1, StarlingParticleBuffers.vertexBuffer, COLOR_OFFSET, Context3DVertexBufferFormat.FLOAT_4);
 			_renderContext.setVertexBufferAt(2, StarlingParticleBuffers.vertexBuffer, TEXCOORD_OFFSET, Context3DVertexBufferFormat.FLOAT_2);
 			
-			_renderTrianglesCount = vertexesBa.length / 64;
+			_renderTrianglesCount = batchedVertexesBa.length / 64;
 
 			_renderContext.drawTriangles(
 				StarlingParticleBuffers.indexBuffer,
