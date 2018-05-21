@@ -176,11 +176,12 @@ public class Emitter extends StardustElement implements ActionCollector, Initial
         //filter out active actions
         activeActions.length = 0;
         var action : Action;
-        i = actions.length;
-		while (--i > -1)
+        len = actions.length;
+		
+        for (i = 0; i < len; ++i)
 		{
             action = actions[i];
-
+			
             if(action.active)
 			{
                 activeActions.push(action);
@@ -189,34 +190,32 @@ public class Emitter extends StardustElement implements ActionCollector, Initial
 
         //sorting
         len = activeActions.length;
-		i = len;
 
-		while (--i > -1)
+        for(i = 0; i < len; ++i)
 		{
-			action = activeActions[i];
-			if(action.needsSortedParticles)
-			{
-				_particles.sort(Particle.compareFunction);
-				break;
-			}
-		}
+            action = activeActions[i];
 
-		//invoke action preupdates.
-		i = len;
-		while (--i > -1)
+            if(action.needsSortedParticles)
+			{
+                _particles.sort(Particle.compareFunction);
+                break;
+            }
+        }
+
+        //invoke action preupdates.
+        for (i = 0; i < len; ++i)
 		{
             activeActions[i].preUpdate(this, timeSinceLastStep);
         }
 
         //update the remaining particles
         var p : Particle;
-		var m:int = _particles.length;
-		while (--m > -1)
+		
+        for(var m : int = 0; m < _particles.length; ++m)
 		{
             p = _particles[m];
-
-			i = len;
-			while (--i > -1)
+			
+            for (i = 0; i < len; ++i)
 			{
                 action = activeActions[i];
                 //update particle
@@ -231,12 +230,12 @@ public class Emitter extends StardustElement implements ActionCollector, Initial
                 factory.recycle(p);
 
                 _particles.removeAt(m);
+                m--;
             }
         }
 
         //postUpdate
-		i = len;
-		while (--i > -1)
+        for(i = 0; i < len; ++i)
 		{
             activeActions[i].postUpdate(this, timeSinceLastStep);
         }
